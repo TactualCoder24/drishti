@@ -326,6 +326,25 @@ a.fn:hover{background:var(--neel-soft)}
 .fcol{display:flex;flex-direction:column;align-items:center}
 .flab{font-size:12px;font-weight:700;color:var(--neel);margin-top:4px}
 @media (max-width:600px){.fsplit{grid-template-columns:minmax(0,1fr)}.hb{grid-template-columns:90px minmax(0,1fr) 30px}}
+/* Input vs dashboard: every page says whether you type here or only read */
+.kd{display:inline-block;font-style:normal;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:2px 9px;border-radius:999px;white-space:nowrap;background:var(--neel);color:#fff;flex:none}
+.kd.out{background:var(--ink2)}
+.kd.guide{background:var(--mute)}
+.kindbar{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:8px;margin-bottom:16px;font-size:14px;line-height:1.45;background:var(--neel-soft);border-left:3px solid var(--neel)}
+.kindbar.out{background:var(--sunk);border-left-color:var(--ink2)}
+.kindbar.guide{background:var(--sunk);border-left-color:var(--mute)}
+.step .sl{display:flex;flex-direction:column;align-items:flex-start;gap:3px}
+.step .kd{font-size:10px;padding:1px 7px}
+.live .kd{background:rgba(255,255,255,.18);color:#fff;font-size:10px;padding:1px 8px;margin-left:6px;vertical-align:middle}
+.howp.in{border-top:3px solid var(--neel)}
+.howp.out{border-top:3px solid var(--ink2)}
+.howp h2{display:flex;align-items:center;gap:10px}
+.howl{list-style:none;margin:0;padding:0}
+.howl li{display:flex;justify-content:space-between;align-items:baseline;gap:4px 14px;flex-wrap:wrap;padding:9px 0;border-bottom:1px solid var(--rule)}
+.howl li:last-child{border-bottom:none}
+.howl a{font-weight:600;color:var(--neel);text-decoration:none}
+.howl a:hover{text-decoration:underline}
+.howl span{color:var(--mute);font-size:13.5px}
 /* Phones: 16px fields stop iOS zoom-on-focus, 40-44px targets, two-up KPIs, swipeable board, tighter blocks */
 .hit{touch-action:pan-y}
 @media (max-width:820px){
@@ -404,6 +423,8 @@ a.fn:hover{background:var(--neel-soft)}
         <button id="resetNo" type="button">Keep my changes</button>
       </div>
 
+      <div class="kindbar" id="kindBar" hidden></div>
+
       <!-- LANDING (overview) -->
       <section class="view" id="v-overview">
         <div class="landbar"><div class="brand"><b>DRISHTI</b><span>ACPL supply chain programme</span></div><a class="btn js-dash" href="#diagnosis">Open dashboard</a></div>
@@ -424,6 +445,28 @@ a.fn:hover{background:var(--neel-soft)}
           </div>
         </div>
 
+        <div class="sec-h"><h2>How it works</h2><p class="note">Teams enter numbers on the input screens. The dashboard shows the results. You never type on the dashboard.</p></div>
+        <div class="grid g2">
+          <div class="panel howp in">
+            <header><h2><span class="kd in">Input</span>Where you enter data</h2></header>
+            <ul class="howl">
+              <li><a href="#inputs">Weekly team inputs</a><span>Each team's numbers for the week</span></li>
+              <li><a href="#orders">Orders to plants</a><span>Raise requests, commit and move orders</span></li>
+              <li><a href="#council">Team chat and actions</a><span>Messages and the council's action list</span></li>
+              <li><a href="#service">Targets, budget and assumptions</a><span>Set service targets, move the ₹150 Cr, stress the plan</span></li>
+              <li><a href="#gates">Gate actuals</a><span>Audited figures for Gate 1 and Gate 2</span></li>
+            </ul>
+          </div>
+          <div class="panel howp out">
+            <header><h2><span class="kd out">Dashboard</span>What you read</h2></header>
+            <ul class="howl">
+              <li><a href="#manager">Manager dashboard</a><span>Requests, cannot-fill rate, gates, who has sent numbers</span></li>
+              <li><a href="#diagnosis">What is going wrong</a><span>The diagnosis behind the plan</span></li>
+              <li><a href="#flow">Process flow</a><span>A map of how a week runs</span></li>
+              <li><b>Live summary</b><span>Right side of every page: plan numbers, gates and alerts</span></li>
+            </ul>
+          </div>
+        </div>
         <div class="sec-h"><h2>Start with your team</h2><p class="note">Pick your team and go straight to the screen you use each week.</p></div>
         <div class="roles" id="roles"></div>
         <div style="height:22px"></div>
@@ -1136,16 +1179,29 @@ const DASH=VIEWS.filter(v=>v[0]!=="overview");
 const GROUPS=[["Plan",["diagnosis","service","opmodel","invest","returns","gates"]],["Weekly run",["inputs","orders","council"]]];
 const TABS=[["Plan","diagnosis"],["Weekly run","inputs"],["Manager dashboard","manager"],["Process flow","flow"]];
 const VN=Object.fromEntries(VIEWS);
+const KIND={
+ diagnosis:["out","Dashboard","Read-only.","Explains what is going wrong. There is nothing to enter here."],
+ service:["in","Input","Set targets.","Move the sliders to set each segment's fill target. Cost and payback update live."],
+ opmodel:["in","Input","Try the rules.","Change supply and quarter-end skew to see how allocation and distributor orders react."],
+ invest:["in","Input","Set the budget.","Change amounts and switch options on or off. Tranche limits are checked as you type."],
+ returns:["in","Input","Set assumptions.","Change the assumptions to stress the plan. Return and payback update live."],
+ gates:["in","Input","Enter actuals.","Type audited actuals for each gate. Blank fields use the plan."],
+ inputs:["in","Input","Weekly numbers.","Each team enters its numbers for the week, then saves."],
+ orders:["in","Input","Requests and orders.","Raise a request, or commit and move orders along."],
+ council:["in","Input","Messages and actions.","Post to a channel and add actions for the council."],
+ manager:["out","Dashboard","Read-only.","Everything here is calculated from what teams entered. There is nothing to type."],
+ flow:["guide","Guide","How a week runs.","A map of the weekly process. Click a box to open that screen."]
+};
 function tabOf(v){const g=GROUPS.find(([,ids])=>ids.includes(v));return g?g[0]:(TABS.find(t=>t[1]===v)||TABS[0])[0];}
 function renderNav(){
  document.body.classList.toggle("landing",S.view==="overview");
- const last=DASH.some(v=>v[0]===S.last)?S.last:"diagnosis";
- document.querySelectorAll(".js-dash").forEach(a=>a.setAttribute("href","#"+last));
+ document.querySelectorAll(".js-dash").forEach(a=>a.setAttribute("href","#manager"));
  const tab=tabOf(S.view),g=GROUPS.find(([n])=>n===tab),at=g?g[1].indexOf(S.view):-1;
  $("abTabs").innerHTML=TABS.map(([n,to])=>`<a href="#${to}" ${tab===n?'aria-current="page"':""}>${n}</a>`).join("");
  $("abSteps").hidden=!g;
- $("abSteps").innerHTML=g?`<div class="steps">`+g[1].map((id,i)=>`<a class="step ${i<at?"done":""}" href="#${id}" ${i===at?'aria-current="step"':""}><i>${i+1}</i><span>${VN[id]}</span></a>`).join("")+`</div>`:"";
+ $("abSteps").innerHTML=g?`<div class="steps">`+g[1].map((id,i)=>`<a class="step ${i<at?"done":""}" href="#${id}" ${i===at?'aria-current="step"':""}><i>${i+1}</i><span class="sl">${VN[id]}<em class="kd ${KIND[id][0]}">${KIND[id][0]==="in"?"Input":"View"}</em></span></a>`).join("")+`</div>`:"";
  const sb=$("abSteps"),cur=sb.querySelector("[aria-current]");if(cur)sb.scrollLeft=cur.offsetLeft-(sb.clientWidth-cur.offsetWidth)/2;
+ const kd=KIND[S.view],kb=$("kindBar");kb.hidden=!kd;if(kd){kb.className="kindbar "+kd[0];kb.innerHTML=`<span class="kd ${kd[0]}">${kd[1]}</span><span><b>${kd[2]}</b> ${kd[3]}</span>`;}
  const wsv=["inputs","orders","council"].includes(S.view);$("wsWho").hidden=!wsv;
  VIEWS.forEach(([id])=>$("v-"+id).hidden=id!==S.view);
 }
@@ -1656,7 +1712,7 @@ function renderLive(){
  const L=attention().slice(0,3);
  const sys=["WMS","ERP","DMS","Sales DB"].map(n=>`<div title="Demo status"><b>${n}</b><i>Connected</i></div>`).join("");
  $("livePanel").innerHTML=`<div class="lv-tiles"><div><span>Today</span><b>${today}</b></div><div><span>Fill plan</span><b>${f1(M.sv.nat)}%</b></div><div><span>Return</span><b>${pct(M.irr)}</b></div></div>
- <h3>Live plan summary</h3>
+ <h3>Live plan summary<span class="kd out">Read-only</span></h3>
  <div><div class="lv-row"><span>National fill</span><b>86% → ${f1(M.sv.nat)}%</b></div><div class="lv-row"><span>Network days</span><b>46 → ${f1(M.sv.natDays)}</b></div><div class="lv-row"><span>Money back</span><b>${M.pb?f1(M.pb)+" mo":">60 mo"}</b></div><div class="lv-row"><span>Spend by month 9</span><b>${cr(M.cs9)}</b></div><div class="lv-row"><span>Gate 1</span>${G.p1?chip("ok","Pass"):chip("no","Miss")}</div><div class="lv-row"><span>Gate 2</span>${G.p2?chip("ok","Pass"):chip("no","Miss")}</div><div class="lv-row"><span>Budget</span>${t1&&t2&&t3?chip("ok","Within limits"):chip("no","Over a limit")}</div></div>
  <h3>Notifications</h3>
  <div class="lv-att">${L.length?L.map(([t,s,v])=>`<a href="#${v}">${esc(t)}<small>${esc(s)}</small></a>`).join(""):`<div class="lv-note">All clear. Nothing needs attention.</div>`}<div class="lv-note">WMS, ERP, DMS and Sales DB synced<small>09:00</small></div></div>

@@ -14,7 +14,17 @@ The page loads its fonts (Archivo, Public Sans, IBM Plex Mono) from Google Fonts
 
 The app is built like a small ERP: a landing page that works as a home screen, and a dashboard with a header, section tabs and a step bar.
 
-**Landing page.** Pick your team (Sales, Distributors, Plants, Brands, Finance, Flow Owner) and go straight to the screen you use. It also shows what **needs attention** right now (missed gates, a budget over a tranche limit, teams that have not sent this week's numbers, late order requests, open actions), a tickable **launch checklist** and the live plan numbers. **Open dashboard** takes you in; the DRISHTI logo takes you back, and the landing button resumes at the desk you were last on.
+**Input or dashboard?** Every page is one of three kinds, and says so in a label at the top of the page and in the step bar:
+
+| Label | Meaning | Pages |
+|---|---|---|
+| **Input** | You type or change data here | Service targets, New ways of working, Budget, Returns and risk, Timeline and gates (actuals), Weekly team inputs, Orders to plants, Team chat and actions |
+| **Dashboard** | Read-only; calculated from what teams entered | Manager dashboard, What is going wrong, and the live summary panel on the right |
+| **Guide** | A map, nothing to type | Process flow |
+
+The landing page repeats this in a **How it works** block with a link to every screen.
+
+**Landing page.** Pick your team (Sales, Distributors, Plants, Brands, Finance, Flow Owner) and go straight to the screen you use. It also shows what **needs attention** right now (missed gates, a budget over a tranche limit, teams that have not sent this week's numbers, late order requests, open actions), a tickable **launch checklist** and the live plan numbers. **Open dashboard** opens the Manager dashboard; the DRISHTI logo takes you back to the landing page.
 
 **Dashboard.** The header has four tabs: **Plan** (a six-step flow), **Weekly run** (three steps), **Manager dashboard** and **Process flow**. It also has a **Viewing as** team switcher and a notification bell that lists the same attention items.
 
