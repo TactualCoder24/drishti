@@ -345,6 +345,37 @@ a.fn:hover{background:var(--neel-soft)}
 .howl a{font-weight:600;color:var(--neel);text-decoration:none}
 .howl a:hover{text-decoration:underline}
 .howl span{color:var(--mute);font-size:13.5px}
+/* Control tower: warnings, risks, approvals, scenarios */
+.alist{display:flex;flex-direction:column;gap:10px}
+.alert{border:1px solid var(--rule);border-left:4px solid var(--rule2);border-radius:8px;padding:12px 14px;background:var(--sheet);display:flex;flex-direction:column;gap:6px}
+.alert.high{border-left-color:var(--bad)}
+.alert.med{border-left-color:var(--warn)}
+.alert.low{border-left-color:var(--mute)}
+.al-h{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:15px}
+.al-do{font-size:13.5px;color:var(--ink2)}
+.al-acts{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:2px}
+.al-acts select{width:auto}
+.chain{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.chain>div{padding:8px 10px;border:1px solid var(--rule);border-radius:8px;font-size:12.5px;line-height:1.35;background:var(--sunk);color:var(--mute)}
+.chain>div b{display:block;font-size:13px;color:var(--ink)}
+.chain>div.cur{border-color:var(--neel);background:var(--neel-soft);color:var(--neel-ink)}
+.chain>div.done{border-color:var(--good);background:var(--good-soft);color:var(--good)}
+.histl{list-style:none;margin:0;padding:0;font-size:13px;color:var(--ink2);display:flex;flex-direction:column;gap:4px}
+.feed2{display:flex;flex-direction:column}
+.feed2>div{padding:8px 0;border-bottom:1px solid var(--rule);font-size:14px}
+.feed2>div:last-child{border-bottom:none}
+.feed2 small{display:block;color:var(--mute);font-size:12.5px}
+#scTable th{white-space:normal;min-width:118px;vertical-align:bottom}
+#scTable th .cur{margin-top:4px}
+.phases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.phase{background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.phase h3{font-size:18px}
+.phase h4{margin:2px 0 0;font-size:13px;color:var(--neel);font-family:var(--f-head)}
+.phase ul{margin:0;padding-left:18px;font-size:14px;color:var(--ink2)}
+@media (max-width:1400px){.phases{grid-template-columns:minmax(0,1fr)}}
+#rkTable td select{width:auto;min-width:104px}
+#rkTable td:nth-child(2) select{min-width:140px}
+@media (max-width:1350px){.ab-brand small,.ab-scn,.ab-team span{display:none}.ab-tabs a{padding:7px 11px}}
 /* Phones: 16px fields stop iOS zoom-on-focus, 40-44px targets, two-up KPIs, swipeable board, tighter blocks */
 .hit{touch-action:pan-y}
 @media (max-width:820px){
@@ -364,8 +395,8 @@ a.fn:hover{background:var(--neel-soft)}
   .ab-top{flex-wrap:wrap;gap:10px}
   .ab-brand small,.ab-scn,.ab-team span{display:none}
   .ab-tabs{order:3;width:100%;margin-left:0}
-  .ab-tabs{flex-wrap:wrap}
-  .ab-tabs a{flex:1 1 40%;text-align:center;padding:9px 10px}
+  .ab-tabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+  .ab-tabs a{flex:none;padding:9px 14px}
   .pill{min-height:40px}
   .ab-steps{position:sticky;top:env(safe-area-inset-top,0px);z-index:20}
   .roles{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -455,6 +486,8 @@ a.fn:hover{background:var(--neel-soft)}
               <li><a href="#council">Team chat and actions</a><span>Messages and the council's action list</span></li>
               <li><a href="#service">Targets, budget and assumptions</a><span>Set service targets, move the ₹150 Cr, stress the plan</span></li>
               <li><a href="#gates">Gate actuals</a><span>Audited figures for Gate 1 and Gate 2</span></li>
+              <li><a href="#risks">Risk register</a><span>Log risks, owners and how each is handled</span></li>
+              <li><a href="#approvals">Gate approvals</a><span>Finance submits; Audit and Board verify and release</span></li>
             </ul>
           </div>
           <div class="panel howp out">
@@ -462,6 +495,8 @@ a.fn:hover{background:var(--neel-soft)}
             <ul class="howl">
               <li><a href="#manager">Manager dashboard</a><span>Requests, cannot-fill rate, gates, who has sent numbers</span></li>
               <li><a href="#diagnosis">What is going wrong</a><span>The diagnosis behind the plan</span></li>
+              <li><a href="#alerts">Early warnings</a><span>Problems spotted before they hurt, each with an owner</span></li>
+              <li><a href="#scenarios">Scenarios</a><span>What happens if we run it a different way, and when to act</span></li>
               <li><a href="#flow">Process flow</a><span>A map of how a week runs</span></li>
               <li><b>Live summary</b><span>Right side of every page: plan numbers, gates and alerts</span></li>
             </ul>
@@ -931,7 +966,67 @@ a.fn:hover{background:var(--neel-soft)}
         </div>
       </section>
 
-            <!-- MANAGER DASHBOARD -->
+            <!-- EARLY WARNINGS -->
+      <section class="view" id="v-alerts" hidden>
+        <div class="crumbs">Control tower · Early warnings</div>
+        <h1>Know before it hurts</h1>
+        <p class="lede">The system keeps checking the plan, the weekly numbers and the risk register. Each warning says why it was raised and what to do. Make it an action and the owner gets it, with a note in the council channel.</p>
+        <div style="height:22px"></div>
+        <div class="panel"><header><h2>Open warnings</h2><small id="alCount"></small></header><div class="alist" id="alList"></div></div>
+      </section>
+
+      <!-- RISK REGISTER -->
+      <section class="view" id="v-risks" hidden>
+        <div class="crumbs">Control tower · Risk register</div>
+        <h1>Name the risk, give it an owner</h1>
+        <p class="lede">Log what could go wrong, who owns it and how it will be handled. High risks that are still open show up in the early warnings.</p>
+        <div style="height:22px"></div>
+        <div class="kpis" id="rkKpis"></div>
+        <div style="height:22px"></div>
+        <div class="panel">
+          <header><h2>Risks</h2><div class="tools"><button type="button" id="rkLoad" class="ghost">Load plan risks</button></div></header>
+          <div class="tbl" id="rkTable"></div>
+        </div>
+        <div style="height:22px"></div>
+        <div class="panel">
+          <header><h2>Add a risk</h2></header>
+          <form id="rkForm" class="stack">
+            <div class="formgrid">
+              <label class="f">Owner<select id="rkOwner"></select></label>
+              <label class="f">Likelihood<select id="rkL"><option value="1">Low</option><option value="2" selected>Medium</option><option value="3">High</option></select></label>
+              <label class="f">Impact<select id="rkI"><option value="1">Low</option><option value="2" selected>Medium</option><option value="3">High</option></select></label>
+            </div>
+            <label class="f">What could go wrong<input id="rkTitle" type="text" maxlength="120" required placeholder="e.g. Plant C output is late"></label>
+            <label class="f">How we will handle it<input id="rkMit" type="text" maxlength="160" placeholder="e.g. Move the load to Plant H"></label>
+            <div class="tools"><button class="primary" type="submit">Add risk</button><span class="note" id="rkMsg"></span></div>
+          </form>
+        </div>
+      </section>
+
+      <!-- GATE APPROVALS -->
+      <section class="view" id="v-approvals" hidden>
+        <div class="crumbs">Control tower · Gate approvals</div>
+        <h1>No tranche moves without sign-off</h1>
+        <p class="lede">Each funding gate passes through three hands. Finance certifies the figures, Audit and Board verify them, and the Board releases or delays the tranche. Every step is recorded.</p>
+        <div id="aprNote" class="callout" style="margin:16px 0 0"></div>
+        <div style="height:22px"></div>
+        <div class="grid g2"><div id="apr-g1"></div><div id="apr-g2"></div></div>
+      </section>
+
+      <!-- SCENARIOS -->
+      <section class="view" id="v-scenarios" hidden>
+        <div class="crumbs">Scenarios</div>
+        <h1>If we run it this way, this is what happens</h1>
+        <p class="lede">Five ways to run the programme, side by side. Pick one to load it into the whole app, then read the phase plan for when and how to proceed.</p>
+        <div style="height:22px"></div>
+        <div class="panel"><header><h2>Compare scenarios</h2><small>plan figures, not actuals</small></header><div class="tbl" id="scTable"></div></div>
+        <div style="height:22px"></div>
+        <div class="panel"><header><h2>What to do next</h2><small>for your current settings</small></header><div id="scNext"></div></div>
+        <div style="height:22px"></div>
+        <div class="phases" id="scPhases"></div>
+      </section>
+
+      <!-- MANAGER DASHBOARD -->
       <section class="view" id="v-manager" hidden>
         <div class="crumbs">Manager dashboard</div>
         <h1>Is the week running to plan?</h1>
@@ -945,6 +1040,13 @@ a.fn:hover{background:var(--neel-soft)}
         </div>
         <div style="height:22px"></div>
         <div class="panel"><header><h2>Waiting for a decision</h2><small>open requests and cannot-fill orders</small></header><div class="tbl" id="mgTable"></div></div>
+        <div style="height:22px"></div>
+        <div class="panel"><header><h2>Team accountability</h2><small>who is doing what</small></header><div class="tbl" id="mgTeams"></div></div>
+        <div style="height:22px"></div>
+        <div class="grid g2">
+          <div class="panel"><header><h2>Top early warnings</h2><small>see Control tower</small></header><div id="mgWarn"></div></div>
+          <div class="panel"><header><h2>Latest activity</h2></header><div class="feed2" id="mgFeed"></div></div>
+        </div>
         <div style="height:22px"></div>
         <div class="grid g2">
           <div class="panel"><header><h2>Funding gates</h2><small>plan vs what is needed</small></header><div id="mgGates"></div></div>
@@ -962,6 +1064,7 @@ a.fn:hover{background:var(--neel-soft)}
           <div class="fn start">Week opens (Monday)</div><div class="fa"></div>
           <a class="fn" href="#inputs"><span class="rt">All teams</span><br>Each team enters its numbers<small>Sales forecast and bias · distributor stock · plant capacity · promotions · certified figures</small></a><div class="fa"></div>
           <a class="fn" href="#inputs"><span class="rt">System</span><br>Demand, stock and plant capacity are balanced<small>Shows demand and supply by region, and the load on each plant</small></a><div class="fa"></div>
+          <a class="fn" href="#alerts"><span class="rt">System</span><br>Early warnings are raised<small>Gaps, late orders, overloaded plants and risks. Each becomes an action with an owner</small></a><div class="fa"></div>
           <div class="fn dec">Is the net need covered?</div>
           <div class="fsplit">
             <div class="fcol"><span class="flab">Yes</span><div class="fa"></div><a class="fn" href="#orders"><span class="rt">Sales and regions</span><br>Regions raise order requests</a></div>
@@ -977,10 +1080,12 @@ a.fn:hover{background:var(--neel-soft)}
           <div class="fa"></div>
           <a class="fn" href="#orders"><span class="rt">Plants</span><br>Production, dispatch, received</a><div class="fa"></div>
           <div class="fn"><span class="rt">Finance and audit</span><br>Stock Identity Check<small>A sample of declared stock is audited each week</small></div><div class="fa"></div>
-          <a class="fn" href="#council"><span class="rt">Flow Owner</span><br>Tuesday Flow Council, 45 minutes<small>Review gaps, late orders and open actions</small></a><div class="fa"></div>
-          <a class="fn dec" href="#gates">Do the certified figures meet the gate?<small>Gate 1 at month 9, Gate 2 at month 22</small></a>
+          <a class="fn" href="#council"><span class="rt">Flow Owner</span><br>Tuesday Flow Council, 45 minutes<small>Review warnings, late orders, risks and open actions</small></a><div class="fa"></div>
+          <a class="fn" href="#approvals"><span class="rt">Finance</span><br>Certified figures are submitted for the gate</a><div class="fa"></div>
+          <a class="fn" href="#approvals"><span class="rt">Audit and Board</span><br>The figures are verified independently</a><div class="fa"></div>
+          <a class="fn dec" href="#approvals">Do the verified figures meet the gate?<small>Gate 1 at month 9, Gate 2 at month 22</small></a>
           <div class="fsplit">
-            <div class="fcol"><span class="flab">Yes</span><div class="fa"></div><div class="fn good">The next tranche is released</div></div>
+            <div class="fcol"><span class="flab">Yes</span><div class="fa"></div><div class="fn good">The Board releases the next tranche</div></div>
             <div class="fcol"><span class="flab">No</span><div class="fa"></div><div class="fn bad">The tranche is delayed; core work keeps running and the gate is re-tested</div></div>
           </div>
           <div class="fa"></div>
@@ -1007,7 +1112,7 @@ a.fn:hover{background:var(--neel-soft)}
 (function(){
 "use strict";
 /* ---------- data ---------- */
-const VIEWS=[["overview","Overview"],["diagnosis","What is going wrong"],["service","Service targets"],["opmodel","New ways of working"],["invest","Budget"],["returns","Returns and risk"],["gates","Timeline and gates"],["inputs","Weekly team inputs"],["orders","Orders to plants"],["council","Team chat and actions"],["manager","Manager dashboard"],["flow","Process flow"]];
+const VIEWS=[["overview","Overview"],["diagnosis","What is going wrong"],["service","Service targets"],["opmodel","New ways of working"],["invest","Budget"],["returns","Returns and risk"],["gates","Timeline and gates"],["inputs","Weekly team inputs"],["orders","Orders to plants"],["council","Team chat and actions"],["manager","Manager dashboard"],["flow","Process flow"],["alerts","Early warnings"],["risks","Risk register"],["approvals","Gate approvals"],["scenarios","Scenarios"]];
 const SEG={
  A:{act:"Last 3 points need A and H capacity (unfunded); 95% only on trigger",name:"Core high-volume",rev:3705,cur:86,curve:[[86,0],[92,24],[95,49],[97,88]],pp:[3.3,4.5],days:44,fg:395,max:97},
  B:{act:"Stop at 92%; 92 to 95% pays back in 3.5 years",name:"Mid and regional",rev:2021,cur:85,curve:[[85,0],[92,18],[95,41]],pp:[2.2,3.0],days:41,fg:236,max:95},
@@ -1087,7 +1192,7 @@ function delivery(alloc){
  return Math.min(1,d);
 }
 function build(over){const sc=over||{};const P=Object.assign({},S.sc,sc.sc||{});
- const sv=service(S.fill,S.days);const alloc=sc.alloc||S.alloc;const opts=sc.opts||S.opts;
+ const sv=service(sc.fill||S.fill,sc.days||S.days);const alloc=sc.alloc||S.alloc;const opts=sc.opts||S.opts;
  return{P,sv,alloc,opts,coo:sc.coo!=null?sc.coo:S.coo,shift:sc.shift||0};}
 function dayVal(P){return P.day==="network"?26.7:P.day==="cogs"?14.1:18.8;}
 /* Calibration to the submitted deck (base: IRR 86.6%, payback 29.3 mo, NPV ₹89 Cr; spend ₹32.5/84.5/131 Cr at M9/21/36; gate EBITDA ₹34.5/75.7 Cr) */
@@ -1176,8 +1281,8 @@ function lineChart(el,o){
 }
 /* ---------- nav ---------- */
 const DASH=VIEWS.filter(v=>v[0]!=="overview");
-const GROUPS=[["Plan",["diagnosis","service","opmodel","invest","returns","gates"]],["Weekly run",["inputs","orders","council"]]];
-const TABS=[["Plan","diagnosis"],["Weekly run","inputs"],["Manager dashboard","manager"],["Process flow","flow"]];
+const GROUPS=[["Plan",["diagnosis","service","opmodel","invest","returns","gates"]],["Weekly run",["inputs","orders","council"]],["Control tower",["alerts","risks","approvals"]]];
+const TABS=[["Plan","diagnosis"],["Weekly run","inputs"],["Control tower","alerts"],["Manager dashboard","manager"],["Scenarios","scenarios"],["Process flow","flow"]];
 const VN=Object.fromEntries(VIEWS);
 const KIND={
  diagnosis:["out","Dashboard","Read-only.","Explains what is going wrong. There is nothing to enter here."],
@@ -1190,7 +1295,11 @@ const KIND={
  orders:["in","Input","Requests and orders.","Raise a request, or commit and move orders along."],
  council:["in","Input","Messages and actions.","Post to a channel and add actions for the council."],
  manager:["out","Dashboard","Read-only.","Everything here is calculated from what teams entered. There is nothing to type."],
- flow:["guide","Guide","How a week runs.","A map of the weekly process. Click a box to open that screen."]
+ flow:["guide","Guide","How a week runs.","A map of the weekly process. Click a box to open that screen."],
+ alerts:["out","Dashboard","Early warnings.","Spotted before they hurt. Turn a warning into an action with an owner."],
+ risks:["in","Input","Risk register.","Log risks, owners and how each will be handled. Change the status as work progresses."],
+ approvals:["in","Input","Gate approvals.","Finance submits, Audit and Board verify and release. Every step is recorded."],
+ scenarios:["out","Dashboard","Compare scenarios.","Side-by-side results for five ways to run the programme. Pick one to load it."]
 };
 function tabOf(v){const g=GROUPS.find(([,ids])=>ids.includes(v));return g?g[0]:(TABS.find(t=>t[1]===v)||TABS[0])[0];}
 function renderNav(){
@@ -1243,7 +1352,7 @@ function renderOverview(){
 function renderManager(){
  const R=WS.req,tot=R.length,got=R.filter(r=>r.status==="received").length,short=R.filter(r=>r.status==="short").length;
  const isOpen=r=>!["received","short"].includes(r.status),late=R.filter(r=>isOpen(r)&&r.week<THISWEEK).length;
- const data=TEAMS.filter(([v])=>v!=="flow"),sent=data.filter(([v])=>inpDoc(v,THISWEEK)).length;
+ const data=DATA_TEAMS,sent=data.filter(([v])=>inpDoc(v,THISWEEK)).length;
  $("mgKpis").innerHTML=kpi("Requests",tot,"all weeks")+kpi("Received",got,"delivered to the region")+kpi("Cannot fill",short,"closed without supply")+kpi("Late",late,"open and past their week")+kpi("Teams sent numbers",sent+" of "+data.length,THISWEEK);
  const mx=Math.max(1,...COLS.map(([st])=>R.filter(r=>r.status===st).length));
  $("mgStages").innerHTML=COLS.map(([st,n])=>{const c=R.filter(r=>r.status===st).length;return `<div class="hb"><span>${n}</span><div class="bar"><span style="width:${c/mx*100}%"></span></div><b class="num">${c}</b></div>`;}).join("");
@@ -1422,7 +1531,7 @@ function renderVisibleNonService(){renderSide();
  const sv=M.sv;const uni=service({A:95,B:95,C:95,D:95,E:95},S.days);
  $("svKpis").innerHTML=kpi("National fill",f1(sv.nat)+"%","from 86%; Board asked 95%")+kpi("Network days",f1(sv.natDays),"from 46; Board asked under 35")+kpi("Cost of service",cr(sv.cost),`uniform 95% costs ${cr(uni.cost)}`)+kpi("Annual contribution",cr(sv.ann),`payback ${sv.ann>0?f1(sv.cost/sv.ann):"n/a"} years`);}
 function recalc(){recalcCore();renderAll();}
-function renderAll(){renderSide();renderOverview();renderDiagnosis();renderService();renderOpModel();renderInvest();renderReturns();renderGates();renderManager();}
+function renderAll(){renderSide();renderOverview();renderDiagnosis();renderService();renderOpModel();renderInvest();renderReturns();renderGates();renderManager();renderMgExtra();renderControl();renderScenarios();}
 /* ---------- wiring ---------- */
 [["sRec","rec"],["sReal","real"],["sDelay","delay"],["sLag","lag"],["sOver","over"],["sCap","cap"],["sHair","hair"]].forEach(([id,k])=>{$(id).addEventListener("input",e=>{S.sc[k]=+e.target.value;recalcCore();renderSide();renderReturns();});$(id).addEventListener("change",()=>recalc());});
 $("sDay").onchange=e=>{S.sc.day=e.target.value;recalc();};
@@ -1449,8 +1558,9 @@ Assumptions: recovery ${S.sc.rec}%, realisation ${(S.sc.real/100).toFixed(2)}x, 
  function fallback(){const ta=document.createElement("textarea");ta.value=txt;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();try{document.execCommand("copy");done();}catch(e){toast("Select and copy the text manually");}ta.remove();}
 };
 /* ================= WORKSPACE (saved in this browser) ================= */
-const TEAMS=[["sales","Sales and regions"],["dist","Distributors"],["plants","Plants"],["brands","Brands"],["finance","Finance"],["flow","Flow Owner"]];
+const TEAMS=[["sales","Sales and regions"],["dist","Distributors"],["plants","Plants"],["brands","Brands"],["finance","Finance"],["board","Audit and Board"],["flow","Flow Owner"]];
 const TEAMN=Object.fromEntries(TEAMS);
+const NONDATA=["flow","board"],DATA_TEAMS=TEAMS.filter(t=>!NONDATA.includes(t[0]));
 const REGS=["North","West","South","East","Central"];
 const PLANTS=[["A","Snacks"],["B","Beverages"],["C","Snacks"],["D","Personal care"],["E","Foods"],["F","Beverages"],["G","Foods"],["H","Snacks"],["I","Personal care"]];
 const SEGS=["A Core","B Mid and regional","C Premium","D Tail and launches","E Quick-commerce packs"];
@@ -1459,7 +1569,7 @@ const CHANS=[["council","Flow Council"],["plants","Sales and plants"],["dist","D
 function isoWeek(d){const t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));const day=t.getUTCDay()||7;t.setUTCDate(t.getUTCDate()+4-day);const y=t.getUTCFullYear();const w=Math.ceil(((t-Date.UTC(y,0,1))/864e5+1)/7);return y+"-W"+String(w).padStart(2,"0");}
 function addWeeks(wk,n){const[y,w]=wk.split("-W").map(Number);const jan4=new Date(Date.UTC(y,0,4));const mon=new Date(jan4);mon.setUTCDate(jan4.getUTCDate()-((jan4.getUTCDay()||7)-1)+(w-1)*7+n*7);return isoWeek(new Date(mon.getUTCFullYear(),mon.getUTCMonth(),mon.getUTCDate()));}
 const THISWEEK=isoWeek(new Date());
-const WS={db:null,user:null,uid:null,canWrite:null,ro:false,team:null,week:THISWEEK,inTeam:null,req:[],inp:{},msgs:[],acts:[],members:{},prof:{},state:"connecting",ch:"council",fReg:"",fPlant:""};
+const WS={db:null,user:null,uid:null,canWrite:null,ro:false,team:null,week:THISWEEK,inTeam:null,req:[],inp:{},msgs:[],acts:[],risks:[],apr:{},members:{},prof:{},state:"connecting",ch:"council",fReg:"",fPlant:""};
 try{WS.team=localStorage.getItem("drishti-team");}catch(e){}
 /* Local stand-in for a shared database: the same collection/doc calls, kept in this browser's localStorage (in memory if storage is blocked). */
 const LS_WS="drishti-ws-v1",LS_UID="drishti-uid";
@@ -1509,6 +1619,8 @@ async function wsInit(){
  db.collection("inputs").orderBy("at","desc").limit(300).onSnapshot(s=>{WS.inp={};s.docs.forEach(d=>WS.inp[d.id]={id:d.id,...d.data()});renderWS();resolveProfiles();},fail);
  db.collection("msgs").orderBy("at","desc").limit(400).onSnapshot(s=>{WS.msgs=s.docs.map(d=>({id:d.id,...d.data()})).reverse();renderWS();resolveProfiles();},fail);
  db.collection("acts").orderBy("at","desc").limit(300).onSnapshot(s=>{WS.acts=s.docs.map(d=>({id:d.id,...d.data()}));renderWS();resolveProfiles();},fail);
+ db.collection("risks").orderBy("at","desc").limit(200).onSnapshot(s=>{WS.risks=s.docs.map(d=>({id:d.id,...d.data()}));renderWS();},fail);
+ db.collection("approvals").orderBy("at","desc").limit(10).onSnapshot(s=>{WS.apr={};s.docs.forEach(d=>{WS.apr[d.id]={id:d.id,...d.data()};});renderWS();},fail);
  if(WS.uid)db.doc("members/"+WS.uid).onSnapshot(s=>{if(s.exists){const t=s.data().team;if(t&&t!==WS.team){WS.team=t;renderWS();}}},()=>{});
  db.doc("gates/actuals").onSnapshot(s=>{if(!s.exists)return;const d=s.data();const g1=Object.assign({fill:"",days:"",ebitda:""},d.g1||{}),g2=Object.assign({fill:"",days:"",ebitda:"",wc:""},d.g2||{});if(JSON.stringify(g1)!==JSON.stringify(S.g1)||JSON.stringify(g2)!==JSON.stringify(S.g2)){S.g1=g1;S.g2=g2;recalc();}},()=>{});
  renderWS();resolveProfiles();
@@ -1528,7 +1640,8 @@ const FIELDS={
  plants:{t:"Capacity available this week",rows:PLANTS.map(([p,c])=>["Plant "+p+" · "+c,[["cap","Capacity, k cases"],["co","Changeover h"]]]),note:"After the 72-hour freeze; 6% of each figure is held for express."},
  brands:{t:"Promotions and launches",rows:REGS.map(r=>[r,[["promo","Promo uplift, k cases"]]]),note:"Launches need a 12-week supply sign-off before they enter the plan."},
  finance:{t:"Latest certified figures",rows:[["National",[["fill","Fill %"],["days","Inventory days"],["ebitda","EBITDA run-rate ₹ Cr"],["wc","WC release ₹ Cr"]]]],note:"These are the audited numbers. Send them to a gate below."},
- flow:{t:"Flow Owner decisions",rows:[],note:"Allocation calls and exceptions for the council."}
+ flow:{t:"Flow Owner decisions",rows:[],note:"Allocation calls and exceptions for the council."},
+ board:{t:"Audit and Board notes",rows:[],note:"Verification notes and sample results for the gates."}
 };
 function key(row){return row.replace(/[^A-Za-z]/g,"").slice(0,7);}
 function inpDoc(team,wk){return WS.inp[wk+"_"+team];}
@@ -1559,7 +1672,7 @@ $("wkNext").onclick=()=>{WS.week=addWeeks(WS.week,1);$("inForm").dataset.k="";re
 function num(d,k){const v=d&&d.v&&d.v[k];return typeof v==="number"?v:null;}
 function renderBalance(){
  const wk=WS.week,S1=inpDoc("sales",wk),D1=inpDoc("dist",wk),P1=inpDoc("plants",wk),B1=inpDoc("brands",wk);
- $("inStatus").innerHTML=`<div class="tbl"><table><tbody>`+TEAMS.map(([v,n])=>{const d=inpDoc(v,wk);return `<tr><td>${n}</td><td>${d?chip("ok","In")+(d.example?" "+chip("nt","Example"):""):chip("wn","Missing")}</td><td class="note">${d?esc(pname(d.by))+", "+ago(d.at):""}</td></tr>`;}).join("")+`</tbody></table></div>`;
+ $("inStatus").innerHTML=`<div class="tbl"><table><tbody>`+DATA_TEAMS.map(([v,n])=>{const d=inpDoc(v,wk);return `<tr><td>${n}</td><td>${d?chip("ok","In")+(d.example?" "+chip("nt","Example"):""):chip("wn","Missing")}</td><td class="note">${d?esc(pname(d.by))+", "+ago(d.at):""}</td></tr>`;}).join("")+`</tbody></table></div>`;
  const open=WS.req.filter(r=>r.week===wk&&!["received","short"].includes(r.status));
  let tot={dem:0,adj:0,st:0,req:0,com:0};
  const rows=REGS.map(r=>{const k=key(r);const fc=num(S1,k+".fc"),bias=num(S1,k+".bias")||0,pr=num(B1,k+".promo")||0,st=num(D1,k+".stock");
@@ -1584,9 +1697,9 @@ function fillSelects(){
 }
 $("fReg").onchange=e=>{WS.fReg=e.target.value;renderOrders();};$("fPlant").onchange=e=>{WS.fPlant=e.target.value;renderOrders();};
 $("rqForm").addEventListener("submit",async e=>{e.preventDefault();const qty=+$("rqQty").value,sku=$("rqSku").value.trim();if(!(qty>0)||!sku){$("rqMsg").textContent="Enter a quantity above zero and a SKU.";return;}
- const body={region:$("rqRegion").value,channel:$("rqChan").value,seg:$("rqSeg").value,sku,qty,week:$("rqWeek").value,plant:$("rqPlant").value,express:$("rqExp").checked,status:"requested",commitQty:0,shipWeek:"",by:WS.uid||"",team:WS.team||"",at:Date.now(),hist:[{s:"requested",by:WS.uid||"",at:Date.now()}]};
+ const body={region:$("rqRegion").value,channel:$("rqChan").value,seg:$("rqSeg").value,sku,qty,week:$("rqWeek").value,plant:$("rqPlant").value,express:$("rqExp").checked,status:"requested",commitQty:0,shipWeek:"",by:WS.uid||"",team:WS.team||"",at:Date.now(),hist:[{s:"requested",team:WS.team||"",by:WS.uid||"",at:Date.now()}]};
  const ok=await wsWrite(()=>WS.db.collection("requests").add(body),$("rqMsg"));if(ok){$("rqQty").value="";$("rqSku").value="";$("rqExp").checked=false;$("rqMsg").textContent="";toast("Request raised");}});
-async function moveReq(r,patch,label){const hist=(r.hist||[]).slice(-19).concat([{s:patch.status||r.status,by:WS.uid||"",at:Date.now(),note:patch.note||""}]);delete patch.note;
+async function moveReq(r,patch,label){const hist=(r.hist||[]).slice(-19).concat([{s:patch.status||r.status,team:WS.team||"",by:WS.uid||"",at:Date.now(),note:patch.note||""}]);delete patch.note;
  const ok=await wsWrite(()=>WS.db.doc("requests/"+r.id).update({...patch,hist}));if(ok)toast(label);}
 function renderOrders(){
  const list=WS.req.filter(r=>(!WS.fReg||r.region===WS.fReg)&&(!WS.fPlant||r.plant===WS.fPlant));const dis=(!WS.db||WS.ro||!canAct())?"disabled":"";roleNote();
@@ -1654,13 +1767,13 @@ $("exLoad").onclick=async()=>{if(!WS.db||WS.ro){toast("The workspace is still st
  const acts=[["Split West chips request between Plants C and H","plants","Wed"],["Audit 10 North distributors for Stock Identity Check","dist","Thu"],["Send launch sign-off pack for herbal sachet","brands","Fri"]];
  const ok=await wsWrite(async()=>{
   for(const [t,v] of Object.entries(inputs))await WS.db.doc("inputs/"+wk+"_"+t).set({team:t,week:wk,v,notes:"Example figures for a walkthrough.",...ex});
-  for(const r of reqs)await WS.db.collection("requests").add({...r,team:"",hist:[{s:r.status,by,at:now}],...ex});
+  for(const r of reqs)await WS.db.collection("requests").add({...r,team:"sales",hist:[{s:"requested",team:"sales",by,at:now}].concat(r.status==="requested"?[]:[{s:r.status,team:"plants",by,at:now}]),...ex});
   for(const [c,t,tm] of msgs)await WS.db.collection("msgs").add({ch:c,text:t,team:tm,...ex,at:Date.now()});
   for(const [t,tm,d] of acts)await WS.db.collection("acts").add({text:t,team:tm,day:d,week:wk,done:false,...ex});
  });if(ok)toast("Example week loaded");};
 $("exClear").onclick=async()=>{if(!WS.db||WS.ro)return;const docs=[...WS.req.filter(r=>r.example).map(r=>"requests/"+r.id),...Object.values(WS.inp).filter(i=>i.example).map(i=>"inputs/"+i.id),...WS.msgs.filter(m=>m.example).map(m=>"msgs/"+m.id),...WS.acts.filter(a=>a.example).map(a=>"acts/"+a.id)];
  if(!docs.length){toast("No examples to clear");return;}const ok=await wsWrite(async()=>{for(const p of docs)await WS.db.doc(p).delete();});if(ok)toast("Cleared "+docs.length+" example entries");};
-function renderWS(){renderWho();renderInputs();renderBalance();renderOrders();renderCouncil();renderRoles();renderManager();renderAttention();}
+function renderWS(){renderWho();renderInputs();renderBalance();renderOrders();renderCouncil();renderRoles();renderManager();renderMgExtra();renderControl();renderAttention();}
 /* ---------- landing hero ---------- */
 function renderHero(){
  $("hcFill").textContent="86% → "+f1(M.sv.nat)+"%";$("hcFillBar").style.width=Math.max(0,Math.min(100,(M.sv.nat-80)/20*100))+"%";
@@ -1674,26 +1787,13 @@ const ROLES=[
  ["dist","Distributors","Declare the stock you hold each week.","inputs"],
  ["plants","Plants","Enter capacity, then commit quantity and a ship week on the orders board.","orders"],
  ["brands","Brands","Share promotions and launches before they enter the plan.","inputs"],
- ["finance","Finance and audit","Enter certified figures and send them to the funding gates.","inputs"],
+ ["finance","Finance","Enter certified figures and submit them for the funding gates.","inputs"],
+ ["board","Audit and Board","Verify the certified figures, then release or delay each funding tranche.","approvals"],
  ["flow","Flow Owner and leadership","Set targets, move the budget, track the gates and run Tuesday's council.","service"]
 ];
 function renderHdr(){const s=$("hdrTeam");if(!s.options.length){s.innerHTML=`<option value="">Choose your team</option>`+TEAMS.map(([v,n])=>`<option value="${v}">${n}</option>`).join("");s.onchange=e=>setTeam(e.target.value);}s.value=WS.team||"";}
 function renderRoles(){$("roles").innerHTML=ROLES.map(([v,n,d,to])=>`<a class="role ${WS.team===v?"on":""}" href="#${to}" data-team="${v}"><b>${n}</b><span>${d}</span><i>${WS.team===v?"Your team · open":"Open"}</i></a>`).join("");}
-function attention(){
- const L=[];
- if(!G.p1)L.push(["Gate 1 is missed in this scenario","Tranche 2 slips by two quarters","gates"]);
- if(!G.p2)L.push(["Gate 2 is missed in this scenario","Tranche 3 lapses","gates"]);
- if(!(M.cs9<=34+1e-6&&M.cs21<=92+1e-6&&M.cs36<=150+1e-6))L.push(["Spend is over a tranche limit","Review the budget","invest"]);
- if(WS.state==="on"){
-  const data=TEAMS.filter(([v])=>v!=="flow"),miss=data.filter(([v])=>!inpDoc(v,THISWEEK)).length;
-  if(miss)L.push([miss+" of "+data.length+" teams have not sent this week's numbers","Weekly team inputs, "+THISWEEK,"inputs"]);
-  const late=WS.req.filter(r=>r.week<THISWEEK&&!["received","short"].includes(r.status)).length;
-  if(late)L.push([late+(late>1?" order requests are late":" order request is late"),"Open the orders board","orders"]);
-  const open=WS.acts.filter(a=>a.week===THISWEEK&&!a.done).length;
-  if(open)L.push([open+(open>1?" actions are open":" action is open")+" this week","Tuesday's council list","council"]);
- }
- return L;
-}
+function attention(){return alerts().filter(a=>a.sev!=="low").map(a=>[a.title,a.why,a.view]);}
 function renderAttention(){
  const L=attention();
  $("bellN").textContent=L.length;$("bellN").hidden=!L.length;
@@ -1718,9 +1818,16 @@ function renderLive(){
  <div class="lv-att">${L.length?L.map(([t,s,v])=>`<a href="#${v}">${esc(t)}<small>${esc(s)}</small></a>`).join(""):`<div class="lv-note">All clear. Nothing needs attention.</div>`}<div class="lv-note">WMS, ERP, DMS and Sales DB synced<small>09:00</small></div></div>
  <div class="lv-sys">${sys}</div>`;
 }
-function plainPlan(){S.fill={...OURS.fill};S.days={...OURS.days};S.sc=clone(DEF.sc);S.alloc=clone(DEF.alloc);S.opts={};S.coo=false;}
-const SCN={rec:["Recommended plan",()=>{}],board:["Board's uniform 95%",()=>{S.fill={A:95,B:95,C:95,D:95,E:95};}],stress:["Stress case",()=>{S.sc={...S.sc,rec:25,real:70,delay:6,over:20};}]};
-$("scnChips").addEventListener("click",e=>{const b=e.target.closest("[data-scn]");if(!b)return;const k=b.dataset.scn;plainPlan();SCN[k][1]();recalc();toast("Loaded: "+SCN[k][0]);});
+const SCENARIOS=[
+ ["rec","A","Recommended plan",{}],
+ ["board","B","Board's uniform 95%",{fill:{A:95,B:95,C:95,D:95,E:95}}],
+ ["stress","C","Stress case",{sc:{rec:25,real:70,delay:6,over:20}}],
+ ["late","D","Benefits 6 months late",{sc:{delay:6}}],
+ ["snacks","E","Add snacks capacity (₹30 Cr)",{opts:{ah:true}}]
+];
+function scnState(p){return{fill:p.fill?{...p.fill}:{...OURS.fill},days:{...OURS.days},sc:{...DEF.sc,...(p.sc||{})},alloc:clone(DEF.alloc),opts:{...(p.opts||{})},coo:false};}
+function loadScenario(k){const s=SCENARIOS.find(x=>x[0]===k);Object.assign(S,scnState(s[3]));recalc();toast("Loaded: "+s[2]);}
+$("scnChips").addEventListener("click",e=>{const b=e.target.closest("[data-scn]");if(b)loadScenario(b.dataset.scn);});
 const ACT_ROLES=["plants","flow"];
 function canAct(){return !WS.team||ACT_ROLES.includes(WS.team);}
 function roleNote(){
@@ -1728,6 +1835,186 @@ function roleNote(){
  el.className="callout"+(WS.team&&!canAct()?" warn":"");
  el.innerHTML=!WS.team?"Choose your team at the top to see what you can do here. Until then you can do everything.":canAct()?`Viewing as <b>${esc(n)}</b>. You can commit quantity, move orders along and mark them cannot fill.`:`Viewing as <b>${esc(n)}</b>. You can raise requests and discuss them. Switch to <b>Plants</b> or <b>Flow Owner</b> to commit and move orders.`;
 }
+/* ---------- control tower: early warnings, risks, gate approvals, accountability, scenarios ---------- */
+const DAYS=["Mon","Tue","Wed","Thu","Fri"];
+const todayIdx=()=>(new Date().getDay()+6)%7;
+const isOverdue=a=>!a.done&&(a.week<THISWEEK||(a.week===THISWEEK&&DAYS.indexOf(a.day)<todayIdx()));
+const LVLS=[["1","Low"],["2","Medium"],["3","High"]];
+const RSTAT=[["open","Open"],["mitigating","Mitigating"],["closed","Closed"]];
+const rScore=r=>(+r.l||1)*(+r.i||1);
+const rLevel=s=>s>=6?"High":s>=3?"Medium":"Low";
+const lvName=v=>(LVLS.find(x=>x[0]===String(v))||["","?"])[1];
+const sevChip=s=>s==="high"?chip("no","High"):s==="med"?chip("wn","Medium"):chip("nt","Low");
+const APR_STAGE={draft:["nt","Not submitted"],submitted:["wn","Waiting for verification"],verified:["ok","Verified, waiting for the Board"],released:["ok","Tranche released"],delayed:["no","Tranche delayed"],rejected:["no","Sent back to Finance"]};
+function alerts(){
+ const L=[],add=(id,sev,title,why,view,act,team)=>L.push({id,sev,title,why,view,act,team:team||"flow"});
+ const tight=rows=>rows.map(r=>({r,h:(r[2]==="≥"?r[1].v-r[3]:r[3]-r[1].v)/r[3]})).sort((a,b)=>a.h-b.h)[0];
+ [["g1","Gate 1",G.g1,G.p1],["g2","Gate 2",G.g2,G.p2]].forEach(([k,n,rows,p])=>{const t=tight(rows);
+  if(!p)add(k+"-miss","high",n+" is missed in this scenario",`${t.r[0]} falls short: ${fmtK(t.r[1].v,t.r[4])} against ${t.r[2]} ${t.r[3]}`,"gates",k==="g1"?"Keep the Flow Contract, Heartbeat and Plant C running; hold replenishment waves and master data until the gate is re-tested.":"Fund the tail from run-rate benefit, withhold the 30% vendor retention and drop the extension decision.","flow");
+  else if(t.h<.05)add(k+"-tight","med",n+" has little headroom",`${t.r[0]} clears its limit by only ${f1(t.h*100)}%`,"gates","Watch this measure weekly and agree a recovery step before the gate month.","flow");});
+ if(M.irr!=null&&M.irr<.18)add("irr","high","Return is below the 18% hurdle","5-year IRR is "+pct(M.irr),"returns","Review the assumptions and the budget.","finance");
+ if(M.pb==null||M.pb>30)add("payback","high","Payback is beyond 30 months",M.pb?"Money is back in "+f1(M.pb)+" months":"Money is not back within 60 months","returns","Move spend later or drop options that pay back slowly.","finance");
+ if(!(M.cs9<=34+1e-6&&M.cs21<=92+1e-6&&M.cs36<=150+1e-6))add("budget","high","Spend is over a tranche limit",`Month 9 ${cr(M.cs9)} of ₹34 Cr; month 21 ${cr(M.cs21)} of ₹92 Cr; month 36 ${cr(M.cs36)} of ₹150 Cr`,"invest","Re-phase spend or drop an option so each tranche is respected.","finance");
+ if(S.sc.rec<37||S.sc.real<85)add("stoploss","high","Stop-loss would trigger at month 12",`Recovery ${S.sc.rec}% (needs 37%) and realisation ${(S.sc.real/100).toFixed(2)}× (needs 0.85×)`,"returns","Freeze replenishment waves 2 and 3 and the data tail (about ₹53 Cr) until the case is re-tested.","flow");
+ if(WS.state==="on"){
+  const wk=THISWEEK,R=WS.req,open=r=>!["received","short"].includes(r.status);
+  const miss=DATA_TEAMS.filter(([v])=>!inpDoc(v,wk));
+  if(miss.length)add("teams-missing",todayIdx()>=1?"high":"med",`${miss.length} of ${DATA_TEAMS.length} teams have not sent this week's numbers`,miss.map(t=>t[1]).join(", "),"inputs","Chase the missing numbers before Tuesday's council.","flow");
+  const late=R.filter(r=>open(r)&&r.week<wk);
+  if(late.length)add("late","high",late.length+(late.length>1?" order requests are late":" order request is late"),late.slice(0,4).map(r=>code(r.id)).join(", "),"orders","Commit a plant and ship week, or mark each one cannot fill with a reason.","plants");
+  const due=R.filter(r=>r.week===wk&&r.status==="requested");
+  if(due.length)add("due","med",due.length+(due.length>1?" requests due this week still wait for a plant":" request due this week still waits for a plant"),due.slice(0,4).map(r=>code(r.id)).join(", "),"orders","Plants commit quantity and a ship week today.","plants");
+  const P1=inpDoc("plants",wk);
+  PLANTS.forEach(([p,c])=>{const cap=num(P1,key("Plant "+p+" · "+c)+".cap");if(!cap)return;
+   const com=R.filter(x=>x.plant===p&&x.shipWeek===wk&&["committed","production","dispatched","received"].includes(x.status)).reduce((a,x)=>a+(+x.commitQty||0),0),u=com/cap;
+   if(u>1)add("plant-"+p,"high","Plant "+p+" is over capacity",`${f0(u*100)}% loaded this week (${f1(com)} of ${f1(cap)}k cases)`,"orders","Move part of the load to another plant or defer lower-priority requests.","plants");
+   else if(u>.92)add("plant-"+p,"med","Plant "+p+" is nearly full",f0(u*100)+"% loaded this week","orders","Route new requests to a plant with room.","plants");
+   const used=R.filter(x=>x.plant===p&&x.express&&x.shipWeek===wk&&x.status!=="short").reduce((a,x)=>a+(+x.commitQty||0),0);
+   if(used>cap*.06)add("express-"+p,"med","Express slot at Plant "+p+" is over",`${f1(used)}k cases against a ${f1(cap*.06)}k slot`,"orders","The Flow Owner decides which express requests keep the slot.","flow");});
+  const S1=inpDoc("sales",wk),D1=inpDoc("dist",wk),B1=inpDoc("brands",wk);
+  REGS.forEach(r=>{const k=key(r),fc=num(S1,k+".fc"),bias=num(S1,k+".bias")||0,pr=num(B1,k+".promo")||0,st=num(D1,k+".stock");if(fc==null||st==null)return;
+   const need=Math.max(0,(fc+pr)/(1+bias/100)-st);if(need<=0)return;
+   const cm=R.filter(x=>x.region===r&&x.week===wk&&open(x)&&x.status!=="requested").reduce((a,x)=>a+(+x.commitQty||+x.qty||0),0),cov=cm/need;
+   if(cov<.85)add("cover-"+r,cov<.5?"high":"med",r+" is only "+f0(cov*100)+"% covered",`Net need ${f1(need)}k cases, committed ${f1(cm)}k`,"orders","Raise and commit requests for the gap, or agree what will not be supplied.","sales");});
+  const od=WS.acts.filter(isOverdue);
+  if(od.length)add("actions-overdue","high",od.length+(od.length>1?" actions are overdue":" action is overdue"),[...new Set(od.map(a=>TEAMN[a.team]||"No owner"))].join(", "),"council","Close each action or agree a new date at the council.","flow");
+  const tot=R.length,short=R.filter(r=>r.status==="short").length,lim=(100-M.sv.nat)/100;
+  if(tot>=3&&short/tot>lim)add("cannot-fill","med","Cannot-fill rate is above the plan limit",`${f1(short/tot*100)}% against a limit of ${f1(lim*100)}%`,"manager","Review the shortfalls on the Manager dashboard and agree supply or substitutes.","flow");
+  WS.risks.filter(r=>r.status!=="closed"&&rScore(r)>=6).forEach(r=>add("risk-"+r.id,r.status==="mitigating"?"low":"med","High risk: "+r.title,`${lvName(r.l)} likelihood, ${lvName(r.i)} impact · ${TEAMN[r.owner]||"no owner"} · ${r.status==="mitigating"?"mitigation under way":"not yet being handled"}`,"risks",r.mitigation||"Agree a mitigation and an owner.",r.owner||"flow"));
+  ["g1","g2"].forEach(g=>{const d=WS.apr[g];if(!d)return;const n=g==="g1"?"Gate 1":"Gate 2";
+   if(d.stage==="submitted")add("apr-"+g+"-ver","med",n+" figures wait for verification","Submitted by Finance","approvals","Audit and Board verify the figures or send them back.","board");
+   if(d.stage==="verified")add("apr-"+g+"-rel","med",n+" is verified and waits for the Board","Verified by Audit and Board","approvals","Release or delay the tranche.","board");
+   if(d.stage==="rejected")add("apr-"+g+"-rej","med",n+" figures were sent back","Finance has to correct and re-submit","approvals","Correct the figures and submit again.","finance");});
+ }
+ return L.sort((a,b)=>["high","med","low"].indexOf(a.sev)-["high","med","low"].indexOf(b.sev));
+}
+async function makeAction(id,team,day){
+ const al=alerts().find(a=>a.id===id);if(!al)return;
+ const ok=await wsWrite(async()=>{
+  await WS.db.collection("acts").add({text:al.title+": "+al.act,team,day,week:THISWEEK,done:false,by:WS.uid||"",at:Date.now(),ref:id});
+  await WS.db.collection("msgs").add({ch:"council",text:"Early warning to action. "+al.title+". Owner: "+TEAMN[team]+", due "+day+".",by:WS.uid||"",team:WS.team||"",at:Date.now()});
+ });
+ if(ok)toast("Action assigned to "+TEAMN[team]);
+}
+function renderAlerts(){
+ const box=$("alList");if(box.contains(document.activeElement))return;
+ const L=alerts(),dflt=DAYS[Math.min(4,todayIdx()+1)];
+ $("alCount").textContent=L.length?L.length+" open":"All clear";
+ box.innerHTML=L.length?L.map(a=>{
+  const ex=WS.acts.find(x=>x.ref===a.id&&!x.done);
+  const tail=ex?chip("ok","Action: "+(TEAMN[ex.team]||"?")+", due "+ex.day):`<select data-o="${a.id}" aria-label="Owner team">${TEAMS.map(([v,n])=>`<option value="${v}" ${v===a.team?"selected":""}>${n}</option>`).join("")}</select><select data-d="${a.id}" aria-label="Due day">${DAYS.map(d=>`<option ${d===dflt?"selected":""}>${d}</option>`).join("")}</select><button type="button" class="primary" data-mk="${a.id}" ${WS.ro?"disabled":""}>Make it an action</button>`;
+  return `<div class="alert ${a.sev}"><div class="al-h">${sevChip(a.sev)}<b>${esc(a.title)}</b></div><div class="note">${esc(a.why)}</div><div class="al-do"><b>Do:</b> ${esc(a.act)}</div><div class="al-acts">${tail}<a href="#${a.view}">Open the screen</a></div></div>`;}).join(""):`<div class="empty">No warnings. Everything is inside its limits.</div>`;
+}
+$("alList").addEventListener("click",e=>{const b=e.target.closest("[data-mk]");if(!b)return;const id=b.dataset.mk,box=$("alList");makeAction(id,box.querySelector('[data-o="'+id+'"]').value,box.querySelector('[data-d="'+id+'"]').value);});
+/* ---- risk register ---- */
+const PLAN_RISKS=[
+ ["Distributors push back on the Flow Contract","₹9 Cr margin guarantee; 2-region pilot before scaling","sales",2,3],
+ ["Pilot C gains fade without the 14-person team","Stepped-wedge rollout gives a built-in control group","flow",2,2],
+ ["Disputes over baselines at audit","Day-0 measurement charter signed before work starts","finance",1,3],
+ ["Plants A, C and H run above 89% utilisation","Plant C output from month 8; trigger the A and H decision at month 12","plants",2,2],
+ ["Quick-commerce SKUs at risk of stock-outs","Fast lane for the 11 at-risk SKUs first (₹31 Cr revenue)","brands",2,2]
+];
+function renderRisks(){
+ const dis=WS.ro?"disabled":"";
+ if(!$("rkOwner").options.length)$("rkOwner").innerHTML=TEAMS.map(([v,n])=>`<option value="${v}">${n}</option>`).join("");
+ const R=WS.risks,openR=R.filter(r=>r.status!=="closed");
+ $("rkKpis").innerHTML=kpi("Open risks",openR.length,R.length+" logged")+kpi("High",openR.filter(r=>rScore(r)>=6).length,"likelihood × impact 6 or more")+kpi("Medium",openR.filter(r=>rScore(r)>=3&&rScore(r)<6).length,"score 3 to 5")+kpi("Being handled",R.filter(r=>r.status==="mitigating").length,"mitigation under way")+kpi("Closed",R.filter(r=>r.status==="closed").length,"resolved");
+ const t=$("rkTable");if(t.contains(document.activeElement))return;
+ const sel=(id,f,opts,v)=>`<select data-id="${id}" data-f="${f}" aria-label="${f}" ${dis}>${opts.map(([o,n])=>`<option value="${o}" ${String(v)===String(o)?"selected":""}>${n}</option>`).join("")}</select>`;
+ const rows=[...R].sort((a,b)=>(a.status==="closed")-(b.status==="closed")||rScore(b)-rScore(a));
+ t.innerHTML=rows.length?`<table><thead><tr><th>Risk</th><th>Owner</th><th>Likelihood</th><th>Impact</th><th>Level</th><th>Status</th><th></th></tr></thead><tbody>`+rows.map(r=>{const lv=rLevel(rScore(r));return `<tr><td><b>${esc(r.title)}</b>${r.mitigation?`<div class="note">${esc(r.mitigation)}</div>`:""}</td><td>${sel(r.id,"owner",TEAMS,r.owner)}</td><td>${sel(r.id,"l",LVLS,r.l)}</td><td>${sel(r.id,"i",LVLS,r.i)}</td><td>${chip(lv==="High"?"no":lv==="Medium"?"wn":"ok",lv)}</td><td>${sel(r.id,"status",RSTAT,r.status)}</td><td><button type="button" class="ghost" data-del="${r.id}" aria-label="Delete risk" ${dis}>×</button></td></tr>`;}).join("")+`</tbody></table>`:`<div class="empty">No risks logged yet. Add one below, or load the risks already named in the plan.</div>`;
+}
+$("rkTable").addEventListener("change",e=>{const el=e.target.closest("select[data-f]");if(!el)return;wsWrite(()=>WS.db.doc("risks/"+el.dataset.id).update({[el.dataset.f]:el.value,at:Date.now()}));});
+$("rkTable").addEventListener("click",e=>{const b=e.target.closest("[data-del]");if(!b)return;if(b.dataset.sure!=="1"){b.dataset.sure="1";b.textContent="Sure?";return;}wsWrite(()=>WS.db.doc("risks/"+b.dataset.del).delete()).then(ok=>ok&&toast("Risk deleted"));});
+$("rkForm").addEventListener("submit",async e=>{e.preventDefault();const title=$("rkTitle").value.trim();if(!title)return;
+ const ok=await wsWrite(()=>WS.db.collection("risks").add({title,mitigation:$("rkMit").value.trim(),owner:$("rkOwner").value,l:$("rkL").value,i:$("rkI").value,status:"open",by:WS.uid||"",at:Date.now()}),$("rkMsg"));
+ if(ok){$("rkTitle").value="";$("rkMit").value="";$("rkMsg").textContent="";toast("Risk added");}});
+$("rkLoad").onclick=async()=>{const have=new Set(WS.risks.map(r=>r.title));const add=PLAN_RISKS.filter(r=>!have.has(r[0]));if(!add.length){toast("The plan risks are already in the register");return;}
+ const ok=await wsWrite(async()=>{for(const [title,mitigation,owner,l,i] of add)await WS.db.collection("risks").add({title,mitigation,owner,l:String(l),i:String(i),status:"open",source:"plan",by:WS.uid||"",at:Date.now()});});if(ok)toast("Loaded "+add.length+" plan risks");};
+/* ---- gate approvals ---- */
+function aprDoc(g){return WS.apr[g]||{stage:"draft",hist:[]};}
+function aprMay(role){return !WS.team||WS.team===role;}
+async function aprAct(g,to,note){
+ const {id,...d}=aprDoc(g),rows=g==="g1"?G.g1:G.g2;
+ const data={...d,stage:to,at:Date.now(),hist:(d.hist||[]).slice(-19).concat([{s:to,team:WS.team||"",by:WS.uid||"",at:Date.now(),note:note||""}])};
+ if(to==="submitted")data.snap={pass:g==="g1"?G.p1:G.p2,rows:rows.map(r=>({m:r[0],v:r[1].v,src:r[1].src,op:r[2],lim:r[3],u:r[4]})),at:Date.now()};
+ const ok=await wsWrite(()=>WS.db.doc("approvals/"+g).set(data));if(ok)toast((g==="g1"?"Gate 1: ":"Gate 2: ")+APR_STAGE[to][1]);
+}
+function renderApprovals(){
+ const n=$("aprNote"),tm=WS.team;
+ n.className="callout"+(tm&&tm!=="finance"&&tm!=="board"?" warn":"");
+ n.innerHTML=!tm?"Choose your team at the top. Finance submits the figures; Audit and Board verify and release. Until you choose, you can do every step.":tm==="finance"?"Viewing as <b>Finance</b>. You can submit certified figures, and re-submit after a send-back.":tm==="board"?"Viewing as <b>Audit and Board</b>. You can verify, send back, release or delay a tranche.":`Viewing as <b>${esc(TEAMN[tm])}</b>. You can follow each gate here. Switch to Finance to submit, or Audit and Board to approve.`;
+ ["g1","g2"].forEach(g=>{
+  const box=$("apr-"+g);if(box.contains(document.activeElement))return;
+  const d=aprDoc(g),st=d.stage||"draft",name=g==="g1"?"Gate 1 · Month 9":"Gate 2 · Month 22";
+  const live=(g==="g1"?G.g1:G.g2).map(r=>({m:r[0],v:r[1].v,src:r[1].src,op:r[2],lim:r[3],u:r[4]}));
+  const rows=(st==="draft"||st==="rejected"||!d.snap)?live:d.snap.rows;
+  const ok=r=>r.op==="≥"?r.v>=r.lim-1e-9:r.v<=r.lim+1e-9,allPass=rows.every(ok);
+  const at={draft:0,rejected:0,submitted:1,verified:2,released:3,delayed:3}[st];
+  const cls=i=>i<at?"done":i===at?"cur":"";
+  const chain=`<div class="chain"><div class="${cls(0)}"><b>1 Finance certifies</b>Submits the figures</div><div class="${cls(1)}"><b>2 Audit and Board verify</b>Check independently</div><div class="${cls(2)}"><b>3 Board decides</b>Release or delay</div></div>`;
+  const may=role=>(aprMay(role)&&!WS.ro)?"":"disabled";
+  const B=(to,label,role,pr)=>`<button type="button" ${pr?'class="primary"':""} data-g="${g}" data-to="${to}" ${may(role)}>${label}</button>`;
+  let btns="";
+  if(st==="draft"||st==="rejected")btns=B("submitted","Submit certified figures","finance",1);
+  else if(st==="submitted")btns=B("verified","Verify figures","board",1)+B("rejected","Send back","board");
+  else if(st==="verified")btns=(allPass?B("released","Release tranche","board",1):B("delayed","Delay tranche","board",1))+B("rejected","Send back","board");
+  else btns=B("draft","Reopen this gate","board");
+  const hist=(d.hist||[]).slice(-5).reverse().map(h=>`<li>${chip((APR_STAGE[h.s]||["nt"])[0],(APR_STAGE[h.s]||[0,h.s])[1])} ${esc(TEAMN[h.team]||"Someone")} · ${ago(h.at)}${h.note?" · "+esc(h.note):""}</li>`).join("");
+  box.innerHTML=`<div class="panel"><header><h2>${name}</h2>${chip(APR_STAGE[st][0],APR_STAGE[st][1])}</header>${chain}
+   <div class="tbl"><table><thead><tr><th>Measure</th><th class="n">Need</th><th class="n">${st==="draft"||st==="rejected"||!d.snap?"Live":"As submitted"}</th><th></th></tr></thead><tbody>${rows.map(r=>`<tr><td>${esc(r.m)}</td><td class="n">${r.op} ${r.u==="cr"?"₹":""}${r.lim}${r.u==="%"?"%":""}</td><td class="n">${fmtK(r.v,r.u)}${r.src==="actual"?" <span class='note'>actual</span>":""}</td><td>${ok(r)?chip("ok","Pass"):chip("no","Miss")}</td></tr>`).join("")}</tbody></table></div>
+   ${st==="verified"&&!allPass?`<div class="callout bad">The submitted figures miss the gate, so the tranche can only be delayed.</div>`:""}
+   <label class="f">Note<input type="text" id="apr-note-${g}" maxlength="140" placeholder="Required when you send figures back"></label>
+   <div class="tools">${btns}</div>
+   ${hist?`<ul class="histl">${hist}</ul>`:`<p class="note">No steps recorded yet.</p>`}</div>`;
+ });
+}
+$("v-approvals").addEventListener("click",e=>{const b=e.target.closest("button[data-g]");if(!b||b.disabled)return;const g=b.dataset.g,to=b.dataset.to,note=($("apr-note-"+g).value||"").trim();
+ if(to==="rejected"&&!note){toast("Add a note so Finance knows what to fix");return;}aprAct(g,to,note);});
+/* ---- manager dashboard: accountability and activity ---- */
+function renderMgExtra(){
+ const W=alerts().slice(0,4);
+ $("mgWarn").innerHTML=W.length?`<div class="alist">${W.map(a=>`<a class="att" href="#alerts">${sevChip(a.sev)} ${esc(a.title)}<small>${esc(a.why)}</small></a>`).join("")}</div>`:`<div class="empty">No warnings right now.</div>`;
+ const rows=TEAMS.map(([v,n])=>{
+  const sent=NONDATA.includes(v)?null:!!inpDoc(v,THISWEEK);
+  const raised=WS.req.filter(r=>r.team===v).length;
+  const moved=WS.req.reduce((a,r)=>a+(r.hist||[]).filter(h=>h.team===v&&h.s!=="requested").length,0);
+  const mine=WS.acts.filter(a=>a.team===v),dn=mine.filter(a=>a.done).length,od=mine.filter(isOverdue).length;
+  const msgs=WS.msgs.filter(m=>m.team===v).length;
+  return `<tr><td>${n}</td><td>${sent==null?"–":sent?chip("ok","Sent"):chip("wn","Missing")}</td><td class="n">${raised}</td><td class="n">${moved}</td><td>${mine.length?dn+" of "+mine.length+`<div class="bar" style="margin-top:4px;width:90px"><span style="width:${dn/mine.length*100}%"></span></div>`:"–"}</td><td class="n">${od?chip("no",String(od)):"0"}</td><td class="n">${msgs}</td></tr>`;}).join("");
+ $("mgTeams").innerHTML=`<table><thead><tr><th>Team</th><th>This week's numbers</th><th class="n">Requests raised</th><th class="n">Order moves</th><th>Actions done</th><th class="n">Overdue</th><th class="n">Messages</th></tr></thead><tbody>${rows}</tbody></table>`;
+ const ev=[];
+ Object.values(WS.inp).forEach(i=>ev.push({at:i.at,team:i.team,t:(TEAMN[i.team]||"A team")+" saved its numbers for "+i.week}));
+ WS.req.forEach(r=>(r.hist||[]).forEach(h=>ev.push({at:h.at,team:h.team||r.team,t:code(r.id)+" "+(h.s==="requested"?"raised":"moved to "+(COLS.find(c=>c[0]===h.s)||[0,h.s])[1].toLowerCase())})));
+ WS.acts.forEach(a=>{ev.push({at:a.at,team:a.team,t:"Action added: "+a.text});if(a.done&&a.doneAt)ev.push({at:a.doneAt,team:a.team,t:"Action done: "+a.text});});
+ WS.risks.forEach(r=>ev.push({at:r.at,team:r.owner,t:"Risk logged: "+r.title}));
+ Object.values(WS.apr).forEach(d=>(d.hist||[]).forEach(h=>ev.push({at:h.at,team:h.team,t:(d.id==="g1"?"Gate 1: ":"Gate 2: ")+(APR_STAGE[h.s]||[0,h.s])[1]})));
+ ev.sort((a,b)=>b.at-a.at);
+ $("mgFeed").innerHTML=ev.length?ev.slice(0,8).map(x=>`<div>${esc(x.t)}<small>${esc(TEAMN[x.team]||"")}${x.team?" · ":""}${ago(x.at)}</small></div>`).join(""):`<div class="empty">No activity yet.</div>`;
+}
+function renderControl(){renderAlerts();renderRisks();renderApprovals();}
+/* ---- scenarios ---- */
+function gateMini(rows){return `<div class="tbl"><table><thead><tr><th>Measure</th><th class="n">Need</th><th class="n">Plan</th><th></th></tr></thead><tbody>`+rows.map(r=>`<tr><td>${r[0]}</td><td class="n">${r[2]} ${r[4]==="cr"?"₹":""}${r[3]}${r[4]==="%"?"%":""}</td><td class="n">${fmtK(r[1].v,r[4])}</td><td>${G.pass(r)?chip("ok","Pass"):chip("no","Miss")}</td></tr>`).join("")+`</tbody></table></div>`;}
+function renderScenarios(){
+ const cur=JSON.stringify({fill:S.fill,days:S.days,sc:S.sc,alloc:S.alloc,opts:S.opts,coo:S.coo});
+ const cols=SCENARIOS.map(([k,l,n,p])=>{const st=scnState(p),m=model({fill:st.fill,days:st.days,sc:st.sc,alloc:st.alloc,opts:st.opts,coo:st.coo});
+  const g1=m.g9.fill>=89&&m.g9.days<=43&&m.g9.ebitda>=22,g2=m.g22.fill>=92&&m.g22.days<=38&&m.g22.ebitda>=70&&m.g22.wc>=170,bud=m.cs9<=34+1e-6&&m.cs21<=92+1e-6&&m.cs36<=150+1e-6;
+  const good=m.irr!=null&&m.irr>=.18&&m.pb!=null&&m.pb<=30,fits=m.sv.cost<=150;
+  return{k,l,n,m,g1,g2,bud,fits,on:JSON.stringify(st)===cur,v:!fits||!bud?["no","Over budget"]:good&&g1&&g2?["ok","Proceed"]:good?["wn","Proceed, re-test the weak point"]:["no","Do not proceed as is"]};});
+ const pf=x=>x?chip("ok","Pass"):chip("no","Miss");
+ const row=(lab,f)=>`<tr><td>${lab}</td>${cols.map(c=>`<td class="n">${f(c)}</td>`).join("")}</tr>`;
+ $("scTable").innerHTML=`<table><thead><tr><th></th>${cols.map(c=>`<th class="n"><div>${c.l} · ${c.n}</div>${c.on?`<span class="chip ok cur">Current</span>`:""}</th>`).join("")}</tr></thead><tbody>`+
+  row("National fill",c=>f1(c.m.sv.nat)+"%")+row("Network days",c=>f1(c.m.sv.natDays))+row("3-year cost of service",c=>cr(c.m.sv.cost))+row("Return (5-year IRR)",c=>pct1(c.m.irr))+row("Money back",c=>c.m.pb?f1(c.m.pb)+" mo":">60 mo")+row("Value created (NPV)",c=>cr(c.m.npv))+row("Spend by month 9",c=>cr(c.m.cs9))+row("Gate 1 (plan)",c=>pf(c.g1))+row("Gate 2 (plan)",c=>pf(c.g2))+row("Spend within tranches",c=>pf(c.bud))+row("Cost of service within ₹150 Cr",c=>pf(c.fits))+row("Verdict",c=>chip(c.v[0],c.v[1]))+row("",c=>`<button type="button" data-load="${c.k}">Use this</button>`)+`</tbody></table>`;
+ const hi=alerts().filter(a=>a.sev==="high"),dn=["release","charter","owner"].filter(k=>S.todo&&S.todo[k]).length;
+ $("scNext").innerHTML=`<div class="callout ${hi.length?"bad":"good"}">${hi.length?`<b>Fix first:</b> ${esc(hi[0].title)}. ${esc(hi[0].act)}`:dn<3?`<b>Next 30 days:</b> finish the launch checklist (${dn} of 3 done): release the first tranche, sign the Day-0 measurement charter and name the Flow Owner.`:`<b>On track.</b> Keep the weekly rhythm going and watch the early warnings.`}</div>`;
+ const ph=(months,title,steps,tail)=>`<div class="phase"><span class="note">${months}</span><h3>${title}</h3><ul>${steps.map(s=>`<li>${s}</li>`).join("")}</ul>${tail}</div>`;
+ const gate=(name,rows,pass,okT,missT)=>`<h4>${name}</h4>${gateMini(rows)}<div class="callout ${pass?"good":"bad"}">${pass?okT:missT}</div>`;
+ $("scPhases").innerHTML=
+  ph("Months 0–9","Prove it",["Release the first tranche, sign the Day-0 measurement charter and name the Flow Owner","Start the Flow Contract, Plant C, the portfolio clean-up and the quick-commerce lane"],gate("Gate 1 · month 9",G.g1,G.p1,"Gate 1 passes. Tranche 2 (₹58 Cr) is released at month 10.","Gate 1 is missed. Tranche 2 slips two quarters; keep the Flow Contract, Heartbeat and Plant C running and hold replenishment waves and master data until the gate is re-tested."))+
+  ph("Months 10–22","Scale it",["Roll out replenishment in North and West in three waves","Fix master data first and run the Stock Identity Check every week"],gate("Gate 2 · month 22",G.g2,G.p2,"Gate 2 passes. Tranche 3 (₹58 Cr) is released at month 22.","Gate 2 is missed. Tranche 3 lapses; fund the tail from run-rate benefit and withhold the 30% vendor retention."))+
+  ph("Months 23–36","Extend",["Decide the national replenishment extension at month 24 using the wave read-outs","Keep payback inside 30 months and fold the weekly rhythm into business as usual"],`<h4>Where this lands</h4><div class="callout ${M.irr>=.18&&M.pb&&M.pb<=30?"good":"bad"}">Return ${pct(M.irr)} · money back ${M.pb?f1(M.pb)+" months":"after 60 months"} · value created ${cr(M.npv)}.</div>`);
+}
+$("scTable").addEventListener("click",e=>{const b=e.target.closest("[data-load]");if(b)loadScenario(b.dataset.load);});
 /* ---------- boot ---------- */
 recalcCore();
 {const h=location.hash.slice(1);S.view=VIEWS.some(v=>v[0]===h)?h:"overview";if(S.view!=="overview")S.last=S.view;}
