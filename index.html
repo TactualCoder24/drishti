@@ -265,6 +265,14 @@ main{max-width:1480px}
   .pillars{grid-template-columns:minmax(0,1fr)} .pillars>div{border-right:none;border-bottom:1px solid var(--rule)}
   .alloc{grid-template-columns:minmax(0,1fr) 80px 64px}.alloc .bar{display:none}
 }
+/* Landing page (#overview): no sidebar or scenario bar, one "Open dashboard" door into the desks */
+a.brand{text-decoration:none;color:inherit}
+.landbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}
+.landbar .btn{background:var(--neel);border-color:var(--neel);color:var(--sheet);padding:10px 18px;font-weight:600}
+nav a.home{color:var(--neel);font-weight:600;font-size:14px}
+.mobnav a.home{color:var(--neel);font-weight:600}
+body.landing .shell{grid-template-columns:minmax(0,1fr)}
+body.landing aside,body.landing .mobnav,body.landing .topbar,body.landing #confirmReset{display:none!important}
 /* Phones: 16px fields stop iOS zoom-on-focus, 40-44px targets, two-up KPIs, swipeable board, tighter blocks */
 .hit{touch-action:pan-y}
 .mobnav{scrollbar-width:none}.mobnav::-webkit-scrollbar{display:none}
@@ -308,7 +316,7 @@ main{max-width:1480px}
 
 <div class="shell">
   <aside>
-    <div class="brand"><b>DRISHTI</b><span>ACPL supply chain programme</span></div>
+    <a class="brand" href="#overview" aria-label="Back to the landing page"><b>DRISHTI</b><span>ACPL supply chain programme</span></a>
     <nav id="nav"></nav>
     <div class="side-status" id="sideStatus"></div>
   </aside>
@@ -328,14 +336,15 @@ main{max-width:1480px}
         <button id="resetNo" type="button">Keep my changes</button>
       </div>
 
-      <!-- OVERVIEW -->
+      <!-- LANDING (overview) -->
       <section class="view" id="v-overview">
+        <div class="landbar"><div class="brand"><b>DRISHTI</b><span>ACPL supply chain programme</span></div><a class="btn js-dash" href="#diagnosis">Open dashboard</a></div>
         <div class="hero">
           <div class="hero-txt">
             <span class="hero-eye">Project Drishti · ACPL supply chain</span>
             <h1 class="hero-h">Serve every order on time without filling warehouses</h1>
             <p class="hero-p">ACPL has stock-outs and excess stock at the same time. This control room shows why, sets realistic targets, tests the ₹150 Cr plan, and gives every team one place to work each week.</p>
-            <div class="hero-cta"><a class="btn primary" href="#diagnosis">See what is going wrong</a><a class="btn" href="#inputs">Open the team workspace</a></div>
+            <div class="hero-cta"><a class="btn primary js-dash" href="#diagnosis">Open the dashboard</a><a class="btn" href="#inputs">Open the team workspace</a></div>
           </div>
           <div class="hero-card" aria-label="Live plan snapshot">
             <span class="hc-l">Plan right now</span>
@@ -824,7 +833,7 @@ main{max-width:1480px}
 
       <footer class="foot">
         <div class="foot-brand"><b>DRISHTI</b><span>Control room for ACPL's three-year supply chain programme. Truth, rhythm, then speed.</span></div>
-        <div class="foot-col"><h3>The plan</h3><a href="#overview">Overview</a><a href="#diagnosis">What is going wrong</a><a href="#service">Service targets</a><a href="#opmodel">New ways of working</a></div>
+        <div class="foot-col"><h3>The plan</h3><a href="#overview">Landing page</a><a href="#diagnosis">What is going wrong</a><a href="#service">Service targets</a><a href="#opmodel">New ways of working</a></div>
         <div class="foot-col"><h3>Money and timing</h3><a href="#invest">Budget</a><a href="#returns">Returns and risk</a><a href="#gates">Timeline and gates</a></div>
         <div class="foot-col"><h3>Every week</h3><a href="#inputs">Weekly team inputs</a><a href="#orders">Orders to plants</a><a href="#council">Team chat and actions</a></div>
         <p class="foot-note">Sources: ACPL case Appendices 1–6; Lee, Padmanabhan &amp; Whang (1997). Model uses monthly cash flows over 60 months, working capital valued at 11% a year, benefits certified one quarter after delivery, pilot costs treated as sunk. Figures are model estimates and may differ slightly from the submitted deck.</p>
@@ -881,7 +890,7 @@ const PILOTS={
  C:{t:"C · Automated replenishment",sp:"Supply Chain Head",flaws:["No control group","14-person team corrected about 1,100 records a week","Two upgraded warehouses; untested without the team"],trust:"Loop 12.4→6.1 days, verified by Finance, North and West only; we plan on half the effect",plan:"North and West, stepped-wedge",chip:"ok",score:3}
 };
 /* ---------- state ---------- */
-const DEF={view:"overview",fill:{...OURS.fill},days:{...OURS.days},ppMode:"low",alloc:Object.fromEntries(INITS.map(i=>[i.id,i.base])),opts:{},coo:false,
+const DEF={view:"overview",last:"diagnosis",fill:{...OURS.fill},days:{...OURS.days},ppMode:"low",alloc:Object.fromEntries(INITS.map(i=>[i.id,i.base])),opts:{},coo:false,
  sc:{rec:40,real:100,delay:0,lag:3,over:0,cap:40,hair:0,day:"owned"},
  g1:{fill:"",days:"",ebitda:""},g2:{fill:"",days:"",ebitda:"",wc:""},
  om:{supply:85,skew:41,reg:[{n:"North",req:100,bias:14},{n:"West",req:110,bias:18},{n:"South",req:105,bias:2},{n:"East",req:70,bias:7},{n:"Central",req:50,bias:-1}]},
@@ -1007,14 +1016,18 @@ function lineChart(el,o){
  hit.addEventListener("pointercancel",off);
 }
 /* ---------- nav ---------- */
+const DASH=VIEWS.filter(v=>v[0]!=="overview");
 function renderNav(){
- $("nav").innerHTML=`<div class="navgrp">The plan</div>`+VIEWS.map(([id,n],i)=>(id==="inputs"?`<div class="navgrp">Run it every week</div>`:"")+`<a href="#${id}" ${S.view===id?'aria-current="page"':""}>${n}</a>`).join("");
+ document.body.classList.toggle("landing",S.view==="overview");
+ const last=DASH.some(v=>v[0]===S.last)?S.last:"diagnosis";
+ document.querySelectorAll(".js-dash").forEach(a=>a.setAttribute("href","#"+last));
+ $("nav").innerHTML=`<a class="home" href="#overview">← Landing page</a><div class="navgrp">The plan</div>`+DASH.map(([id,n])=>(id==="inputs"?`<div class="navgrp">Run it every week</div>`:"")+`<a href="#${id}" ${S.view===id?'aria-current="page"':""}>${n}</a>`).join("");
  const wsv=["inputs","orders","council"].includes(S.view);$("wsWho").hidden=!wsv;
- $("mobnav").innerHTML="<b>DRISHTI</b>"+VIEWS.map(([id,n])=>`<a href="#${id}" ${S.view===id?'aria-current="page"':""}>${n}</a>`).join("");
+ $("mobnav").innerHTML=`<b>DRISHTI</b><a class="home" href="#overview">← Home</a>`+DASH.map(([id,n])=>`<a href="#${id}" ${S.view===id?'aria-current="page"':""}>${n}</a>`).join("");
  const mn=$("mobnav"),cur=mn.querySelector("[aria-current]");if(cur)mn.scrollLeft=cur.offsetLeft-(mn.clientWidth-cur.offsetWidth)/2;
  VIEWS.forEach(([id])=>$("v-"+id).hidden=id!==S.view);
 }
-function route(){const h=location.hash.replace("#","");S.view=VIEWS.some(v=>v[0]===h)?h:(S.view||"overview");renderNav();save();window.scrollTo(0,0);if(M)requestAnimationFrame(renderAll);}
+function route(){const h=location.hash.replace("#","");S.view=VIEWS.some(v=>v[0]===h)?h:"overview";if(S.view!=="overview")S.last=S.view;renderNav();save();window.scrollTo(0,0);if(M)requestAnimationFrame(renderAll);}
 let rsz=0;let lastW=window.innerWidth;window.addEventListener("resize",()=>{if(Math.abs(window.innerWidth-lastW)<40)return;lastW=window.innerWidth;clearTimeout(rsz);rsz=setTimeout(()=>{if(M)renderAll();},200);});
 window.addEventListener("hashchange",route);
 /* ---------- renderers ---------- */
@@ -1024,7 +1037,7 @@ function hurdle(M){const okI=M.irr!=null&&M.irr>=.18,okP=M.pb!=null&&M.pb<=30;re
 function renderSide(){
  const h=hurdle(M);const t1=M.cs9<=34+1e-6,t2=M.cs21<=92+1e-6,t3=M.cs36<=150+1e-6;
  $("sideStatus").innerHTML=`<div class="row"><span>IRR, 5-yr</span><b class="num">${pct(M.irr)}</b></div><div class="row"><span>Payback</span><b class="num">${M.pb?f1(M.pb)+" mo":">60 mo"}</b></div><div class="row"><span>Gate 1</span>${G.p1?chip("ok","Pass"):chip("no","Miss")}</div><div class="row"><span>Gate 2</span>${G.p2?chip("ok","Pass"):chip("no","Miss")}</div><div class="row"><span>Tranches</span>${t1&&t2&&t3?chip("ok","Within"):chip("no","Breach")}</div>`;
- const edited=JSON.stringify({...S,view:"",region:"",pilot:""})!==JSON.stringify({...DEF,view:"",region:"",pilot:""});
+ const edited=JSON.stringify({...S,view:"",last:"",region:"",pilot:""})!==JSON.stringify({...DEF,view:"",last:"",region:"",pilot:""});
  $("scenarioLine").textContent=edited?"Scenario · edited":"Scenario · base case";
 }
 function cashChart(el,legEl,extra){
@@ -1221,7 +1234,7 @@ $("omSupply").addEventListener("input",e=>{S.om.supply=+e.target.value;save();re
 $("omSkew").addEventListener("input",e=>{S.om.skew=+e.target.value;save();renderOpModel();});
 $("resetBtn").onclick=()=>{$("confirmReset").hidden=false;};
 $("resetNo").onclick=()=>{$("confirmReset").hidden=true;};
-$("resetYes").onclick=()=>{const v=S.view;S=clone(DEF);S.view=v;$("confirmReset").hidden=true;recalc();WSgate();toast("Reset to base case");};
+$("resetYes").onclick=()=>{const v=S.view;S=clone(DEF);S.view=S.last=v;$("confirmReset").hidden=true;recalc();WSgate();toast("Reset to base case");};
 function toast(m){const t=$("toast");t.textContent=m;t.hidden=false;clearTimeout(toast._t);toast._t=setTimeout(()=>t.hidden=true,2200);}
 $("copySum").onclick=()=>{
  const txt=`Project Drishti, current scenario
@@ -1472,8 +1485,7 @@ function renderHero(){
 })();
 /* ---------- boot ---------- */
 recalcCore();
-if(location.hash)S.view=location.hash.slice(1);
-if(!VIEWS.some(v=>v[0]===S.view))S.view="overview";
+{const h=location.hash.slice(1);S.view=VIEWS.some(v=>v[0]===h)?h:"overview";if(S.view!=="overview")S.last=S.view;}
 fillSelects();renderNav();renderAll();renderWS();wsInit();
 })();
 </script>

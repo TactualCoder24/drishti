@@ -12,11 +12,12 @@ The page loads its fonts (Archivo, Public Sans, IBM Plex Mono) from Google Fonts
 
 ## What is in it
 
-The first seven desks share one model, so a change on one desk updates the others.
+The app opens on a **landing page** with the overview: the headline plan numbers, five key facts, a live snapshot (cash curve, funding gates, decisions needed today) and a card for each desk. **Open dashboard** takes you into the dashboard, which has a sidebar of nine desks; **← Landing page** (or the DRISHTI logo) takes you back. Opening the landing page again and pressing **Open dashboard** returns you to the desk you were last on.
+
+The first six desks share one model, so a change on one desk updates the others and the landing page.
 
 | Desk | What it does |
 |---|---|
-| Overview | Live snapshot of fill-rate, inventory days, IRR, payback and gate status, plus the key facts |
 | What is going wrong | Excess and shortfall by region, the root-cause tree, competing explanations and how far to trust each pilot |
 | Service targets | Set fill-rate per product segment (A to E); see cost and payback against the Board's uniform 95% |
 | New ways of working | The weekly rhythm, honest allocation when stock is short, and who gets paid for what |
