@@ -9,7 +9,7 @@
 :root{
   --bg:#EEF0EC; --sheet:#FFFFFF; --sunk:#F5F6F3; --ink:#17202A; --ink2:#3C4752; --mute:#5F6973; --rule:#D8DCD5; --rule2:#C5CAC2;
   --neel:#2C4590; --neel-soft:#E3E8F5; --neel-ink:#21366F;
-  --good:#2D7A4C; --good-soft:#E2F0E6; --warn:#A8730F; --warn-soft:#F6EBD3; --bad:#B03A35; --bad-soft:#F6E1DF; --amber:#F2B544;
+  --good:#2D7A4C; --good-soft:#E2F0E6; --warn:#A8730F; --warn-soft:#F6EBD3; --bad:#B03A35; --bad-soft:#F6E1DF;
   color-scheme:light; --f-head:"Archivo","Arial Narrow",Arial,sans-serif; --f-body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif; --f-num:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
 }
 *{box-sizing:border-box}
@@ -22,7 +22,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .brand b{font-family:var(--f-head);font-stretch:75%;font-weight:800;font-size:26px;letter-spacing:.01em;line-height:1}
 .brand span{font-size:12px;color:var(--mute)}
 a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--neel);outline-offset:2px}
-main{min-width:0;padding-block:24px 64px;padding-left:max(16px,2.4vw);padding-right:max(16px,env(safe-area-inset-right,0px),2.4vw)}
+main{min-width:0}
 .topbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}
 .crumbs{font-size:13px;color:var(--neel);font-weight:600}
 h1{font-family:var(--f-head);font-stretch:85%;font-weight:750;font-size:clamp(26px,3vw,34px);line-height:1.15;margin:6px 0 0;text-wrap:balance;max-width:32ch}
@@ -198,10 +198,8 @@ textarea{font:inherit;font-size:13px;padding:6px 8px;border:1px solid var(--rule
 .foot-note{grid-column:1/-1;font-size:12.5px;color:var(--mute);border-top:1px solid var(--rule);padding-top:14px;max-width:none}
 @media (max-width:1100px){.features{grid-template-columns:repeat(2,minmax(0,1fr))}.foot{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:820px){.hero{grid-template-columns:minmax(0,1fr)}.features{grid-template-columns:minmax(0,1fr)}.foot{grid-template-columns:minmax(0,1fr)}}
-main{max-width:1480px}
 .segact{font-size:12.5px;color:var(--neel-ink);margin-top:4px;line-height:1.4}
 .feas{color:var(--neel);letter-spacing:1px}
-@media (min-width:1700px){main{margin-inline:auto}}
 @media (max-width:820px){
   #svTable thead{display:none}
   #svTable,#svTable tbody{display:block}
@@ -221,7 +219,6 @@ main{max-width:1480px}
 }
 @media (max-width:1100px){.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.g-wide{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:820px){
-  main{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px 48px}
   .g2,.g3,.g4{grid-template-columns:minmax(0,1fr)}
   .tree{grid-template-columns:minmax(0,1fr)} .branch{grid-template-columns:minmax(0,1fr)}
   .week{grid-template-columns:minmax(0,1fr)} .week>div{border-right:none;border-bottom:1px solid var(--rule)}
@@ -233,13 +230,13 @@ main{max-width:1480px}
 .appbar{background:var(--neel-ink);color:#fff;padding:10px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));position:sticky;top:0;z-index:30}
 .ab-top{display:flex;align-items:center;gap:14px;max-width:1480px;margin:0 auto}
 .ab-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff;flex:none}
-.ab-mark{width:34px;height:34px;border-radius:9px;background:var(--amber);color:var(--neel-ink);display:grid;place-items:center;font-family:var(--f-head);font-weight:800;font-size:18px}
+.ab-mark{width:34px;height:34px;border-radius:9px;background:#fff;color:var(--neel-ink);display:grid;place-items:center;font-family:var(--f-head);font-weight:800;font-size:18px}
 .ab-brand b{display:block;font-family:var(--f-head);font-stretch:75%;font-weight:800;font-size:20px;line-height:1;letter-spacing:.02em}
 .ab-brand small{display:block;font-size:11px;color:#C9D5F5;margin-top:2px}
 .ab-tabs{display:flex;gap:6px;margin-left:8px}
 .ab-tabs a{color:#DCE3F6;text-decoration:none;padding:7px 14px;border-radius:999px;font-weight:600;font-size:14px;white-space:nowrap}
 .ab-tabs a:hover{background:rgba(255,255,255,.12)}
-.ab-tabs a[aria-current="page"]{background:var(--amber);color:var(--neel-ink)}
+.ab-tabs a[aria-current="page"]{background:#fff;color:var(--neel-ink)}
 .ab-right{margin-left:auto;display:flex;align-items:center;gap:10px}
 .ab-scn{font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.14);white-space:nowrap}
 .ab-team{display:flex;align-items:center;gap:8px;font-size:12px;color:#C9D5F5;white-space:nowrap}
@@ -247,7 +244,7 @@ main{max-width:1480px}
 .ab-team select option{color:var(--ink)}
 .ab-bell{position:relative}
 .ab-bell>button{width:38px;height:38px;min-height:0;padding:0;border-radius:50%;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);color:#fff;display:grid;place-items:center}
-.ab-bell .badge{position:absolute;top:-5px;right:-5px;min-width:18px;height:18px;padding:0 4px;border-radius:9px;background:var(--amber);color:var(--neel-ink);font-size:11px;font-weight:700;display:grid;place-items:center;pointer-events:none}
+.ab-bell .badge{position:absolute;top:-5px;right:-5px;min-width:18px;height:18px;padding:0 4px;border-radius:9px;background:var(--bad);color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center;pointer-events:none}
 .bellmenu{position:absolute;right:0;top:46px;width:min(340px,calc(100vw - 32px));background:var(--sheet);color:var(--ink);border:1px solid var(--rule2);border-radius:8px;box-shadow:0 12px 32px rgba(10,20,50,.25);padding:6px;z-index:40}
 .att{display:block;padding:10px 12px;border-radius:6px;color:var(--ink);text-decoration:none;font-size:14px;line-height:1.4;font-weight:500}
 .att:hover{background:var(--sunk)}
@@ -260,12 +257,9 @@ main{max-width:1480px}
 .step:hover{background:var(--sunk)}
 .step i{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-family:var(--f-num);font-size:12px;background:var(--sunk);border:1px solid var(--rule2)}
 .step.done{color:var(--ink2)}
-.step.done i{background:var(--neel);border-color:var(--neel);color:#fff}
+.step.done i{background:var(--neel-soft);border-color:var(--neel);color:var(--neel-ink)}
 .step[aria-current="step"]{background:var(--neel-soft);color:var(--neel-ink)}
-.step[aria-current="step"] i{background:var(--amber);border-color:var(--amber);color:var(--neel-ink)}
-.statusbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
-.stc{font-size:13px;color:var(--ink2);background:var(--sheet);border:1px solid var(--rule);border-radius:999px;padding:3px 10px;white-space:nowrap}
-.stc b{color:var(--ink);font-weight:600;margin-left:4px}
+.step[aria-current="step"] i{background:var(--neel);border-color:var(--neel);color:#fff}
 .foot-note summary{cursor:pointer;font-weight:600}
 .foot-note p{margin-top:8px}
 /* Landing page (#overview): a home for each team, no header or step bar */
@@ -284,6 +278,54 @@ body.landing .appbar,body.landing .ab-steps,body.landing .topbar,body.landing #c
 .todo.done b{text-decoration:line-through;color:var(--mute)}
 .landbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}
 .landbar .btn{background:var(--neel);border-color:var(--neel);color:var(--sheet);padding:10px 18px;font-weight:600}
+/* Layout: content on the left, live summary panel on the right */
+.work{max-width:1480px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;align-items:start;padding:24px max(16px,env(safe-area-inset-right,0px),2.4vw) 0 max(16px,env(safe-area-inset-left,0px),2.4vw)}
+.foot-wrap{max-width:1480px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-right,0px),2.4vw) 48px max(16px,env(safe-area-inset-left,0px),2.4vw)}
+main{padding-bottom:16px}
+body.landing .work{grid-template-columns:minmax(0,1fr)}
+body.landing .live{display:none!important}
+@media (max-width:1100px){.work{grid-template-columns:minmax(0,1fr)}.live{position:static!important}}
+@media (max-width:1400px){.g-wide{grid-template-columns:minmax(0,1fr)}}
+.live{background:var(--neel-ink);color:#fff;border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px;position:sticky;top:80px}
+.live h3{color:#C9D5F5;font-size:15px;margin:4px 0 0}
+.lv-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.lv-tiles div{background:rgba(255,255,255,.1);border-radius:10px;padding:8px 10px;display:flex;flex-direction:column;min-width:0}
+.lv-tiles span{font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;color:#C9D5F5}
+.lv-tiles b{font-size:14px;line-height:1.3}
+.lv-row{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13.5px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.12)}
+.lv-row span:first-child{color:#C9D5F5}
+.lv-row b{font-variant-numeric:tabular-nums;font-weight:600}
+.lv-att a,.lv-note{display:block;color:#fff;text-decoration:none;background:rgba(255,255,255,.1);border-radius:8px;padding:8px 10px;font-size:13px;line-height:1.35}
+.lv-att{display:flex;flex-direction:column;gap:6px}
+.lv-att a small,.lv-note small{display:block;color:#C9D5F5;font-size:12px}
+.lv-sys{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.lv-sys div{background:rgba(255,255,255,.1);border-radius:8px;padding:7px 10px;font-size:12.5px;display:flex;justify-content:space-between;gap:6px;min-width:0}
+.lv-sys i{font-style:normal;color:var(--good-soft)}
+.chips{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.chips .lab{font-size:13px;font-weight:600;color:var(--ink2);margin-right:2px}
+.pill{border-radius:999px;padding:5px 13px;font-size:13px;min-height:34px;background:var(--neel-soft);border-color:transparent;color:var(--neel-ink);font-weight:600}
+.pill:hover{border-color:var(--neel)}
+.pill.ghost{background:transparent;border-color:var(--rule2);color:var(--ink2)}
+.more{margin-top:22px}
+.more>summary{cursor:pointer;font-weight:600;color:var(--neel);padding:10px 0;font-size:15px}
+.more[open]>summary{margin-bottom:12px}
+.hb{display:grid;grid-template-columns:110px minmax(0,1fr) 34px;gap:10px;align-items:center;padding:6px 0;font-size:14px}
+.hb b{text-align:right}
+.flow{display:flex;flex-direction:column;align-items:center;max-width:720px;margin:0 auto;padding:6px 0}
+.fn{display:block;width:min(500px,100%);background:var(--sheet);border:1.5px solid var(--neel);border-radius:10px;padding:10px 14px;text-align:center;font-size:14px;font-weight:600;color:var(--ink);text-decoration:none;line-height:1.35}
+a.fn:hover{background:var(--neel-soft)}
+.fn small{display:block;color:var(--mute);font-size:12.5px;font-weight:400;margin-top:2px}
+.fn.start,.fn.end{background:var(--neel-ink);border-color:var(--neel-ink);color:#fff}
+.fn.dec{background:var(--warn-soft);border-color:var(--warn)}
+.fn.good{background:var(--good-soft);border-color:var(--good)}
+.fn.bad{background:var(--bad-soft);border-color:var(--bad)}
+.rt{display:inline-block;font-size:11px;font-weight:700;padding:1px 8px;border-radius:999px;background:var(--neel-soft);color:var(--neel-ink);margin-bottom:4px}
+.fa{width:2px;height:18px;background:var(--rule2);position:relative;flex:none}
+.fa::after{content:"";position:absolute;left:-4px;bottom:-1px;border:5px solid transparent;border-top:7px solid var(--rule2);border-bottom:0}
+.fsplit{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%;margin-top:4px}
+.fcol{display:flex;flex-direction:column;align-items:center}
+.flab{font-size:12px;font-weight:700;color:var(--neel);margin-top:4px}
+@media (max-width:600px){.fsplit{grid-template-columns:minmax(0,1fr)}.hb{grid-template-columns:90px minmax(0,1fr) 30px}}
 /* Phones: 16px fields stop iOS zoom-on-focus, 40-44px targets, two-up KPIs, swipeable board, tighter blocks */
 .hit{touch-action:pan-y}
 @media (max-width:820px){
@@ -299,10 +341,13 @@ body.landing .appbar,body.landing .ab-steps,body.landing .topbar,body.landing #c
   .hero{padding:22px 18px;gap:20px}
   .hero-cta .btn{flex:1;justify-content:center}
   .appbar{position:relative}
+  .work{padding:16px max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px))}
   .ab-top{flex-wrap:wrap;gap:10px}
   .ab-brand small,.ab-scn,.ab-team span{display:none}
   .ab-tabs{order:3;width:100%;margin-left:0}
-  .ab-tabs a{flex:1;text-align:center;padding:9px 10px}
+  .ab-tabs{flex-wrap:wrap}
+  .ab-tabs a{flex:1 1 40%;text-align:center;padding:9px 10px}
+  .pill{min-height:40px}
   .ab-steps{position:sticky;top:env(safe-area-inset-top,0px);z-index:20}
   .roles{grid-template-columns:repeat(2,minmax(0,1fr))}
   .hero-card{padding:16px}
@@ -347,15 +392,13 @@ body.landing .appbar,body.landing .ab-steps,body.landing .topbar,body.landing #c
     </div>
   </header>
   <div class="ab-steps" id="abSteps"></div>
+  <div class="work">
   <main>
       <div class="topbar">
-        <div class="statusbar" id="sideStatus"></div>
-        <div class="tools">
-          <button id="copySum" class="ghost" type="button">Copy summary</button>
-          <button id="resetBtn" type="button">Reset to base case</button>
-        </div>
+        <div class="chips" id="scnChips"><span class="lab">Try a scenario</span><button class="pill" type="button" data-scn="rec">A · Recommended plan</button><button class="pill" type="button" data-scn="board">B · Board's uniform 95%</button><button class="pill" type="button" data-scn="stress">C · Stress case</button><button class="pill ghost" id="resetBtn" type="button">Reset</button></div>
+        <div class="tools"><button id="copySum" class="ghost" type="button">Copy summary</button></div>
       </div>
-      <div id="confirmReset" class="callout warn" hidden style="margin-bottom:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+<div id="confirmReset" class="callout warn" hidden style="margin-bottom:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
         <span>This clears every change you made on all desks and restores the base case.</span>
         <button id="resetYes" class="primary" type="button">Reset everything</button>
         <button id="resetNo" type="button">Keep my changes</button>
@@ -411,26 +454,13 @@ body.landing .appbar,body.landing .ab-steps,body.landing .topbar,body.landing #c
             </div>
           </div>
         </div>
-        <div style="height:6px"></div>
-        <div class="sec-h"><h2>All modules</h2><p class="note">Every page is live. Change something on one page and the others update.</p></div>
-        <div class="features">
-          <a class="feat" href="#diagnosis"><span class="fk">Understand</span><b>What is going wrong</b><span>Regions, the root-cause tree, competing explanations and how far to trust each pilot.</span><i>Open</i></a>
-          <a class="feat" href="#service"><span class="fk">Decide</span><b>Service targets</b><span>Drag fill-rate for each product group and see cost and payback. Compare with the Board's uniform 95%.</span><i>Open</i></a>
-          <a class="feat" href="#opmodel"><span class="fk">Decide</span><b>New ways of working</b><span>The weekly heartbeat, honest supply when stock is short, and who gets paid for what.</span><i>Open</i></a>
-          <a class="feat" href="#invest"><span class="fk">Fund</span><b>Budget</b><span>Move the ₹150 Cr between initiatives. Tranche limits are checked as you type.</span><i>Open</i></a>
-          <a class="feat" href="#returns"><span class="fk">Test</span><b>Returns and risk</b><span>Stress recovery, delays and overruns. IRR, payback and break-points recalculate.</span><i>Open</i></a>
-          <a class="feat" href="#gates"><span class="fk">Track</span><b>Timeline and gates</b><span>The 36-month roadmap, Gate 1 and Gate 2 with real actuals, and what happens if one is missed.</span><i>Open</i></a>
-          <a class="feat wk" href="#inputs"><span class="fk">Every week</span><b>Weekly team inputs</b><span>Sales, distributors, plants, brands and finance enter one set of numbers.</span><i>Open</i></a>
-          <a class="feat wk" href="#orders"><span class="fk">Every day</span><b>Orders to plants</b><span>Regions raise requests; plants commit quantity and a ship week.</span><i>Open</i></a>
-          <a class="feat wk" href="#council"><span class="fk">Every week</span><b>Team chat and actions</b><span>One channel per hand-off and the action list for Tuesday's council.</span><i>Open</i></a>
-        </div>
       </section>
 
       <!-- DIAGNOSIS -->
       <section class="view" id="v-diagnosis" hidden>
         <div class="crumbs">Step 1 · What is going wrong</div>
-        <h1>Signal and loop latency are binding; capacity and forecasting are not</h1>
-        <p class="lede">Fill-rate fell 94 to 86% while inventory days rose 39 to 46. If stock were the problem, more stock would have raised service. It did not.</p>
+        <h1>Slow, distorted signals hurt service more than capacity or forecasting</h1>
+        <p class="lede">Service fell from 94% to 86% while stock rose from 39 to 46 days. More stock did not raise service, so stock is not the root problem.</p>
         <div style="height:16px"></div>
         <div class="grid g3">
           <div class="callout bad"><b>₹185 Cr excess and ₹73 Cr shortfall coexist.</b> North and West hold 76% of it.</div>
@@ -462,7 +492,7 @@ body.landing .appbar,body.landing .ab-steps,body.landing .topbar,body.landing #c
             </div>
           </div>
         </div>
-        <div style="height:22px"></div>
+        <details class="more"><summary>More evidence: competing explanations and pilot reliability</summary>
         <div class="grid g2">
           <div class="panel">
             <header><h2>Competing explanations</h2><small>tested against the data</small></header>
@@ -483,6 +513,7 @@ body.landing .appbar,body.landing .ab-steps,body.landing .topbar,body.landing #c
             <div id="pilotDetail"></div>
           </div>
         </div>
+        </details>
       </section>
 
       <!-- SERVICE -->
@@ -516,7 +547,7 @@ body.landing .appbar,body.landing .ab-steps,body.landing .topbar,body.landing #c
             </div>
           </div>
         </div>
-        <div style="height:22px"></div>
+        <details class="more"><summary>More detail: regional targets and channel rules</summary>
         <div class="grid g2">
           <div class="panel">
             <header><h2>Regions converge on the South frontier</h2></header>
@@ -542,13 +573,14 @@ body.landing .appbar,body.landing .ab-steps,body.landing .topbar,body.landing #c
               </tbody></table></div>
           </div>
         </div>
+        </details>
       </section>
 
       <!-- OPERATING MODEL -->
       <section class="view" id="v-opmodel" hidden>
         <div class="crumbs">Step 3 · New ways of working</div>
-        <h1>Pay people for flow before holding any new meeting</h1>
-        <p class="lede">The 2023 S&amp;OP reset lapsed because sales targets, plant KPIs and distributor slabs did not change. These rules change them first.</p>
+        <h1>Change what people are paid for, then hold the weekly meeting</h1>
+        <p class="lede">The last reset faded because targets and incentives stayed the same. These rules change them first.</p>
         <div style="height:22px"></div>
         <div class="panel">
           <header><h2>Weekly Heartbeat</h2><small>one rhythm for sales, plants, finance and brands</small></header>
@@ -577,7 +609,7 @@ body.landing .appbar,body.landing .ab-steps,body.landing .topbar,body.landing #c
             <p class="note">13-week rolling run-rate slab plus a stock-truth rebate (±5% of audit). ₹9 Cr margin guarantee for 6 quarters while distributors adjust.</p>
           </div>
         </div>
-        <div style="height:22px"></div>
+        <details class="more"><summary>More detail: incentives, stakeholders, rules and precedents</summary>
         <div class="grid g2">
           <div class="panel">
             <header><h2>Who is paid for what</h2></header>
@@ -625,9 +657,9 @@ body.landing .appbar,body.landing .ab-steps,body.landing .topbar,body.landing #c
               <tr><td>Danone (vendor data)</td><td>Machine learning plus joint planning cut lost sales 30%</td></tr>
               <tr><td>HUL 2018</td><td>Next-visit delivery: 90% re-billing vs 81%</td></tr>
             </tbody></table></div>
-            <p class="note">Sources: Lee et al. (1997); Hammond (HBS); iSixSigma Asia; HUL (2018); Danone (vendor-reported); DeHoratius &amp; Raman (2008).</p>
           </div>
         </div>
+        </details>
       </section>
 
       <!-- INVESTMENT -->
@@ -652,8 +684,10 @@ body.landing .appbar,body.landing .ab-steps,body.landing .topbar,body.landing #c
             <div class="panel">
               <header><h2>Left unfunded</h2><small>switch on to test</small></header>
               <div id="optRows"></div>
+              <details class="more"><summary>Why these are left out</summary>
               <div class="callout warn"><b>Left unfunded: snacks capacity at Plants A and H (₹30 Cr).</b> 10-year IRR 37% if the transformation office is right, but 5-year IRR is 10% (below 18%), −22% with 50% overlap, and negative if the COO is right. Trigger at month 12: fund only if Plant C adds at least ₹7 Cr a year and utilisation stays at 92% or more after the wheel.</div>
               <div class="callout">Also not funded: national replenishment (+₹54 Cr; rest of India holds 24% of the imbalance, 9-year payback). Funding is cash-gated: tech-first plans breach ₹34 Cr by month 9.</div>
+              </details>
               <label style="display:flex;gap:8px;align-items:center;font-size:13px"><input type="checkbox" id="cooRight"> Assume the COO is right: snacks losses are scheduling, not capacity</label>
             </div>
           </div>
@@ -663,8 +697,8 @@ body.landing .appbar,body.landing .ab-steps,body.landing .topbar,body.landing #c
       <!-- RETURNS -->
       <section class="view" id="v-returns" hidden>
         <div class="crumbs">Step 5 · Returns and risk</div>
-        <h1>Payback, not IRR, is the binding hurdle</h1>
-        <p class="lede">Stress the assumptions the Audit Committee will challenge. Hurdles: at least 18% pre-tax IRR over five years and payback within 30 months of first disbursement.</p>
+        <h1>Payback is the hurdle to watch</h1>
+        <p class="lede">Stress the assumptions that matter. The plan must earn at least 18% a year over five years and pay back within 30 months.</p>
         <div style="height:22px"></div>
         <div class="kpis" id="rtKpis"></div>
         <div style="height:22px"></div>
@@ -688,11 +722,11 @@ body.landing .appbar,body.landing .ab-steps,body.landing .topbar,body.landing #c
               <select id="sDay"><option value="owned">ACPL-owned stock (₹18.8 Cr/day), Finance view</option><option value="network">Network stock (₹26.7 Cr/day), transformation office view</option><option value="cogs">COGS basis, owned (₹14.1 Cr/day)</option></select></label>
           </div>
         </div>
-        <div style="height:22px"></div>
+        <details class="more"><summary>More detail: stress tests, break-points and benefit build</summary>
         <div class="grid g2">
           <div class="panel">
             <header><h2>Stress tests</h2><small>reference figures, with the live model beside them</small></header>
-            <p class="note">Deck columns are the submitted results. Live columns rerun each case on the current targets and budget, starting from base assumptions; small differences come from rebuilding the spreadsheet here.</p>
+            <p class="note">Plan columns are the reference results. Live columns rerun each case on the current targets and budget, starting from base assumptions; small differences are expected.</p>
             <div class="tbl"><table id="rtStress"></table></div>
           </div>
           <div class="stack">
@@ -706,6 +740,7 @@ body.landing .appbar,body.landing .ab-steps,body.landing .topbar,body.landing #c
             </div>
           </div>
         </div>
+        </details>
       </section>
 
       <!-- GATES -->
@@ -731,7 +766,7 @@ body.landing .appbar,body.landing .ab-steps,body.landing .topbar,body.landing #c
             <div id="g2Out"></div>
           </div>
         </div>
-        <div style="height:22px"></div>
+        <details class="more"><summary>More detail: fill-rate path, early warnings and risks</summary>
         <div class="grid g-wide">
           <div class="panel">
             <header><h2>Fill-rate path</h2><small>% national distributor fill</small></header>
@@ -750,6 +785,7 @@ body.landing .appbar,body.landing .ab-steps,body.landing .topbar,body.landing #c
             <div class="callout bad"><b>Stop-loss at month 12.</b> If recovery is below 37% or realisation below 0.85×, freeze replenishment waves 2–3 and the data tail (about ₹53 Cr).</div>
           </div>
         </div>
+        </details>
       </section>
 
       <!-- WORKSPACE: shared bar -->
@@ -793,6 +829,7 @@ body.landing .appbar,body.landing .ab-steps,body.landing .topbar,body.landing #c
         <div class="crumbs">Every day · Orders to plants</div>
         <h1>Requests from the market, commitments from the plants</h1>
         <p class="lede">Regions, distributors and channel teams raise requests; plants commit quantity and a ship week inside the 72-hour freeze. Express requests draw on each plant's 6% slot.</p>
+        <div id="roleNote" class="callout" style="margin:16px 0 0"></div>
         <div style="height:22px"></div>
         <div class="grid g-wide">
           <div class="panel">
@@ -851,14 +888,74 @@ body.landing .appbar,body.landing .ab-steps,body.landing .topbar,body.landing #c
         </div>
       </section>
 
-      <footer class="foot">
+            <!-- MANAGER DASHBOARD -->
+      <section class="view" id="v-manager" hidden>
+        <div class="crumbs">Manager dashboard</div>
+        <h1>Is the week running to plan?</h1>
+        <p class="lede">One screen for the Flow Owner and leadership: what is waiting for a decision, how many orders could not be filled, and whether the funding gates are on track.</p>
+        <div style="height:22px"></div>
+        <div class="kpis" id="mgKpis"></div>
+        <div style="height:22px"></div>
+        <div class="grid g2">
+          <div class="panel"><header><h2>Requests by stage</h2><small>all weeks</small></header><div id="mgStages"></div></div>
+          <div class="panel"><header><h2>Cannot-fill rate vs plan limit</h2></header><div id="mgRate"></div></div>
+        </div>
+        <div style="height:22px"></div>
+        <div class="panel"><header><h2>Waiting for a decision</h2><small>open requests and cannot-fill orders</small></header><div class="tbl" id="mgTable"></div></div>
+        <div style="height:22px"></div>
+        <div class="grid g2">
+          <div class="panel"><header><h2>Funding gates</h2><small>plan vs what is needed</small></header><div id="mgGates"></div></div>
+          <div class="panel"><header><h2>This week's numbers</h2><small id="mgWk"></small></header><div id="mgInputs"></div></div>
+        </div>
+      </section>
+
+      <!-- PROCESS FLOW -->
+      <section class="view" id="v-flow" hidden>
+        <div class="crumbs">Process flow</div>
+        <h1>How a week runs, from numbers to money</h1>
+        <p class="lede">Every box is a step someone owns. Click a box to open that screen.</p>
+        <div style="height:22px"></div>
+        <div class="panel"><div class="flow">
+          <div class="fn start">Week opens (Monday)</div><div class="fa"></div>
+          <a class="fn" href="#inputs"><span class="rt">All teams</span><br>Each team enters its numbers<small>Sales forecast and bias · distributor stock · plant capacity · promotions · certified figures</small></a><div class="fa"></div>
+          <a class="fn" href="#inputs"><span class="rt">System</span><br>Demand, stock and plant capacity are balanced<small>Shows demand and supply by region, and the load on each plant</small></a><div class="fa"></div>
+          <div class="fn dec">Is the net need covered?</div>
+          <div class="fsplit">
+            <div class="fcol"><span class="flab">Yes</span><div class="fa"></div><a class="fn" href="#orders"><span class="rt">Sales and regions</span><br>Regions raise order requests</a></div>
+            <div class="fcol"><span class="flab">No, supply is short</span><div class="fa"></div><a class="fn" href="#opmodel"><span class="rt">Flow Owner</span><br>Short supply is shared by each region's own forecast bias<small>A 0 to 25% cut, not a blanket 15%</small></a><div class="fa"></div><div class="fn bad">Unfilled quantity is logged as “Cannot fill” with a reason</div></div>
+          </div>
+          <div class="fa"></div>
+          <a class="fn" href="#orders"><span class="rt">Plants</span><br>Plants commit a quantity and a ship week<small>Inside the 72-hour freeze</small></a><div class="fa"></div>
+          <div class="fn dec">Is it an express request?</div>
+          <div class="fsplit">
+            <div class="fcol"><span class="flab">Yes</span><div class="fa"></div><div class="fn">Uses the plant's 6% express slot<small>If the slot is full, the Flow Owner decides</small></div></div>
+            <div class="fcol"><span class="flab">No</span><div class="fa"></div><div class="fn">Goes on the normal product wheel</div></div>
+          </div>
+          <div class="fa"></div>
+          <a class="fn" href="#orders"><span class="rt">Plants</span><br>Production, dispatch, received</a><div class="fa"></div>
+          <div class="fn"><span class="rt">Finance and audit</span><br>Stock Identity Check<small>A sample of declared stock is audited each week</small></div><div class="fa"></div>
+          <a class="fn" href="#council"><span class="rt">Flow Owner</span><br>Tuesday Flow Council, 45 minutes<small>Review gaps, late orders and open actions</small></a><div class="fa"></div>
+          <a class="fn dec" href="#gates">Do the certified figures meet the gate?<small>Gate 1 at month 9, Gate 2 at month 22</small></a>
+          <div class="fsplit">
+            <div class="fcol"><span class="flab">Yes</span><div class="fa"></div><div class="fn good">The next tranche is released</div></div>
+            <div class="fcol"><span class="flab">No</span><div class="fa"></div><div class="fn bad">The tranche is delayed; core work keeps running and the gate is re-tested</div></div>
+          </div>
+          <div class="fa"></div>
+          <div class="fn end">Week closes. Next week starts.</div>
+        </div></div>
+      </section>
+
+
+    </main>
+  <aside class="live" id="livePanel" aria-label="Live summary"></aside>
+  </div>
+  <div class="foot-wrap"><footer class="foot">
         <div class="foot-brand"><b>DRISHTI</b><span>Control room for ACPL's three-year supply chain programme. Truth, rhythm, then speed.</span></div>
         <div class="foot-col"><h3>The plan</h3><a href="#overview">Landing page</a><a href="#diagnosis">What is going wrong</a><a href="#service">Service targets</a><a href="#opmodel">New ways of working</a></div>
         <div class="foot-col"><h3>Money and timing</h3><a href="#invest">Budget</a><a href="#returns">Returns and risk</a><a href="#gates">Timeline and gates</a></div>
-        <div class="foot-col"><h3>Every week</h3><a href="#inputs">Weekly team inputs</a><a href="#orders">Orders to plants</a><a href="#council">Team chat and actions</a></div>
-        <details class="foot-note"><summary>About the numbers</summary><p>The model uses monthly cash flows over 60 months, values working capital at 11% a year, certifies benefits one quarter after delivery and treats pilot costs as sunk. Figures are estimates that you can test on the Returns and risk desk. Background: Lee, Padmanabhan &amp; Whang (1997) on demand distortion along the supply chain; ACPL case Appendices 1–6 for the source data.</p></details>
-      </footer>
-    </main>
+        <div class="foot-col"><h3>Every week</h3><a href="#inputs">Weekly team inputs</a><a href="#orders">Orders to plants</a><a href="#council">Team chat and actions</a><a href="#manager">Manager dashboard</a><a href="#flow">Process flow</a></div>
+        <details class="foot-note"><summary>About the numbers</summary><p>The model uses monthly cash flows over 60 months, values working capital at 11% a year, certifies benefits one quarter after delivery and treats pilot costs as sunk. Figures are estimates that you can test on the Returns and risk desk. Background: Lee, Padmanabhan &amp; Whang (1997) on demand distortion; precedents draw on Hammond (HBS), iSixSigma Asia, HUL (2018), Danone (vendor-reported) and DeHoratius &amp; Raman (2008); ACPL case Appendices 1–6 for the source data.</p></details>
+      </footer></div>
 </div>
 <div class="tip" id="tip" hidden></div>
 <div class="toast" id="toast" hidden></div>
@@ -867,7 +964,7 @@ body.landing .appbar,body.landing .ab-steps,body.landing .topbar,body.landing #c
 (function(){
 "use strict";
 /* ---------- data ---------- */
-const VIEWS=[["overview","Overview"],["diagnosis","What is going wrong"],["service","Service targets"],["opmodel","New ways of working"],["invest","Budget"],["returns","Returns and risk"],["gates","Timeline and gates"],["inputs","Weekly team inputs"],["orders","Orders to plants"],["council","Team chat and actions"]];
+const VIEWS=[["overview","Overview"],["diagnosis","What is going wrong"],["service","Service targets"],["opmodel","New ways of working"],["invest","Budget"],["returns","Returns and risk"],["gates","Timeline and gates"],["inputs","Weekly team inputs"],["orders","Orders to plants"],["council","Team chat and actions"],["manager","Manager dashboard"],["flow","Process flow"]];
 const SEG={
  A:{act:"Last 3 points need A and H capacity (unfunded); 95% only on trigger",name:"Core high-volume",rev:3705,cur:86,curve:[[86,0],[92,24],[95,49],[97,88]],pp:[3.3,4.5],days:44,fg:395,max:97},
  B:{act:"Stop at 92%; 92 to 95% pays back in 3.5 years",name:"Mid and regional",rev:2021,cur:85,curve:[[85,0],[92,18],[95,41]],pp:[2.2,3.0],days:41,fg:236,max:95},
@@ -1037,14 +1134,17 @@ function lineChart(el,o){
 /* ---------- nav ---------- */
 const DASH=VIEWS.filter(v=>v[0]!=="overview");
 const GROUPS=[["Plan",["diagnosis","service","opmodel","invest","returns","gates"]],["Weekly run",["inputs","orders","council"]]];
+const TABS=[["Plan","diagnosis"],["Weekly run","inputs"],["Manager dashboard","manager"],["Process flow","flow"]];
 const VN=Object.fromEntries(VIEWS);
+function tabOf(v){const g=GROUPS.find(([,ids])=>ids.includes(v));return g?g[0]:(TABS.find(t=>t[1]===v)||TABS[0])[0];}
 function renderNav(){
  document.body.classList.toggle("landing",S.view==="overview");
  const last=DASH.some(v=>v[0]===S.last)?S.last:"diagnosis";
  document.querySelectorAll(".js-dash").forEach(a=>a.setAttribute("href","#"+last));
- const g=GROUPS.find(([,ids])=>ids.includes(S.view))||GROUPS[0],at=g[1].indexOf(S.view);
- $("abTabs").innerHTML=GROUPS.map(([n,ids])=>`<a href="#${ids[0]}" ${g[0]===n?'aria-current="page"':""}>${n}</a>`).join("");
- $("abSteps").innerHTML=`<div class="steps">`+g[1].map((id,i)=>`<a class="step ${i<at?"done":""}" href="#${id}" ${i===at?'aria-current="step"':""}><i>${i+1}</i><span>${VN[id]}</span></a>`).join("")+`</div>`;
+ const tab=tabOf(S.view),g=GROUPS.find(([n])=>n===tab),at=g?g[1].indexOf(S.view):-1;
+ $("abTabs").innerHTML=TABS.map(([n,to])=>`<a href="#${to}" ${tab===n?'aria-current="page"':""}>${n}</a>`).join("");
+ $("abSteps").hidden=!g;
+ $("abSteps").innerHTML=g?`<div class="steps">`+g[1].map((id,i)=>`<a class="step ${i<at?"done":""}" href="#${id}" ${i===at?'aria-current="step"':""}><i>${i+1}</i><span>${VN[id]}</span></a>`).join("")+`</div>`:"";
  const sb=$("abSteps"),cur=sb.querySelector("[aria-current]");if(cur)sb.scrollLeft=cur.offsetLeft-(sb.clientWidth-cur.offsetWidth)/2;
  const wsv=["inputs","orders","council"].includes(S.view);$("wsWho").hidden=!wsv;
  VIEWS.forEach(([id])=>$("v-"+id).hidden=id!==S.view);
@@ -1057,8 +1157,6 @@ let M,G;
 function kpi(l,v,s,cls){return `<div class="kpi"><span class="l">${l}</span><span class="v ${cls||""}">${v}</span><span class="s">${s}</span></div>`;}
 function hurdle(M){const okI=M.irr!=null&&M.irr>=.18,okP=M.pb!=null&&M.pb<=30;return{okI,okP};}
 function renderSide(){
- const t1=M.cs9<=34+1e-6,t2=M.cs21<=92+1e-6,t3=M.cs36<=150+1e-6;
- $("sideStatus").innerHTML=`<span class="stc">Return<b class="num">${pct(M.irr)}</b></span><span class="stc">Money back<b class="num">${M.pb?f1(M.pb)+" mo":">60 mo"}</b></span>${G.p1?chip("ok","Gate 1 pass"):chip("no","Gate 1 miss")}${G.p2?chip("ok","Gate 2 pass"):chip("no","Gate 2 miss")}${t1&&t2&&t3?chip("ok","Budget within limits"):chip("no","Budget over a limit")}`;
  const changed=JSON.stringify({...S,view:"",last:"",todo:"",region:"",pilot:""})!==JSON.stringify({...DEF,view:"",last:"",todo:"",region:"",pilot:""});
  $("scenarioLine").textContent=changed?"Your scenario":"Base case";
  renderAttention();
@@ -1071,6 +1169,10 @@ function cashChart(el,legEl,extra){
  lineChart(el,{label:"Cumulative net cash by month",x0:0,x1:60,y0:Math.floor(lo/50)*50,y1:Math.ceil(hi/50)*50,zero:0,xt:[0,12,24,30,36,48,60],xf:t=>"M"+t,series,marks,vlines:[{x:30,c:"var(--warn)",t:"30-mo hurdle"}],tf:v=>"₹"+f0(v)});
  if(legEl)legEl.innerHTML=series.map(s=>`<span class="${s.dash?"dash":""}" style="--c:${s.c}">${s.name}</span>`).join("");
 }
+function gateTable(){
+ const row=(n,r)=>{const ok=G.pass(r);return `<tr><td>${n} ${r[0]}</td><td class="n">${fmtK(r[1].v,r[4])}</td><td class="n">${r[2]}${r[4]==="cr"?"₹":""}${r[3]}</td><td>${ok?chip("ok","Pass"):chip("no","Miss")}</td></tr>`;};
+ return `<div class="tbl"><table><thead><tr><th>Measure</th><th class="n">Plan</th><th class="n">Need</th><th></th></tr></thead><tbody>${G.g1.map(r=>row("G1",r)).join("")}${G.g2.map(r=>row("G2",r)).join("")}</tbody></table></div>`;
+}
 function renderOverview(){
  const h=hurdle(M);renderHero();
  $("ovKpis").innerHTML=kpi("Return (5-year IRR)",pct1(M.irr),"needs at least 18%")+kpi("Money back in (months)",M.pb?f1(M.pb):"60+",h.okP?"limit is 30 months":"misses the 30-month limit")+kpi("Value created (NPV)",cr(M.npv),"5 years, at 18%")+kpi("Yearly profit gain",cr(M.g22.ebitda),"EBITDA run-rate, about +90 bps")+kpi("Cash freed from stock","₹"+f0(M.g22.wc)+" Cr",`₹${f0(M.g22.wcOwned)} Cr of it ACPL-owned`)+kpi("Orders filled on time",f1(M.sv.nat)+"%",`from 86% today; stock ${f1(M.sv.natDays)} days`);
@@ -1080,8 +1182,23 @@ function renderOverview(){
  $("ovTodoN").textContent=TODO.filter(t=>tick(t[0])).length+" of "+TODO.length+" done";
  $("ovTodo").innerHTML=TODO.map(([k,t,s])=>`<label class="todo ${tick(k)?"done":""}"><input type="checkbox" data-k="${k}" ${tick(k)?"checked":""}><span><b>${t}</b><small>${s}</small></span></label>`).join("");
  $("ovTodo").querySelectorAll("input").forEach(c=>c.onchange=()=>{S.todo=S.todo||{};S.todo[c.dataset.k]=c.checked;save();renderOverview();});
- const row=(n,r)=>{const ok=G.pass(r);return `<tr><td>${n} ${r[0]}</td><td class="n">${fmtK(r[1].v,r[4])}</td><td class="n">${r[2]}${r[4]==="cr"?"₹":""}${r[3]}</td><td>${ok?chip("ok","Pass"):chip("no","Miss")}</td></tr>`;};
- $("ovGates").innerHTML=`<div class="tbl"><table><thead><tr><th>Measure</th><th class="n">Plan</th><th class="n">Need</th><th></th></tr></thead><tbody>${G.g1.map(r=>row("G1",r)).join("")}${G.g2.map(r=>row("G2",r)).join("")}</tbody></table></div>`;
+ $("ovGates").innerHTML=gateTable();
+}
+function renderManager(){
+ const R=WS.req,tot=R.length,got=R.filter(r=>r.status==="received").length,short=R.filter(r=>r.status==="short").length;
+ const isOpen=r=>!["received","short"].includes(r.status),late=R.filter(r=>isOpen(r)&&r.week<THISWEEK).length;
+ const data=TEAMS.filter(([v])=>v!=="flow"),sent=data.filter(([v])=>inpDoc(v,THISWEEK)).length;
+ $("mgKpis").innerHTML=kpi("Requests",tot,"all weeks")+kpi("Received",got,"delivered to the region")+kpi("Cannot fill",short,"closed without supply")+kpi("Late",late,"open and past their week")+kpi("Teams sent numbers",sent+" of "+data.length,THISWEEK);
+ const mx=Math.max(1,...COLS.map(([st])=>R.filter(r=>r.status===st).length));
+ $("mgStages").innerHTML=COLS.map(([st,n])=>{const c=R.filter(r=>r.status===st).length;return `<div class="hb"><span>${n}</span><div class="bar"><span style="width:${c/mx*100}%"></span></div><b class="num">${c}</b></div>`;}).join("");
+ const rate=tot?short/tot:0,lim=(100-M.sv.nat)/100,scale=.2,col=rate>lim?"var(--bad)":"var(--good)";
+ $("mgRate").innerHTML=tot?`<div class="kpi" style="padding:0;border:none"><span class="v" style="color:${col}">${f1(rate*100)}%</span><span class="s">plan limit ${f1(lim*100)}% (100% minus the ${f1(M.sv.nat)}% fill target)</span></div><div class="bar" style="margin:16px 0 8px"><span style="width:${Math.min(1,rate/scale)*100}%;background:${col}"></span><em style="left:${Math.min(1,lim/scale)*100}%"></em></div><p class="note">The marker is the plan limit. Above it, review the shortfalls below.</p>`:`<div class="empty">No requests yet, so there is no rate to show.</div>`;
+ const need=R.filter(r=>r.status==="requested"||r.status==="short"||(isOpen(r)&&r.week<THISWEEK)).sort((a,b)=>(a.week>b.week)-(a.week<b.week)).slice(0,10);
+ $("mgTable").innerHTML=need.length?`<table><thead><tr><th>Code</th><th>Region</th><th>SKU</th><th class="n">k cases</th><th>Needed by</th><th>Status</th><th></th></tr></thead><tbody>`+need.map(r=>`<tr><td class="num">${code(r.id)}</td><td>${esc(r.region)}</td><td>${esc(r.sku)}</td><td class="n">${f1(+r.qty)}</td><td>${esc(r.week)}</td><td>${r.status==="short"?chip("no","Cannot fill"):chip("wn","Waiting for a plant")}${r.week<THISWEEK&&isOpen(r)?" "+chip("no","Late"):""}${r.reason?`<div class="note">${esc(r.reason)}</div>`:""}</td><td><a href="#orders">Open</a></td></tr>`).join("")+`</tbody></table>`:`<div class="empty">Nothing is waiting for a decision.<br><button type="button" id="mgDemo" class="ghost" style="margin-top:10px">Load the example week</button></div>`;
+ if($("mgDemo"))$("mgDemo").onclick=()=>$("exLoad").click();
+ $("mgGates").innerHTML=gateTable();
+ $("mgWk").textContent=THISWEEK;
+ $("mgInputs").innerHTML=`<div class="tbl"><table><tbody>`+data.map(([v,n])=>{const d=inpDoc(v,THISWEEK);return `<tr><td>${n}</td><td>${d?chip("ok","Sent"):chip("wn","Missing")}</td><td class="note">${d?esc(pname(d.by))+", "+ago(d.at):""}</td></tr>`;}).join("")+`</tbody></table></div>`;
 }
 function renderDiagnosis(){
  // grouped bars
@@ -1249,7 +1366,7 @@ function renderVisibleNonService(){renderSide();
  const sv=M.sv;const uni=service({A:95,B:95,C:95,D:95,E:95},S.days);
  $("svKpis").innerHTML=kpi("National fill",f1(sv.nat)+"%","from 86%; Board asked 95%")+kpi("Network days",f1(sv.natDays),"from 46; Board asked under 35")+kpi("Cost of service",cr(sv.cost),`uniform 95% costs ${cr(uni.cost)}`)+kpi("Annual contribution",cr(sv.ann),`payback ${sv.ann>0?f1(sv.cost/sv.ann):"n/a"} years`);}
 function recalc(){recalcCore();renderAll();}
-function renderAll(){renderSide();renderOverview();renderDiagnosis();renderService();renderOpModel();renderInvest();renderReturns();renderGates();}
+function renderAll(){renderSide();renderOverview();renderDiagnosis();renderService();renderOpModel();renderInvest();renderReturns();renderGates();renderManager();}
 /* ---------- wiring ---------- */
 [["sRec","rec"],["sReal","real"],["sDelay","delay"],["sLag","lag"],["sOver","over"],["sCap","cap"],["sHair","hair"]].forEach(([id,k])=>{$(id).addEventListener("input",e=>{S.sc[k]=+e.target.value;recalcCore();renderSide();renderReturns();});$(id).addEventListener("change",()=>recalc());});
 $("sDay").onchange=e=>{S.sc.day=e.target.value;recalc();};
@@ -1416,7 +1533,7 @@ $("rqForm").addEventListener("submit",async e=>{e.preventDefault();const qty=+$(
 async function moveReq(r,patch,label){const hist=(r.hist||[]).slice(-19).concat([{s:patch.status||r.status,by:WS.uid||"",at:Date.now(),note:patch.note||""}]);delete patch.note;
  const ok=await wsWrite(()=>WS.db.doc("requests/"+r.id).update({...patch,hist}));if(ok)toast(label);}
 function renderOrders(){
- const list=WS.req.filter(r=>(!WS.fReg||r.region===WS.fReg)&&(!WS.fPlant||r.plant===WS.fPlant));const dis=(!WS.db||WS.ro)?"disabled":"";
+ const list=WS.req.filter(r=>(!WS.fReg||r.region===WS.fReg)&&(!WS.fPlant||r.plant===WS.fPlant));const dis=(!WS.db||WS.ro||!canAct())?"disabled":"";roleNote();
  const P1=inpDoc("plants",THISWEEK);
  $("expTable").innerHTML=`<thead><tr><th>Plant</th><th class="n">Slot (6%)</th><th class="n">Express used</th><th></th></tr></thead><tbody>`+PLANTS.map(([p,c])=>{const capv=num(P1,key("Plant "+p+" · "+c)+".cap");const slot=capv==null?null:capv*.06;const used=WS.req.filter(x=>x.plant===p&&x.express&&x.shipWeek===THISWEEK&&x.status!=="short").reduce((a,x)=>a+(+x.commitQty||0),0);
   return `<tr><td>Plant ${p}</td><td class="n">${slot==null?"–":f1(slot)}</td><td class="n">${f1(used)}</td><td>${slot==null?chip("nt","No capacity"):used>slot?chip("no","Over slot"):used>slot*.8?chip("wn","Nearly full"):chip("ok","Room")}</td></tr>`;}).join("")+`</tbody>`;
@@ -1487,7 +1604,7 @@ $("exLoad").onclick=async()=>{if(!WS.db||WS.ro){toast("The workspace is still st
  });if(ok)toast("Example week loaded");};
 $("exClear").onclick=async()=>{if(!WS.db||WS.ro)return;const docs=[...WS.req.filter(r=>r.example).map(r=>"requests/"+r.id),...Object.values(WS.inp).filter(i=>i.example).map(i=>"inputs/"+i.id),...WS.msgs.filter(m=>m.example).map(m=>"msgs/"+m.id),...WS.acts.filter(a=>a.example).map(a=>"acts/"+a.id)];
  if(!docs.length){toast("No examples to clear");return;}const ok=await wsWrite(async()=>{for(const p of docs)await WS.db.doc(p).delete();});if(ok)toast("Cleared "+docs.length+" example entries");};
-function renderWS(){renderWho();renderInputs();renderBalance();renderOrders();renderCouncil();renderRoles();renderAttention();}
+function renderWS(){renderWho();renderInputs();renderBalance();renderOrders();renderCouncil();renderRoles();renderManager();renderAttention();}
 /* ---------- landing hero ---------- */
 function renderHero(){
  $("hcFill").textContent="86% → "+f1(M.sv.nat)+"%";$("hcFillBar").style.width=Math.max(0,Math.min(100,(M.sv.nat-80)/20*100))+"%";
@@ -1525,13 +1642,36 @@ function renderAttention(){
  const L=attention();
  $("bellN").textContent=L.length;$("bellN").hidden=!L.length;
  const list=L.length?L.map(([t,s,v])=>`<a class="att" href="#${v}">${esc(t)}<small>${esc(s)}</small></a>`).join(""):`<div class="none">All clear. Nothing needs attention right now.</div>`;
- $("bellMenu").innerHTML=list;$("ovAttn").innerHTML=list;$("ovAttnN").textContent=L.length?L.length+" open":"All clear";
+ $("bellMenu").innerHTML=list;$("ovAttn").innerHTML=list;$("ovAttnN").textContent=L.length?L.length+" open":"All clear";renderLive();
 }
 function bellClose(){$("bellMenu").hidden=true;$("bellBtn").setAttribute("aria-expanded","false");}
 $("bellBtn").onclick=e=>{e.stopPropagation();const m=$("bellMenu");m.hidden=!m.hidden;$("bellBtn").setAttribute("aria-expanded",String(!m.hidden));};
 document.addEventListener("click",e=>{if($("bellMenu").hidden)return;if(!e.target.closest(".ab-bell")||e.target.closest("#bellMenu a"))bellClose();});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")bellClose();});
 $("roles").addEventListener("click",e=>{const a=e.target.closest("a.role");if(!a)return;WS.inTeam=a.dataset.team;setTeam(a.dataset.team);});
+/* ---------- live side panel, scenarios, who-can-do-what ---------- */
+function renderLive(){
+ const t1=M.cs9<=34+1e-6,t2=M.cs21<=92+1e-6,t3=M.cs36<=150+1e-6;
+ const today=new Date().toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});
+ const L=attention().slice(0,3);
+ const sys=["WMS","ERP","DMS","Sales DB"].map(n=>`<div title="Demo status"><b>${n}</b><i>Connected</i></div>`).join("");
+ $("livePanel").innerHTML=`<div class="lv-tiles"><div><span>Today</span><b>${today}</b></div><div><span>Fill plan</span><b>${f1(M.sv.nat)}%</b></div><div><span>Return</span><b>${pct(M.irr)}</b></div></div>
+ <h3>Live plan summary</h3>
+ <div><div class="lv-row"><span>National fill</span><b>86% → ${f1(M.sv.nat)}%</b></div><div class="lv-row"><span>Network days</span><b>46 → ${f1(M.sv.natDays)}</b></div><div class="lv-row"><span>Money back</span><b>${M.pb?f1(M.pb)+" mo":">60 mo"}</b></div><div class="lv-row"><span>Spend by month 9</span><b>${cr(M.cs9)}</b></div><div class="lv-row"><span>Gate 1</span>${G.p1?chip("ok","Pass"):chip("no","Miss")}</div><div class="lv-row"><span>Gate 2</span>${G.p2?chip("ok","Pass"):chip("no","Miss")}</div><div class="lv-row"><span>Budget</span>${t1&&t2&&t3?chip("ok","Within limits"):chip("no","Over a limit")}</div></div>
+ <h3>Notifications</h3>
+ <div class="lv-att">${L.length?L.map(([t,s,v])=>`<a href="#${v}">${esc(t)}<small>${esc(s)}</small></a>`).join(""):`<div class="lv-note">All clear. Nothing needs attention.</div>`}<div class="lv-note">WMS, ERP, DMS and Sales DB synced<small>09:00</small></div></div>
+ <div class="lv-sys">${sys}</div>`;
+}
+function plainPlan(){S.fill={...OURS.fill};S.days={...OURS.days};S.sc=clone(DEF.sc);S.alloc=clone(DEF.alloc);S.opts={};S.coo=false;}
+const SCN={rec:["Recommended plan",()=>{}],board:["Board's uniform 95%",()=>{S.fill={A:95,B:95,C:95,D:95,E:95};}],stress:["Stress case",()=>{S.sc={...S.sc,rec:25,real:70,delay:6,over:20};}]};
+$("scnChips").addEventListener("click",e=>{const b=e.target.closest("[data-scn]");if(!b)return;const k=b.dataset.scn;plainPlan();SCN[k][1]();recalc();toast("Loaded: "+SCN[k][0]);});
+const ACT_ROLES=["plants","flow"];
+function canAct(){return !WS.team||ACT_ROLES.includes(WS.team);}
+function roleNote(){
+ const el=$("roleNote"),n=WS.team?TEAMN[WS.team]:"";
+ el.className="callout"+(WS.team&&!canAct()?" warn":"");
+ el.innerHTML=!WS.team?"Choose your team at the top to see what you can do here. Until then you can do everything.":canAct()?`Viewing as <b>${esc(n)}</b>. You can commit quantity, move orders along and mark them cannot fill.`:`Viewing as <b>${esc(n)}</b>. You can raise requests and discuss them. Switch to <b>Plants</b> or <b>Flow Owner</b> to commit and move orders.`;
+}
 /* ---------- boot ---------- */
 recalcCore();
 {const h=location.hash.slice(1);S.view=VIEWS.some(v=>v[0]===h)?h:"overview";if(S.view!=="overview")S.last=S.view;}
