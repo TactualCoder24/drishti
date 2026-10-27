@@ -12,9 +12,13 @@ The page loads its fonts (Archivo, Public Sans, IBM Plex Mono) from Google Fonts
 
 ## What is in it
 
-The app opens on a **landing page** with the overview: the headline plan numbers, five key facts, a live snapshot (cash curve, funding gates, decisions needed today) and a card for each desk. **Open dashboard** takes you into the dashboard, which has a sidebar of nine desks; **← Landing page** (or the DRISHTI logo) takes you back. Opening the landing page again and pressing **Open dashboard** returns you to the desk you were last on.
+The app is built like a small ERP: a landing page that works as a home screen, and a dashboard with a header, section tabs and a step bar.
 
-The first six desks share one model, so a change on one desk updates the others and the landing page.
+**Landing page.** Pick your team (Sales, Distributors, Plants, Brands, Finance, Flow Owner) and go straight to the screen you use. It also shows what **needs attention** right now (missed gates, a budget over a tranche limit, teams that have not sent this week's numbers, late order requests, open actions), a tickable **launch checklist**, the live plan numbers and a card for every module. **Open dashboard** takes you in; the DRISHTI logo takes you back, and the landing button resumes at the desk you were last on.
+
+**Dashboard.** The header has two tabs, **Plan** (a six-step flow) and **Weekly run** (three steps), a **Viewing as** team switcher and a notification bell that lists the same attention items. A status row under the step bar shows return, payback, both gates and the budget limits for the current scenario.
+
+The six Plan desks share one model, so a change on one desk updates the others and the landing page.
 
 | Desk | What it does |
 |---|---|
@@ -34,7 +38,7 @@ Everything is stored in your browser's `localStorage`, so nothing leaves your de
 
 | Key | Holds |
 |---|---|
-| `drishti-v2` | Planning state: targets, budget, assumptions, gate actuals, current desk |
+| `drishti-v2` | Planning state: targets, budget, assumptions, gate actuals, launch checklist, last desk |
 | `drishti-ws-v1` | Workspace: weekly inputs, order requests, messages, actions |
 | `drishti-uid`, `drishti-team` | Your local identity and chosen team |
 
@@ -46,8 +50,8 @@ The workspace (the last three desks) is not shared between people or devices. If
 
 ## Model notes
 
-The returns model uses monthly cash flows over 60 months, values working capital at 11% a year, certifies benefits one quarter after delivery and treats pilot costs as sunk. It is calibrated to the submitted deck (base case IRR 86.6%, payback 29.3 months), so figures are model estimates and may differ slightly from it.
+The returns model uses monthly cash flows over 60 months, values working capital at 11% a year, certifies benefits one quarter after delivery and treats pilot costs as sunk. The base case gives an IRR of 86.6% and payback of 29.3 months. Figures are model estimates; use the Returns and risk desk to test them.
 
 ## Phones and tablets
 
-The layout adapts below 1100 px and again below 820 px, where the side index becomes a scrolling tab strip. On phones, form fields use 16 px text (so iOS does not zoom on focus), touch targets are 40 to 44 px, the order board swipes sideways, and chart tooltips respond to touch.
+The layout adapts below 1100 px and again below 820 px, where the header stacks, the tabs fill the width and the step bar scrolls sideways and stays pinned. On phones, form fields use 16 px text (so iOS does not zoom on focus), touch targets are 40 to 44 px, the order board swipes sideways, and chart tooltips respond to touch.
