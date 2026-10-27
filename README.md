@@ -2,11 +2,11 @@
 
 An interactive planning dashboard for **Project Drishti**, a three-year, ₹150 Cr supply chain programme at ACPL. ACPL has stock-outs and excess stock at the same time (fill-rate fell from 94% to 86% while inventory days rose from 39 to 46). This control room shows why, sets service targets, tests the investment plan and gives each team one place to work every week.
 
-The whole app is a single file, [`drishti-control-room.html`](drishti-control-room.html). There is no build step, no backend and no dependencies.
+The whole app is a single file, [`index.html`](index.html). There is no build step, no backend and no dependencies.
 
 ## Run it
 
-Open `drishti-control-room.html` in any modern browser. It also works from any static host (GitHub Pages, Netlify, an S3 bucket).
+Open `index.html` in any modern browser. It also works from any static host (GitHub Pages, Netlify, an S3 bucket).
 
 The page loads its fonts (Archivo, Public Sans, IBM Plex Mono) from Google Fonts. Without a connection it falls back to system fonts and everything else still works.
 
