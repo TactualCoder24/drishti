@@ -1,0 +1,1413 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"></head><body>
+<title>Drishti Control Room</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,500..800&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: operations console. Fixed left index of seven desks, one working sheet at a time; mobile turns the index into a scrolling tab strip. */
+:root{
+  --bg:#EEF0EC; --sheet:#FFFFFF; --sunk:#F5F6F3; --ink:#17202A; --ink2:#3C4752; --mute:#5F6973; --rule:#D8DCD5; --rule2:#C5CAC2;
+  --neel:#2C4590; --neel-soft:#E3E8F5; --neel-ink:#21366F;
+  --good:#2D7A4C; --good-soft:#E2F0E6; --warn:#A8730F; --warn-soft:#F6EBD3; --bad:#B03A35; --bad-soft:#F6E1DF;
+  color-scheme:light; --f-head:"Archivo","Arial Narrow",Arial,sans-serif; --f-body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif; --f-num:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--sheet)}
+.num,td.n,th.n{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.shell{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:100%}
+aside{background:var(--sheet);border-right:1px solid var(--rule);padding-block:20px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:16px;position:sticky;top:0;height:100vh;overflow:auto;display:flex;flex-direction:column;gap:18px}
+.brand{display:flex;flex-direction:column;gap:2px}
+.brand b{font-family:var(--f-head);font-stretch:75%;font-weight:800;font-size:26px;letter-spacing:.01em;line-height:1}
+.brand span{font-size:12px;color:var(--mute)}
+nav{display:flex;flex-direction:column;gap:1px}
+nav a{display:block;padding:9px 12px;color:var(--ink2);text-decoration:none;border-radius:4px;font-weight:500;font-size:15px}
+nav a i{font-style:normal;font-family:var(--f-num);font-size:11px;color:var(--mute)}
+nav a:hover{background:var(--sunk);color:var(--ink)}
+nav a[aria-current="page"]{background:var(--neel-soft);color:var(--neel-ink)}
+nav a[aria-current="page"] i{color:var(--neel)}
+nav a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--neel);outline-offset:2px}
+.side-status{margin-top:auto;border-top:1px solid var(--rule);padding-top:14px;display:flex;flex-direction:column;gap:8px;font-size:12px}
+.side-status .row{display:flex;justify-content:space-between;gap:8px}
+.side-status .row span:first-child{color:var(--mute)}
+.side-status b{font-family:var(--f-body);font-variant-numeric:tabular-nums}
+main{min-width:0;padding-block:24px 64px;padding-left:max(16px,2.4vw);padding-right:max(16px,env(safe-area-inset-right,0px),2.4vw)}
+.topbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}
+.crumbs{font-size:13px;color:var(--neel);font-weight:600}
+h1{font-family:var(--f-head);font-stretch:85%;font-weight:750;font-size:clamp(26px,3vw,34px);line-height:1.15;margin:6px 0 0;text-wrap:balance;max-width:32ch}
+h2{font-family:var(--f-head);font-stretch:90%;font-weight:700;font-size:19px;margin:0;text-wrap:balance}
+h3{font-family:var(--f-head);font-stretch:90%;font-weight:650;font-size:14px;margin:0;letter-spacing:.01em}
+p{margin:0}
+.lede{color:var(--ink2);max-width:68ch;margin-top:10px;font-size:16px;line-height:1.65}
+.tools{display:flex;gap:8px;flex-wrap:wrap}
+button,.btn{font:inherit;font-weight:500;font-size:14px;border:1px solid var(--rule2);background:var(--sheet);color:var(--ink);padding:8px 14px;border-radius:4px;cursor:pointer;min-height:36px}
+button:hover{border-color:var(--ink2)}
+button.primary{background:var(--neel);border-color:var(--neel);color:var(--sheet)}
+button.ghost{background:transparent}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.chip::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.ok{color:var(--good);background:var(--good-soft)} .wn{color:var(--warn);background:var(--warn-soft)} .no{color:var(--bad);background:var(--bad-soft)} .nt{color:var(--ink2);background:var(--sunk)}
+.grid{display:grid;gap:20px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))} .g3{grid-template-columns:repeat(3,minmax(0,1fr))} .g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.g-wide{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);align-items:start}
+.panel{background:var(--sheet);border:1px solid var(--rule);border-radius:6px;padding:20px;min-width:0;display:flex;flex-direction:column;gap:14px}
+.panel header{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.panel header small{color:var(--mute);font-size:13px}
+.stack{display:flex;flex-direction:column;gap:20px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));border:1px solid var(--rule);border-radius:6px;overflow:hidden;background:var(--sheet)}
+.kpi{padding:16px 18px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);display:flex;flex-direction:column;gap:4px;min-width:0}
+.kpi .l{font-size:13px;color:var(--ink2);font-weight:500}
+.kpi .v{font-family:var(--f-head);font-stretch:90%;font-size:30px;font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums}
+.kpi .s{font-size:13px;color:var(--mute)}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th{font-weight:600;text-align:left;color:var(--ink2);font-size:13px;padding:8px 10px;border-bottom:1px solid var(--rule2);white-space:nowrap}
+td{padding:10px 10px;line-height:1.45;border-bottom:1px solid var(--rule);vertical-align:top}
+td.n,th.n{text-align:right;white-space:nowrap}
+td.n{font-family:var(--f-body);font-variant-numeric:tabular-nums}
+tr.sum td{font-weight:600;border-top:1px solid var(--rule2);border-bottom:none}
+tbody tr:hover td{background:var(--sunk)}
+.note{font-size:13px;color:var(--mute);line-height:1.5}
+.callout{border-left:3px solid var(--neel);background:var(--neel-soft);padding:12px 14px;font-size:14px;line-height:1.55;border-radius:0 4px 4px 0;color:var(--ink)}
+.callout.warn{border-color:var(--warn);background:var(--warn-soft)} .callout.bad{border-color:var(--bad);background:var(--bad-soft)} .callout.good{border-color:var(--good);background:var(--good-soft)}
+label.f{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--ink2);min-width:0}
+.ctl{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;align-items:center}
+.ctl output{font-family:var(--f-body);font-weight:600;font-variant-numeric:tabular-nums;font-size:14px;color:var(--ink);min-width:56px;text-align:right}
+input[type=range]{width:100%;accent-color:var(--neel)}
+input[type=number],input[type=text]{font:inherit;font-variant-numeric:tabular-nums;font-size:14px;padding:8px 10px;border-radius:4px;border:1px solid var(--rule2);background:var(--sheet);color:var(--ink);border-radius:2px;width:100%;min-width:0}
+select{font:inherit;font-size:13px;padding:5px 7px;border:1px solid var(--rule2);background:var(--sheet);color:var(--ink);border-radius:2px;width:100%;min-width:0}
+input[type=checkbox]{accent-color:var(--neel);width:15px;height:15px}
+.seg{display:inline-flex;border:1px solid var(--rule2);border-radius:2px;overflow:hidden}
+.seg button{border:none;border-right:1px solid var(--rule2);border-radius:0;padding:5px 10px;background:var(--sheet)}
+.seg button:last-child{border-right:none}
+.seg button[aria-pressed="true"]{background:var(--neel);color:var(--sheet)}
+.bar{height:8px;background:var(--sunk);position:relative;border-radius:1px}
+.bar>span{position:absolute;inset:0 auto 0 0;background:var(--neel);border-radius:1px}
+.bar>em{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink)}
+.tree{display:grid;grid-template-columns:minmax(150px,.7fr) minmax(0,3fr);gap:12px;align-items:stretch}
+.tree .root{background:var(--ink);color:var(--sheet);padding:14px;display:flex;flex-direction:column;justify-content:center;gap:6px}
+.tree .root b{font-family:var(--f-head);font-stretch:80%;font-size:20px;line-height:1.1}
+.branches{display:grid;gap:8px}
+.branch{display:grid;grid-template-columns:130px minmax(0,1fr);gap:12px;border:1px solid var(--rule);padding:10px 12px;align-items:start}
+.branch ul{margin:0;padding-left:16px;color:var(--ink2);font-size:13px}
+.branch .tag{display:flex;flex-direction:column;gap:6px}
+.week{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border:1px solid var(--rule)}
+.week>div{padding:12px;border-right:1px solid var(--rule);display:flex;flex-direction:column;gap:4px}
+.week>div:last-child{border-right:none;background:var(--sunk)}
+.week .d{font-family:var(--f-num);font-size:11px;color:var(--neel);font-weight:600;letter-spacing:.06em}
+.pillars{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border:1px solid var(--rule)}
+.pillars>div{padding:14px;border-right:1px solid var(--rule);display:flex;flex-direction:column;gap:6px}
+.pillars>div:last-child{border-right:none}
+.pillars .nm{font-family:var(--f-head);font-stretch:75%;font-weight:800;font-size:22px;letter-spacing:.06em;color:var(--neel)}
+.pillars ul{margin:0;padding-left:16px;font-size:13px;color:var(--ink2)}
+.gantt{display:grid;grid-template-columns:200px minmax(0,1fr);font-size:12px;min-width:640px}
+.gantt .lab{padding:6px 8px 6px 0;border-bottom:1px solid var(--rule);color:var(--ink2)}
+.gantt .lab.grp{font-family:var(--f-head);font-weight:700;color:var(--neel);letter-spacing:.08em;font-size:11px}
+.gantt .trk{position:relative;border-bottom:1px solid var(--rule);min-height:28px}
+.gantt .trk span{position:absolute;top:7px;height:14px;background:var(--neel);opacity:.85;border-radius:1px}
+.gantt .trk span.soft{background:var(--neel-soft);border:1px solid var(--neel);opacity:1}
+.gantt .trk i{position:absolute;top:0;bottom:0;width:1px;background:var(--rule2)}
+.gantt .trk i.gate{background:var(--warn);width:2px}
+.gantt .axis{position:relative;height:20px;font-family:var(--f-num);color:var(--mute);font-size:11px}
+.gantt .axis b{position:absolute;font-weight:400;transform:translateX(-50%)}
+.optrow{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--rule)}
+.optrow:last-child{border-bottom:none}
+.optrow .meta{font-size:12px;color:var(--mute)}
+.alloc{display:grid;grid-template-columns:minmax(0,1.4fr) 92px minmax(80px,1fr) 74px;gap:10px;align-items:center;padding:7px 0;border-bottom:1px solid var(--rule)}
+.alloc .nm{font-weight:500}
+.alloc .nm small{display:block;color:var(--mute);font-weight:400;font-size:12px}
+.chart{width:100%;height:auto;display:block;overflow:visible}
+.chart text{font-family:var(--f-body);font-size:12px;fill:var(--mute)}
+.chart .lbl{fill:var(--ink2)}
+.chart .strong{fill:var(--ink);font-weight:600}
+.tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--sheet);font-size:13px;padding:7px 10px;border-radius:4px;z-index:50;font-family:var(--f-body);white-space:nowrap;transform:translate(-50%,calc(-100% - 10px))}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ink2)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend span::before{content:"";width:14px;height:3px;background:var(--c,var(--neel))}
+.legend span.dash::before{background:repeating-linear-gradient(90deg,var(--c) 0 4px,transparent 4px 7px)}
+.legend span.sq::before{height:10px;width:10px}
+.howto{display:flex;flex-direction:column;gap:4px;padding:14px;border:1px solid var(--rule);border-radius:6px;text-decoration:none;color:var(--ink);background:var(--sunk)}
+.howto:hover{border-color:var(--neel);background:var(--neel-soft)}
+.howto span{font-size:14px;color:var(--ink2)}
+.view[hidden]{display:none!important}
+.decisions{counter-reset:d;display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.decisions li{counter-increment:d;display:grid;grid-template-columns:28px minmax(0,1fr);gap:8px;align-items:baseline}
+.decisions li::before{content:counter(d);font-family:var(--f-num);font-weight:600;color:var(--neel);font-size:13px}
+.toast{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--ink);color:var(--sheet);padding:8px 14px;font-size:13px;border-radius:2px;z-index:60}
+.mobnav{display:none}
+.navgrp{font-size:12px;font-weight:600;color:var(--mute);padding:14px 12px 4px}
+.who{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--sheet);border:1px solid var(--rule);padding:8px 12px;margin-bottom:16px;font-size:13px}
+.who img{width:24px;height:24px;border-radius:50%}
+.who select{width:auto}
+.av{width:20px;height:20px;border-radius:50%;vertical-align:middle;flex:none}
+.tabs{display:flex;gap:2px;flex-wrap:wrap;border-bottom:1px solid var(--rule2)}
+.tabs button{border:none;border-bottom:2px solid transparent;border-radius:0;background:transparent;padding:6px 10px;color:var(--ink2)}
+.tabs button[aria-pressed="true"]{border-bottom-color:var(--neel);color:var(--ink);font-weight:600}
+.formgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+textarea{font:inherit;font-size:13px;padding:6px 8px;border:1px solid var(--rule2);background:var(--sheet);color:var(--ink);border-radius:2px;width:100%;min-height:60px;resize:vertical}
+.kanban{display:grid;grid-template-columns:repeat(6,minmax(210px,1fr));gap:10px;min-width:1300px}
+.col{background:var(--sunk);border:1px solid var(--rule);border-radius:6px;padding:8px;display:flex;flex-direction:column;gap:8px;min-height:160px}
+.col h3{display:flex;justify-content:space-between;font-size:14px;color:var(--ink)}
+.card{background:var(--sheet);border:1px solid var(--rule);border-radius:6px;padding:12px;display:flex;flex-direction:column;gap:8px;font-size:14px}
+.card.express{border-left:3px solid var(--warn)}
+.card .id{font-family:var(--f-num);font-size:11px;color:var(--mute)}
+.card .q{font-family:var(--f-head);font-weight:700;font-size:20px}
+.card .acts{display:flex;gap:6px;flex-wrap:wrap}
+.card .acts button{padding:3px 8px;font-size:12px}
+.card .mini{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.card .mini select,.card .mini input{font-size:12px;padding:3px 5px}
+.empty{border:1px dashed var(--rule2);padding:16px;color:var(--mute);font-size:13px;text-align:center}
+.chat{display:grid;grid-template-columns:180px minmax(0,1fr) minmax(0,.9fr);gap:16px}
+.chlist{display:flex;flex-direction:column;gap:2px}
+.chlist button{text-align:left;border:none;background:transparent;padding:6px 8px;display:flex;justify-content:space-between}
+.chlist button[aria-pressed="true"]{background:var(--neel-soft);color:var(--neel-ink)}
+.feed{display:flex;flex-direction:column;gap:10px;max-height:460px;overflow:auto;padding-right:4px}
+.msg{display:grid;grid-template-columns:24px minmax(0,1fr);gap:8px}
+.msg .h{font-size:12px;color:var(--mute)}
+.msg .h b{color:var(--ink);font-weight:600}
+.msg .t{white-space:pre-wrap;word-break:break-word}
+.ref{font-family:var(--f-num);font-size:11px;background:var(--neel-soft);color:var(--neel-ink);padding:1px 5px;border-radius:2px}
+.act{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:start;padding:6px 0;border-bottom:1px solid var(--rule);font-size:13px}
+.act.done .tx{text-decoration:line-through;color:var(--mute)}
+@media (max-width:1100px){.chat{grid-template-columns:minmax(0,1fr)}.chlist{flex-direction:row;flex-wrap:wrap}}
+.hero{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,1fr);gap:28px;align-items:center;background:var(--neel-ink);color:#fff;border-radius:10px;padding:clamp(24px,4vw,48px);position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-80px;top:-80px;width:320px;height:320px;border-radius:50%;border:48px solid rgba(255,255,255,.05);pointer-events:none}
+.hero-txt{display:flex;flex-direction:column;gap:14px;animation:rise .6s ease-out both}
+.hero-eye{font-size:13px;font-weight:600;color:#C9D5F5;letter-spacing:.02em}
+.hero-h{font-family:var(--f-head);font-stretch:82%;font-weight:800;font-size:clamp(30px,4.4vw,52px);line-height:1.04;margin:0;text-wrap:balance;max-width:16ch;color:#fff}
+.hero-p{font-size:17px;line-height:1.6;color:#DCE3F6;max-width:52ch}
+.hero-cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.btn{display:inline-flex;align-items:center;text-decoration:none}
+.hero .btn{background:transparent;color:#fff;border-color:rgba(255,255,255,.45);padding:11px 18px;font-size:15px}
+.hero .btn.primary{background:#fff;color:var(--neel-ink);border-color:#fff;font-weight:600}
+.hero .btn:hover{border-color:#fff}
+.hero-card{background:var(--sheet);color:var(--ink);border-radius:8px;padding:20px;display:flex;flex-direction:column;gap:10px;position:relative;z-index:1;animation:rise .6s .12s ease-out both;box-shadow:0 12px 32px rgba(10,20,50,.25)}
+.hc-l{font-size:13px;font-weight:600;color:var(--neel)}
+.hc-row{display:flex;justify-content:space-between;align-items:baseline;font-size:14px;color:var(--ink2)}
+.hc-row b{font-family:var(--f-head);font-size:20px;color:var(--ink)}
+.hc-bar{height:8px;background:var(--sunk);border-radius:99px;overflow:hidden}
+.hc-bar span{display:block;height:100%;background:var(--neel);border-radius:99px;transition:width .6s ease}
+.hc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;border-top:1px solid var(--rule);padding-top:12px;margin-top:4px}
+.hc-grid div{display:flex;flex-direction:column;font-size:12.5px;color:var(--mute)}
+.hc-grid b{font-family:var(--f-head);font-size:19px;color:var(--ink)}
+@keyframes rise{from{opacity:.001;transform:translateY(12px)}to{opacity:1;transform:none}}
+.slider{margin-top:22px;background:var(--sheet);border:1px solid var(--rule);border-radius:8px;overflow:hidden}
+.sl-track{display:flex;transition:transform .55s cubic-bezier(.4,.1,.2,1)}
+.slide{flex:0 0 100%;padding:28px clamp(20px,4vw,40px) 12px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.sl-k{font-size:13px;font-weight:600;color:var(--neel)}
+.sl-big{font-family:var(--f-head);font-stretch:85%;font-weight:700;font-size:clamp(21px,2.6vw,30px);line-height:1.2;max-width:30ch;text-wrap:balance}
+.sl-s{color:var(--ink2);max-width:60ch}
+.slide a{color:var(--neel);font-weight:600;text-decoration:none;margin-top:4px;align-self:flex-start}
+.slide a:hover{text-decoration:underline}
+.sl-nav{display:flex;align-items:center;gap:12px;padding:10px clamp(20px,4vw,40px) 20px}
+.sl-nav button{width:36px;height:36px;padding:0;border-radius:50%;font-size:18px;line-height:1}
+.sl-dots{display:flex;gap:6px}
+.sl-dots button{width:26px;height:6px;min-height:0;padding:0;border:none;border-radius:99px;background:var(--rule2)}
+.sl-dots button[aria-current="true"]{background:var(--neel);width:40px}
+.sl-dots button{transition:width .3s,background .3s}
+.sec-h{margin:34px 0 14px;display:flex;flex-direction:column;gap:4px}
+.features{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.feat{display:flex;flex-direction:column;gap:6px;padding:18px;border:1px solid var(--rule);border-radius:8px;background:var(--sheet);text-decoration:none;color:var(--ink);transition:transform .2s,border-color .2s,box-shadow .2s}
+.feat:hover{transform:translateY(-2px);border-color:var(--neel);box-shadow:0 6px 18px rgba(30,50,110,.08)}
+.feat .fk{font-size:12px;font-weight:600;color:var(--mute)}
+.feat.wk .fk{color:var(--good)}
+.feat b{font-family:var(--f-head);font-stretch:90%;font-size:18px}
+.feat>span:not(.fk){color:var(--ink2);font-size:14px;flex:1}
+.feat i{font-style:normal;font-weight:600;color:var(--neel);font-size:14px}
+.feat i::after{content:" \2192";transition:margin .2s}
+.feat:hover i::after{margin-left:4px}
+.foot{margin-top:48px;border-top:1px solid var(--rule2);padding-top:28px;display:grid;grid-template-columns:minmax(0,1.4fr) repeat(3,minmax(0,1fr));gap:24px}
+.foot-brand{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--ink2)}
+.foot-brand b{font-family:var(--f-head);font-stretch:75%;font-weight:800;font-size:22px;color:var(--ink)}
+.foot-col{display:flex;flex-direction:column;gap:6px}
+.foot-col h3{font-size:13px;color:var(--mute);margin-bottom:2px}
+.foot-col a{color:var(--ink2);text-decoration:none;font-size:14px}
+.foot-col a:hover{color:var(--neel)}
+.foot-note{grid-column:1/-1;font-size:12.5px;color:var(--mute);border-top:1px solid var(--rule);padding-top:14px;max-width:none}
+@media (max-width:1100px){.features{grid-template-columns:repeat(2,minmax(0,1fr))}.foot{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:820px){.hero{grid-template-columns:minmax(0,1fr)}.features{grid-template-columns:minmax(0,1fr)}.foot{grid-template-columns:minmax(0,1fr)}}
+main{max-width:1480px}
+.segact{font-size:12.5px;color:var(--neel-ink);margin-top:4px;line-height:1.4}
+.feas{color:var(--neel);letter-spacing:1px}
+@media (min-width:1700px){main{margin-inline:auto}}
+@media (max-width:820px){
+  #svTable thead{display:none}
+  #svTable,#svTable tbody{display:block}
+  #svTable tr{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;padding:12px 0;border-bottom:1px solid var(--rule)}
+  #svTable td{border:none;padding:0;text-align:left}
+  #svTable td:first-child,#svTable td[data-l="Fill target"]{grid-column:1/-1}
+  #svTable td[data-l]::before{content:attr(data-l);display:block;font-size:12px;color:var(--mute);font-weight:500}
+  #svTable td.n{text-align:left}
+  #svTable tr.sum td{text-align:left}
+  .hero-h{font-size:30px}
+  .hero-p{font-size:15.5px}
+  .kpi .v{font-size:26px}
+  .topbar .tools button{flex:1}
+  .optrow{grid-template-columns:auto minmax(0,1fr) auto}
+  .optrow>span:last-child{grid-column:2/-1;text-align:left!important}
+  .panel{padding:16px}
+}
+@media (max-width:1100px){.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.g-wide{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:820px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  aside{display:none}
+  .mobnav{display:flex;position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--sheet);border-bottom:1px solid var(--rule);overflow-x:auto;gap:2px;padding-block:8px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  .mobnav b{font-family:var(--f-head);font-stretch:75%;font-weight:800;font-size:17px;margin-right:8px;align-self:center;white-space:nowrap}
+  .mobnav a{white-space:nowrap;padding:5px 10px;color:var(--ink2);text-decoration:none;font-size:13px;border-radius:2px}
+  .mobnav a[aria-current="page"]{background:var(--neel-soft);color:var(--neel-ink)}
+  main{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px 48px}
+  .g2,.g3,.g4{grid-template-columns:minmax(0,1fr)}
+  .tree{grid-template-columns:minmax(0,1fr)} .branch{grid-template-columns:minmax(0,1fr)}
+  .week{grid-template-columns:minmax(0,1fr)} .week>div{border-right:none;border-bottom:1px solid var(--rule)}
+  .pillars{grid-template-columns:minmax(0,1fr)} .pillars>div{border-right:none;border-bottom:1px solid var(--rule)}
+  .alloc{grid-template-columns:minmax(0,1fr) 80px 64px}.alloc .bar{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="shell">
+  <aside>
+    <div class="brand"><b>DRISHTI</b><span>ACPL supply chain programme</span></div>
+    <nav id="nav"></nav>
+    <div class="side-status" id="sideStatus"></div>
+  </aside>
+  <div style="min-width:0">
+    <div class="mobnav" id="mobnav"><b>DRISHTI</b></div>
+    <main>
+      <div class="topbar">
+        <div class="crumbs" id="scenarioLine">Scenario</div>
+        <div class="tools">
+          <button id="copySum" class="ghost" type="button">Copy summary</button>
+          <button id="resetBtn" type="button">Reset to base case</button>
+        </div>
+      </div>
+      <div id="confirmReset" class="callout warn" hidden style="margin-bottom:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <span>This clears every change you made on all desks and restores the base case.</span>
+        <button id="resetYes" class="primary" type="button">Reset everything</button>
+        <button id="resetNo" type="button">Keep my changes</button>
+      </div>
+
+      <!-- OVERVIEW -->
+      <section class="view" id="v-overview">
+        <div class="hero">
+          <div class="hero-txt">
+            <span class="hero-eye">Project Drishti · ACPL supply chain</span>
+            <h1 class="hero-h">Serve every order on time without filling warehouses</h1>
+            <p class="hero-p">ACPL has stock-outs and excess stock at the same time. This control room shows why, sets realistic targets, tests the ₹150 Cr plan, and gives every team one place to work each week.</p>
+            <div class="hero-cta"><a class="btn primary" href="#diagnosis">See what is going wrong</a><a class="btn" href="#inputs">Open the team workspace</a></div>
+          </div>
+          <div class="hero-card" aria-label="Live plan snapshot">
+            <span class="hc-l">Plan right now</span>
+            <div class="hc-row"><span>Orders filled on time</span><b id="hcFill"></b></div>
+            <div class="hc-bar"><span id="hcFillBar"></span></div>
+            <div class="hc-row"><span>Days of stock</span><b id="hcDays"></b></div>
+            <div class="hc-bar"><span id="hcDaysBar"></span></div>
+            <div class="hc-grid"><div><span>Return</span><b id="hcIrr"></b></div><div><span>Money back</span><b id="hcPb"></b></div><div><span>Gates</span><b id="hcGates"></b></div></div>
+          </div>
+        </div>
+
+        <div class="slider" id="slider" aria-roledescription="carousel" aria-label="Key facts">
+          <div class="sl-track" id="slTrack">
+            <article class="slide"><span class="sl-k">The symptom</span><p class="sl-big">₹185 Cr of excess and ₹73 Cr of shortfall, at the same time</p><p class="sl-s">North and West hold 76% of it. More stock has not raised service.</p><a href="#diagnosis">Look at the regions</a></article>
+            <article class="slide"><span class="sl-k">The distorted signal</span><p class="sl-big">41% of sales are pushed into the last 3 weeks of each quarter</p><p class="sl-s">An even pace would be 23%. Plants chase the spike, then run short.</p><a href="#opmodel">See the Flow Contract</a></article>
+            <article class="slide"><span class="sl-k">The slow loop</span><p class="sl-big">An order takes 11.9 days; only about 3.5 of them do real work</p><p class="sl-s">Most of the rest is waiting for a decision or a production slot.</p><a href="#opmodel">See the weekly rhythm</a></article>
+            <article class="slide"><span class="sl-k">The proof</span><p class="sl-big">Pilot C halved the loop, from 12.4 to 6.1 days</p><p class="sl-s">Fill rose 12 points with forecast accuracy up only 4. Speed matters more than prediction.</p><a href="#diagnosis">Compare the pilots</a></article>
+            <article class="slide"><span class="sl-k">The answer</span><p class="sl-big">SATYA, LAYA, GATI: truth, then rhythm, then speed</p><p class="sl-s">Honest signals and a weekly beat first; technology only where pilots proved it.</p><a href="#invest">See where the money goes</a></article>
+          </div>
+          <div class="sl-nav"><button type="button" id="slPrev" aria-label="Previous fact">‹</button><div class="sl-dots" id="slDots" role="group" aria-label="Choose fact"></div><button type="button" id="slNext" aria-label="Next fact">›</button></div>
+        </div>
+
+        <div class="sec-h"><h2>What you can do here</h2><p class="note">Every page is live. Change something on one page and the others update.</p></div>
+        <div class="features">
+          <a class="feat" href="#diagnosis"><span class="fk">Understand</span><b>What is going wrong</b><span>Regions, the root-cause tree, competing explanations and how far to trust each pilot.</span><i>Open</i></a>
+          <a class="feat" href="#service"><span class="fk">Decide</span><b>Service targets</b><span>Drag fill-rate for each product group and see cost and payback. Compare with the Board's uniform 95%.</span><i>Open</i></a>
+          <a class="feat" href="#opmodel"><span class="fk">Decide</span><b>New ways of working</b><span>The weekly heartbeat, honest supply when stock is short, and who gets paid for what.</span><i>Open</i></a>
+          <a class="feat" href="#invest"><span class="fk">Fund</span><b>Budget</b><span>Move the ₹150 Cr between initiatives. Tranche limits are checked as you type.</span><i>Open</i></a>
+          <a class="feat" href="#returns"><span class="fk">Test</span><b>Returns and risk</b><span>Stress recovery, delays and overruns. IRR, payback and break-points recalculate.</span><i>Open</i></a>
+          <a class="feat" href="#gates"><span class="fk">Track</span><b>Timeline and gates</b><span>The 36-month roadmap, Gate 1 and Gate 2 with real actuals, and what happens if one is missed.</span><i>Open</i></a>
+          <a class="feat wk" href="#inputs"><span class="fk">Every week</span><b>Weekly team inputs</b><span>Sales, distributors, plants, brands and finance enter one set of numbers.</span><i>Open</i></a>
+          <a class="feat wk" href="#orders"><span class="fk">Every day</span><b>Orders to plants</b><span>Regions raise requests; plants commit quantity and a ship week.</span><i>Open</i></a>
+          <a class="feat wk" href="#council"><span class="fk">Every week</span><b>Team chat and actions</b><span>One channel per hand-off and the action list for Tuesday's council.</span><i>Open</i></a>
+        </div>
+
+        <div class="sec-h"><h2>Live snapshot</h2><p class="note">Recalculated from your current targets, budget and assumptions.</p></div>
+        <div class="kpis" id="ovKpis"></div>
+        <div style="height:22px"></div>
+        <div class="grid g-wide">
+          <div class="panel">
+            <header><h2>Cumulative net cash</h2><small>₹ Cr over 60 months</small></header>
+            <div id="ovCash"></div>
+            <div class="legend" id="ovCashLeg"></div>
+          </div>
+          <div class="stack">
+            <div class="panel">
+              <header><h2>Funding gates</h2><small>plan vs what is needed</small></header>
+              <div id="ovGates"></div>
+            </div>
+            <div class="panel">
+              <header><h2>Decisions needed today</h2></header>
+              <ol class="decisions">
+                <li><span>Release the first <b>₹34 Cr</b>. The plan spends <b id="ovM9spend"></b> by month 9 without any new software.</span></li>
+                <li><span>Sign the Day-0 measurement charter so Finance and the auditor agree the starting numbers.</span></li>
+                <li><span>Name one Flow Owner who can change distributor schemes, plant schedules and allocation.</span></li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- DIAGNOSIS -->
+      <section class="view" id="v-diagnosis" hidden>
+        <div class="crumbs">Step 1 · What is going wrong</div>
+        <h1>Signal and loop latency are binding; capacity and forecasting are not</h1>
+        <p class="lede">Fill-rate fell 94 to 86% while inventory days rose 39 to 46. If stock were the problem, more stock would have raised service. It did not.</p>
+        <div style="height:16px"></div>
+        <div class="grid g3">
+          <div class="callout bad"><b>₹185 Cr excess and ₹73 Cr shortfall coexist.</b> North and West hold 76% of it.</div>
+          <div class="callout"><b>₹140 Cr (69%) of the ₹202 Cr margin gap</b> is supply-chain leakage.</div>
+          <div class="callout warn"><b>Overlooked:</b> Pilot B's inventory win moved stock into ACPL warehouses (+7 days), so owned cash got worse.</div>
+        </div>
+        <div style="height:22px"></div>
+        <div class="grid g2">
+          <div class="panel">
+            <header><h2>Excess and shortfall by region</h2><small>₹ Cr, FY26, transformation office estimate</small></header>
+            <div id="dxRegion"></div>
+            <div class="legend"><span class="sq" style="--c:var(--neel)">Excess stock</span><span class="sq" style="--c:var(--warn)">Shortfall</span></div>
+          </div>
+          <div class="panel">
+            <header><h2 id="dxRegTitle">North</h2><div class="seg" id="dxRegSeg" role="group" aria-label="Region"></div></header>
+            <div id="dxRegDetail"></div>
+          </div>
+        </div>
+        <div style="height:22px"></div>
+        <div class="panel">
+          <header><h2>Why do fill-rate and inventory worsen together?</h2></header>
+          <div class="tree">
+            <div class="root"><span class="note" style="color:inherit;opacity:.7">Symptom</span><b>Fill 94→86%<br>Days 39→46</b><span style="font-size:12px;opacity:.8">EBITDA 13.2→10.8%</span></div>
+            <div class="branches">
+              <div class="branch"><div class="tag"><h3>Signal integrity</h3><span class="chip no">Binding</span></div><ul><li>41% of primary sales land in the last 3 weeks (even pace: 23%).</li><li>60% of general-trade forecast error is bias; the centre cuts 15% blindly.</li></ul></div>
+              <div class="branch"><div class="tag"><h3>Loop latency</h3><span class="chip no">Binding</span></div><ul><li>The order loop takes 11.9 days, of which 3.5 add value; 5.6 days are decision waits.</li><li>The utilisation KPI drives long runs; 7–9% of snacks capacity is lost to changeovers.</li></ul></div>
+              <div class="branch"><div class="tag"><h3>Portfolio</h3><span class="chip wn">Contributing</span></div><ul><li>Segment D is 9% of revenue and 54% of obsolescence (₹41 Cr of ₹76 Cr).</li><li>95 SKUs have under 12 months of location history.</li></ul></div>
+              <div class="branch"><div class="tag"><h3>Ownership</h3><span class="chip nt">Enabler</span></div><ul><li>No executive owns end-to-end flow; the Supply Chain Head cannot move targets, schedules or slabs.</li><li>2022 platform and 2023 S&amp;OP both lapsed: KPIs and slabs unchanged.</li></ul></div>
+            </div>
+          </div>
+        </div>
+        <div style="height:22px"></div>
+        <div class="grid g2">
+          <div class="panel">
+            <header><h2>Competing explanations</h2><small>tested against the exhibits</small></header>
+            <div class="tbl"><table>
+              <thead><tr><th>Hypothesis</th><th>Verdict</th><th>Deciding fact</th></tr></thead>
+              <tbody>
+                <tr><td>Capacity</td><td><span class="chip wn">Local</span></td><td>Plants A, C, H run 89–94%; the other six run 68–88%.</td></tr>
+                <tr><td>Forecast accuracy</td><td><span class="chip nt">Symptom</span></td><td>Pilot A added 10 points of accuracy for 1 point of fill. East matches North on accuracy yet fills 5 points better.</td></tr>
+                <tr><td>Technology</td><td><span class="chip nt">Not binding</span></td><td>The 2022 platform was cut back; Pilot B pushed stock upstream.</td></tr>
+                <tr><td>Portfolio</td><td><span class="chip wn">Contributing</span></td><td>Segments A and B (68% of revenue) sit at 85–86% fill.</td></tr>
+                <tr><td>Signal + loop + owner</td><td><span class="chip no">Binding</span></td><td>Pilot C halved the loop (12.4→6.1 days) with accuracy up only 4 points, and fill rose 12.</td></tr>
+              </tbody>
+            </table></div>
+          </div>
+          <div class="panel">
+            <header><h2>Pilot reliability</h2><small>select a pilot</small></header>
+            <div class="seg" id="pilotSeg" role="group" aria-label="Pilot"></div>
+            <div id="pilotDetail"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SERVICE -->
+      <section class="view" id="v-service" hidden>
+        <div class="crumbs">Step 2 · Service targets</div>
+        <h1>Set targets where the next point pays back</h1>
+        <p class="lede">Move each segment's fill target. Cost comes from the Appendix 2B curves; payback compares the cost to the annual contribution those points bring back. The national figures feed the returns and gates desks.</p>
+        <div style="height:22px"></div>
+        <div class="kpis" id="svKpis"></div>
+        <div style="height:14px"></div>
+        <div class="callout"><b>National targets:</b> fill 86 to 92.8%, network days 46 to 37.7, forecast accuracy 56 to 64% (Board asked 70%) with bias within ±3% and forecast value-add above zero.</div>
+        <div style="height:22px"></div>
+        <div class="grid g-wide">
+          <div class="panel">
+            <header><h2>Segment targets, FY29</h2>
+              <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="note">Contribution per point</span><div class="seg" id="ppMode" role="group" aria-label="Contribution per point"></div></div>
+            </header>
+            <div class="tbl"><table id="svTable"></table></div>
+            <div class="tools"><button type="button" id="svUniform">Load Board's uniform 95%</button><button type="button" id="svOurs">Load recommended targets</button></div>
+          </div>
+          <div class="stack">
+            <div class="panel">
+              <header><h2>3-year cost of service</h2><small>₹ Cr, all-in</small></header>
+              <div id="svBars"></div>
+              <div class="legend"><span class="sq" style="--c:var(--rule2)">Uniform 95%</span><span class="sq" style="--c:var(--neel)">Current targets</span></div>
+              <p class="note">₹205 Cr uniform vs ₹98 Cr differentiated. These costs overlap the investment options and are not additive to the ₹150 Cr.</p>
+            </div>
+            <div class="panel">
+              <header><h2>Last-step test</h2><small>stop where payback exceeds 30 months</small></header>
+              <div class="tbl"><table id="svLast"></table></div>
+            </div>
+          </div>
+        </div>
+        <div style="height:22px"></div>
+        <div class="grid g2">
+          <div class="panel">
+            <header><h2>Regions converge on the South frontier</h2></header>
+            <div class="tbl"><table>
+              <thead><tr><th>Region</th><th class="n">Fill now</th><th class="n">Target</th><th class="n">Days now</th><th class="n">Target</th></tr></thead>
+              <tbody>
+                <tr><td>North</td><td class="n">82%</td><td class="n">92%</td><td class="n">51</td><td class="n">36</td></tr>
+                <tr><td>West</td><td class="n">81%</td><td class="n">92%</td><td class="n">52</td><td class="n">36</td></tr>
+                <tr><td>South</td><td class="n">91%</td><td class="n">94%</td><td class="n">37</td><td class="n">33</td></tr>
+                <tr><td>East</td><td class="n">87%</td><td class="n">91%</td><td class="n">43</td><td class="n">36</td></tr>
+                <tr><td>Central</td><td class="n">94%</td><td class="n">95%</td><td class="n">31</td><td class="n">30</td></tr>
+              </tbody></table></div>
+          </div>
+          <div class="panel">
+            <header><h2>Channels: OTIF and replenishment rule</h2></header>
+            <div class="tbl"><table>
+              <thead><tr><th>Channel</th><th class="n">OTIF</th><th>Rule</th></tr></thead>
+              <tbody>
+                <tr><td>General trade</td><td class="n">86→92%</td><td>Twice weekly for the top 40% of volume</td></tr>
+                <tr><td>Modern trade</td><td class="n">91→95%</td><td>POS-driven, 2–3 day cycle; avoids 1.5–2% OTIF penalty</td></tr>
+                <tr><td>E-commerce</td><td class="n">88→93%</td><td>Hold at least 92%; listings drop below 90%</td></tr>
+                <tr><td>Quick commerce</td><td class="n">74→90%</td><td>Daily fast lane; 11 at-risk SKUs to 94% first (₹31 Cr revenue at risk)</td></tr>
+              </tbody></table></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- OPERATING MODEL -->
+      <section class="view" id="v-opmodel" hidden>
+        <div class="crumbs">Step 3 · New ways of working</div>
+        <h1>Pay people for flow before holding any new meeting</h1>
+        <p class="lede">The 2023 S&amp;OP reset lapsed because sales targets, plant KPIs and distributor slabs did not change. These rules change them first.</p>
+        <div style="height:22px"></div>
+        <div class="panel">
+          <header><h2>Weekly Heartbeat</h2><small>one rhythm for sales, plants, finance and brands</small></header>
+          <div class="week">
+            <div><span class="d">MON</span><b>Sense</b><span class="note">Sell-out and stock feeds form one truth pack</span></div>
+            <div><span class="d">TUE</span><b>Decide</b><span class="note">Flow Council, 45 minutes; allocate by calibration</span></div>
+            <div><span class="d">WED–THU</span><b>Make</b><span class="note">Product wheel, 72-hour freeze, 6% express slot</span></div>
+            <div><span class="d">FRI</span><b>Ship and reset</b><span class="note">Rebalancing, exceptions, wave read-outs</span></div>
+            <div><span class="d">MONTHLY</span><b>S&amp;OP</b><span class="note">Demand is not the target; launch gate</span></div>
+          </div>
+        </div>
+        <div style="height:22px"></div>
+        <div class="grid g-wide">
+          <div class="panel">
+            <header><h2>Honest supply: allocation when supply is short</h2><small>edit bias and supply</small></header>
+            <p class="note">Today the centre cuts every regional forecast 15%. Under the new rule a region's own 13-week bias sets its haircut: within ±3% gets none, rising to 25% at +15% bias or worse.</p>
+            <div class="ctl"><label for="omSupply">Supply available, % of total requested</label><output id="omSupplyO"></output><input id="omSupply" type="range" min="60" max="100" step="1"></div>
+            <div class="tbl"><table id="omTable"></table></div>
+            <div id="omNote"></div>
+          </div>
+          <div class="panel">
+            <header><h2>Flow Contract</h2><small>replaces quarterly volume slabs</small></header>
+            <div class="ctl"><label for="omSkew">Primary sales in last 3 weeks of quarter</label><output id="omSkewO"></output><input id="omSkew" type="range" min="23" max="45" step="1"></div>
+            <div id="omSkewChart"></div>
+            <div id="omSkewNote"></div>
+            <p class="note">13-week rolling run-rate slab plus a stock-truth rebate (±5% of audit). ₹9 Cr margin guarantee for 6 quarters while distributors adjust.</p>
+          </div>
+        </div>
+        <div style="height:22px"></div>
+        <div class="grid g2">
+          <div class="panel">
+            <header><h2>Who is paid for what</h2></header>
+            <div class="tbl"><table>
+              <thead><tr><th>Role</th><th>Today</th><th>New measure</th></tr></thead>
+              <tbody>
+                <tr><td>Sales and regions</td><td>Dispatch revenue; forecast equals target</td><td>70% sell-through, 15% fill, 15% calibration</td></tr>
+                <tr><td>Plant heads</td><td>Utilisation</td><td>Service-adjusted OEE (OTIF, changeover)</td></tr>
+                <tr><td>Distributors</td><td>Quarterly volume slabs</td><td>Flow Contract</td></tr>
+                <tr><td>Supply Chain Head</td><td>Service and cost, no levers</td><td>Flow Owner: fill, days and decision rights</td></tr>
+                <tr><td>Finance, procurement</td><td>Low stock; bulk-buy savings</td><td>Landed cost including 14.5% carrying</td></tr>
+                <tr><td>Brand managers</td><td>Plan first, supply informed later</td><td>Launch gate; half of year-1 obsolescence in brand P&amp;L</td></tr>
+              </tbody></table></div>
+          </div>
+          <div class="panel">
+            <header><h2>Stakeholders</h2></header>
+            <div class="tbl"><table>
+              <thead><tr><th>Stakeholder</th><th>Stance</th><th>Our play</th></tr></thead>
+              <tbody>
+                <tr><td>CSO</td><td><span class="chip no">Resists</span></td><td>Co-owns the Flow Contract; 6-quarter guarantee</td></tr>
+                <tr><td>COO</td><td><span class="chip wn">Ally, disputes capacity</span></td><td>Plant C experiment settles the capacity question</td></tr>
+                <tr><td>CFO and CIO</td><td><span class="chip ok">Allies</span></td><td>CFO owns the baseline; CIO owns the data</td></tr>
+                <tr><td>Regional and plant heads</td><td><span class="chip no">Resist</span></td><td>KPI change first; calibration credits</td></tr>
+                <tr><td>Distributors, brands</td><td><span class="chip wn">Split</span></td><td>Tiered offer; incubation shields 11 launches</td></tr>
+              </tbody></table></div>
+          </div>
+        </div>
+        <div style="height:22px"></div>
+        <div class="grid g2">
+          <div class="panel">
+            <header><h2>Three new rules</h2></header>
+            <div class="tbl"><table><thead><tr><th>Rule</th><th>What changes</th></tr></thead><tbody>
+              <tr><td>Flow Contract</td><td>13-week rolling run-rate slab and a stock-truth rebate (±5% of audit) replace quarterly slabs; ₹9 Cr guarantee for 6 quarters; last-3-week share from 41% to 27% or less.</td></tr>
+              <tr><td>Honest supply</td><td>Forecast is not the target. 13-week bias sets the haircut when supply is short: calibrated regions 0%, biased up to 25%, replacing the blanket 15% cut.</td></tr>
+              <tr><td>Launch gate</td><td>Launches need 12-week supply sign-off; SKUs with under 12 months of history are made to order in lead regions; half of year-1 obsolescence is charged to the brand P&amp;L.</td></tr>
+            </tbody></table></div>
+            <div class="callout"><b>Lead indicators to watch:</b> order loop 11.9 to 7 days or less · quarter-end loading 1.78× to 1.2× or less · distributor stock-truth gap 12% to 5% or less · general-trade forecast bias within ±3%.</div>
+          </div>
+          <div class="panel">
+            <header><h2>Precedents that back the levers</h2></header>
+            <div class="tbl"><table><thead><tr><th>Precedent</th><th>Lesson for ACPL</th></tr></thead><tbody>
+              <tr><td>P&amp;G value pricing</td><td>Ending forward-buying damped order swings (Flow Contract)</td></tr>
+              <tr><td>Indian FMCG case</td><td>Month-end skew fell from 30% to 8.5% after one destock</td></tr>
+              <tr><td>Barilla JITD</td><td>Shared sell-out data let the maker drive replenishment (pull)</td></tr>
+              <tr><td>Danone (vendor data)</td><td>Machine learning plus joint planning cut lost sales 30%</td></tr>
+              <tr><td>HUL 2018</td><td>Next-visit delivery: 90% re-billing vs 81%</td></tr>
+            </tbody></table></div>
+            <p class="note">Sources: Lee et al. (1997); Hammond (HBS); iSixSigma Asia; HUL (2018); Danone (vendor-reported); DeHoratius &amp; Raman (2008).</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- INVESTMENT -->
+      <section class="view" id="v-invest" hidden>
+        <div class="crumbs">Step 4 · Budget</div>
+        <h1>Spend inside the tranches, fund only proven levers</h1>
+        <p class="lede">Change any amount or add an option. Spend timing is checked against each tranche, and benefit delivery scales down when an initiative is funded below what it needs.</p>
+        <div style="height:22px"></div>
+        <div class="kpis" id="invKpis"></div>
+        <div style="height:22px"></div>
+        <div class="grid g-wide">
+          <div class="panel">
+            <header><h2>Core programme</h2><small>₹ Cr over 3 years</small></header>
+            <div id="allocRows"></div>
+          </div>
+          <div class="stack">
+            <div class="panel">
+              <header><h2>Cumulative spend vs tranches</h2><small>₹ Cr</small></header>
+              <div id="invChart"></div>
+              <div class="legend"><span style="--c:var(--neel)">Planned spend</span><span class="dash" style="--c:var(--ink2)">Cash released</span></div>
+            </div>
+            <div class="panel">
+              <header><h2>Left unfunded</h2><small>switch on to test</small></header>
+              <div id="optRows"></div>
+              <div class="callout warn"><b>Left unfunded: snacks capacity at Plants A and H (₹30 Cr).</b> 10-year IRR 37% if the transformation office is right, but 5-year IRR is 10% (below 18%), −22% with 50% overlap, and negative if the COO is right. Trigger at month 12: fund only if Plant C adds at least ₹7 Cr a year and utilisation stays at 92% or more after the wheel.</div>
+              <div class="callout">Also not funded: national replenishment (+₹54 Cr; rest of India holds 24% of the imbalance, 9-year payback). Funding is cash-gated: tech-first plans breach ₹34 Cr by month 9.</div>
+              <label style="display:flex;gap:8px;align-items:center;font-size:13px"><input type="checkbox" id="cooRight"> Assume the COO is right: snacks losses are scheduling, not capacity</label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RETURNS -->
+      <section class="view" id="v-returns" hidden>
+        <div class="crumbs">Step 5 · Returns and risk</div>
+        <h1>Payback, not IRR, is the binding hurdle</h1>
+        <p class="lede">Stress the assumptions the Audit Committee will challenge. Hurdles: at least 18% pre-tax IRR over five years and payback within 30 months of first disbursement.</p>
+        <div style="height:22px"></div>
+        <div class="kpis" id="rtKpis"></div>
+        <div style="height:22px"></div>
+        <div class="grid g-wide">
+          <div class="panel">
+            <header><h2>Cumulative net cash</h2><small>₹ Cr by month</small></header>
+            <div id="rtCash"></div>
+            <div class="legend" id="rtLeg"></div>
+          </div>
+          <div class="panel">
+            <header><h2>Assumptions</h2><button type="button" id="rtBase" class="ghost">Base values</button></header>
+            <div class="ctl"><label for="sRec">Recoverable stock-out demand</label><output id="sRecO"></output><input id="sRec" type="range" min="20" max="70" step="1"></div>
+            <div class="seg" id="recPreset" role="group" aria-label="Recovery view"></div>
+            <div class="ctl"><label for="sReal">Benefit realisation</label><output id="sRealO"></output><input id="sReal" type="range" min="60" max="110" step="1"></div>
+            <div class="ctl"><label for="sDelay">Benefits late by</label><output id="sDelayO"></output><input id="sDelay" type="range" min="0" max="12" step="1"></div>
+            <div class="ctl"><label for="sLag">Finance certification lag</label><output id="sLagO"></output><input id="sLag" type="range" min="0" max="6" step="1"></div>
+            <div class="ctl"><label for="sOver">Cost overrun</label><output id="sOverO"></output><input id="sOver" type="range" min="0" max="40" step="1"></div>
+            <div class="ctl"><label for="sCap">Avoided-cost cap (share of claimed benefit)</label><output id="sCapO"></output><input id="sCap" type="range" min="10" max="60" step="1"></div>
+            <div class="ctl"><label for="sHair">Finance haircut on avoided cost</label><output id="sHairO"></output><input id="sHair" type="range" min="0" max="80" step="5"></div>
+            <label class="f">Inventory day valued on
+              <select id="sDay"><option value="owned">ACPL-owned stock (₹18.8 Cr/day), Finance view</option><option value="network">Network stock (₹26.7 Cr/day), transformation office view</option><option value="cogs">COGS basis, owned (₹14.1 Cr/day)</option></select></label>
+          </div>
+        </div>
+        <div style="height:22px"></div>
+        <div class="grid g2">
+          <div class="panel">
+            <header><h2>Stress tests</h2><small>deck figures, with the live model beside them</small></header>
+            <p class="note">Deck columns are the submitted results. Live columns rerun each case on the current targets and budget, starting from base assumptions; small differences come from rebuilding the spreadsheet here.</p>
+            <div class="tbl"><table id="rtStress"></table></div>
+          </div>
+          <div class="stack">
+            <div class="panel">
+              <header><h2>Break-points</h2></header>
+              <div id="rtBreak"></div>
+            </div>
+            <div class="panel">
+              <header><h2>Benefit build, run-rate year 3</h2><small>₹ Cr a year</small></header>
+              <div class="tbl"><table id="rtBuild"></table></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- GATES -->
+      <section class="view" id="v-gates" hidden>
+        <div class="crumbs">Step 6 · Timeline and gates</div>
+        <h1>Gate 1 needs no new software</h1>
+        <p class="lede">Enter audited actuals as they arrive; when the workspace is connected they are shared with every team. Blank fields use the plan. Each gate needs every condition met and independently verified.</p>
+        <div style="height:22px"></div>
+        <div class="panel">
+          <header><h2>36-month roadmap</h2><small>bars follow the allocator's timing</small></header>
+          <div class="tbl"><div id="gantt"></div></div>
+        </div>
+        <div style="height:22px"></div>
+        <div class="grid g2">
+          <div class="panel">
+            <header><h2>Gate 1 · Month 9</h2><span id="g1chip"></span></header>
+            <div class="tbl"><table id="g1Table"></table></div>
+            <div id="g1Out"></div>
+          </div>
+          <div class="panel">
+            <header><h2>Gate 2 · Month 22</h2><span id="g2chip"></span></header>
+            <div class="tbl"><table id="g2Table"></table></div>
+            <div id="g2Out"></div>
+          </div>
+        </div>
+        <div style="height:22px"></div>
+        <div class="grid g-wide">
+          <div class="panel">
+            <header><h2>Fill-rate path</h2><small>% national distributor fill</small></header>
+            <div id="gFill"></div>
+            <div class="legend"><span style="--c:var(--neel)">Plan</span><span class="dash" style="--c:var(--warn)">Gate threshold</span><span class="sq" style="--c:var(--ink)">Actual entered</span></div>
+          </div>
+          <div class="panel">
+            <header><h2>Early warning and stop-loss</h2></header>
+            <div class="callout warn"><b>Month 6–7 warning.</b> If fill is under 88.5% or days over 43.5, pull rebalancing wave 2 forward and widen the quick-commerce lane to 12 SKUs.</div>
+            <div class="callout"><b>Month 12 trigger for A&amp;H capacity.</b> Fund the ₹30 Cr only if Plant C adds at least ₹7 Cr a year and utilisation stays at 92% or more after the wheel.</div>
+            <div class="tbl"><table><thead><tr><th>Top risk</th><th>Mitigation</th></tr></thead><tbody>
+              <tr><td>Distributors push back on the Flow Contract</td><td>₹9 Cr margin guarantee; 2-region pilot before scaling</td></tr>
+              <tr><td>Pilot C gains fade without the 14-person team</td><td>Stepped-wedge rollout gives a built-in control group</td></tr>
+              <tr><td>Disputes over baselines at audit</td><td>Day-0 measurement charter signed before work starts</td></tr>
+            </tbody></table></div>
+            <div class="callout bad"><b>Stop-loss at month 12.</b> If recovery is below 37% or realisation below 0.85×, freeze replenishment waves 2–3 and the data tail (about ₹53 Cr).</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- WORKSPACE: shared bar -->
+      <div class="who" id="wsWho" hidden></div>
+
+      <!-- TEAM INPUTS -->
+      <section class="view" id="v-inputs" hidden>
+        <div class="crumbs">Every week · Team inputs</div>
+        <h1>One truth pack for the week</h1>
+        <p class="lede">Each team enters its numbers for the week before Tuesday's Flow Council. Everyone sees the same figures, and the balance below compares demand with stock and plant capacity.</p>
+        <div style="height:22px"></div>
+        <div id="wsOff" class="callout warn" hidden></div>
+        <div class="grid g-wide">
+          <div class="panel">
+            <header><h2 id="inTitle">Inputs</h2><div style="display:flex;gap:6px;align-items:center"><button type="button" id="wkPrev" aria-label="Previous week">‹</button><b class="num" id="wkLab"></b><button type="button" id="wkNext" aria-label="Next week">›</button></div></header>
+            <div class="tabs" id="inTabs" role="group" aria-label="Team"></div>
+            <form id="inForm" class="stack"></form>
+          </div>
+          <div class="panel">
+            <header><h2>Submitted this week</h2><small id="inWkSmall"></small></header>
+            <div id="inStatus"></div>
+            <div class="tools"><button type="button" id="exLoad" class="ghost">Load example week</button><button type="button" id="exClear" class="ghost">Clear examples</button></div>
+            <p class="note">Examples are marked and can be removed in one step.</p>
+          </div>
+        </div>
+        <div style="height:22px"></div>
+        <div class="grid g2">
+          <div class="panel">
+            <header><h2>Demand and supply by region</h2><small>thousand cases, this week</small></header>
+            <div class="tbl"><table id="balReg"></table></div>
+          </div>
+          <div class="panel">
+            <header><h2>Plant load</h2><small>thousand cases, this week</small></header>
+            <div class="tbl"><table id="balPlant"></table></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ORDERS BOARD -->
+      <section class="view" id="v-orders" hidden>
+        <div class="crumbs">Every day · Orders to plants</div>
+        <h1>Requests from the market, commitments from the plants</h1>
+        <p class="lede">Regions, distributors and channel teams raise requests; plants commit quantity and a ship week inside the 72-hour freeze. Express requests draw on each plant's 6% slot.</p>
+        <div style="height:22px"></div>
+        <div class="grid g-wide">
+          <div class="panel">
+            <header><h2>New request</h2></header>
+            <form id="rqForm" class="stack">
+              <div class="formgrid">
+                <label class="f">Region<select id="rqRegion"></select></label>
+                <label class="f">Channel<select id="rqChan"><option>General trade</option><option>Modern trade</option><option>E-commerce</option><option>Quick commerce</option></select></label>
+                <label class="f">Segment<select id="rqSeg"></select></label>
+                <label class="f">Quantity, k cases<input id="rqQty" type="number" min="0.1" step="0.1" required></label>
+                <label class="f">Needed by<select id="rqWeek"></select></label>
+                <label class="f">Preferred plant<select id="rqPlant"></select></label>
+              </div>
+              <label class="f">SKU or description<input id="rqSku" type="text" maxlength="80" placeholder="e.g. 50g masala chips, 24-pack" required></label>
+              <label style="display:flex;gap:8px;align-items:center;font-size:13px"><input type="checkbox" id="rqExp"> Express (uses the plant's 6% slot)</label>
+              <div class="tools"><button class="primary" type="submit">Raise request</button><span id="rqMsg" class="note"></span></div>
+            </form>
+          </div>
+          <div class="panel">
+            <header><h2>Express slot use</h2><small>committed express vs 6% of declared capacity</small></header>
+            <div class="tbl"><table id="expTable"></table></div>
+          </div>
+        </div>
+        <div style="height:22px"></div>
+        <div class="panel">
+          <header><h2>Board</h2><div class="tools"><select id="fReg" aria-label="Filter region" style="width:auto"></select><select id="fPlant" aria-label="Filter plant" style="width:auto"></select></div></header>
+          <div class="tbl"><div class="kanban" id="kanban"></div></div>
+        </div>
+      </section>
+
+      <!-- FLOW COUNCIL -->
+      <section class="view" id="v-council" hidden>
+        <div class="crumbs">Every week · Team chat and actions</div>
+        <h1>Talk across teams, decide once a week</h1>
+        <p class="lede">Channels for each hand-off, plus the action list the Tuesday council works from. Mention a request as #R-code to link it.</p>
+        <div style="height:22px"></div>
+        <div class="chat">
+          <div class="panel"><header><h2>Channels</h2></header><div class="chlist" id="chList"></div></div>
+          <div class="panel">
+            <header><h2 id="chTitle">Channel</h2><small id="chSub"></small></header>
+            <div class="feed" id="feed"></div>
+            <form id="msgForm" class="stack" style="gap:8px">
+              <textarea id="msgText" maxlength="1000" placeholder="Write to this channel"></textarea>
+              <div class="tools"><button class="primary" type="submit">Send</button><span class="note" id="msgNote"></span></div>
+            </form>
+          </div>
+          <div class="panel">
+            <header><h2>Actions</h2><small id="actSub"></small></header>
+            <div id="actList"></div>
+            <form id="actForm" class="stack" style="gap:8px">
+              <input id="actText" type="text" maxlength="160" placeholder="New action" required aria-label="New action">
+              <div class="formgrid"><label class="f">Owner team<select id="actTeam"></select></label><label class="f">Due<select id="actDay"><option>Mon</option><option>Tue</option><option>Wed</option><option>Thu</option><option>Fri</option></select></label></div>
+              <button type="submit">Add action</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <footer class="foot">
+        <div class="foot-brand"><b>DRISHTI</b><span>Control room for ACPL's three-year supply chain programme. Truth, rhythm, then speed.</span></div>
+        <div class="foot-col"><h3>The plan</h3><a href="#overview">Overview</a><a href="#diagnosis">What is going wrong</a><a href="#service">Service targets</a><a href="#opmodel">New ways of working</a></div>
+        <div class="foot-col"><h3>Money and timing</h3><a href="#invest">Budget</a><a href="#returns">Returns and risk</a><a href="#gates">Timeline and gates</a></div>
+        <div class="foot-col"><h3>Every week</h3><a href="#inputs">Weekly team inputs</a><a href="#orders">Orders to plants</a><a href="#council">Team chat and actions</a></div>
+        <p class="foot-note">Sources: ACPL case Appendices 1–6; Lee, Padmanabhan &amp; Whang (1997). Model uses monthly cash flows over 60 months, working capital valued at 11% a year, benefits certified one quarter after delivery, pilot costs treated as sunk. Figures are model estimates and may differ slightly from the submitted deck.</p>
+      </footer>
+    </main>
+  </div>
+</div>
+<div class="tip" id="tip" hidden></div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(function(){
+"use strict";
+/* ---------- data ---------- */
+const VIEWS=[["overview","Overview"],["diagnosis","What is going wrong"],["service","Service targets"],["opmodel","New ways of working"],["invest","Budget"],["returns","Returns and risk"],["gates","Timeline and gates"],["inputs","Weekly team inputs"],["orders","Orders to plants"],["council","Team chat and actions"]];
+const SEG={
+ A:{act:"Last 3 points need A and H capacity (unfunded); 95% only on trigger",name:"Core high-volume",rev:3705,cur:86,curve:[[86,0],[92,24],[95,49],[97,88]],pp:[3.3,4.5],days:44,fg:395,max:97},
+ B:{act:"Stop at 92%; 92 to 95% pays back in 3.5 years",name:"Mid and regional",rev:2021,cur:85,curve:[[85,0],[92,18],[95,41]],pp:[2.2,3.0],days:41,fg:236,max:95},
+ C:{act:"Cheapest points in the book: ₹7 Cr for 2 points",name:"Premium",rev:1431,cur:95,curve:[[95,0],[97,7]],pp:[2.1,2.8],days:27,fg:71,max:97},
+ D:{act:"Delist 68 tail SKUs, incubate 11 launches, make-to-order in lead regions",name:"Tail and launches",rev:758,cur:76,curve:[[76,0],[88,21],[92,39],[95,81]],pp:[0.7,1.0],days:68,fg:229,max:95},
+ E:{act:"Platform floor; 11 at-risk SKUs to 94% first (₹31 Cr revenue at risk)",name:"Quick-commerce packs",rev:505,cur:74,curve:[[74,0],[92,22],[95,34]],pp:[0.4,0.5],days:22,fg:39,max:95}
+};
+const OURS={fill:{A:93,B:92,C:97,D:88,E:90},days:{A:35,B:33,C:25,D:45,E:24}};
+const INITS=[
+ {id:"pmo",name:"Programme office and audit",route:"Outsource",feas:5,base:6,s:0,e:36,share:0,note:"Independent gate audit"},
+ {id:"flow",name:"Flow Contract and signals",route:"Build",feas:3,base:24,s:0,e:34,share:.30,note:"Slab redesign, ₹9 Cr guarantee, sell-out feeds"},
+ {id:"mdm",name:"Master data and integration",route:"Buy + SI",feas:4,base:26,s:4,e:30,share:0,note:"Prerequisite for replenishment"},
+ {id:"rep",name:"Replenishment, North and West",route:"Buy",feas:3,base:40,s:10,e:36,share:.30,note:"3 stepped-wedge waves, M10–18"},
+ {id:"plc",name:"Plant C and product wheel",route:"Build",feas:4,base:22,s:0,e:18,share:.10,note:"Output from M8, adds ₹7 Cr a year"},
+ {id:"port",name:"Portfolio rationalisation",route:"Build",feas:4,base:4,s:1,e:9,share:.08,note:"Delist 68, incubate 11"},
+ {id:"qc",name:"Quick-commerce lane",route:"Reuse",feas:5,base:3,s:1,e:7,share:.05,note:"11 at-risk SKUs first"},
+ {id:"sic",name:"Stock Identity Check",route:"Build",feas:3,base:6,s:3,e:30,share:.07,note:"Audit-based, no hardware"}
+];
+const OPTS=[
+ {id:"ah",name:"Snacks capacity, Plants A and H",amt:30,s:2,e:16,note:"Trigger at M12; COO disputes the benefit",ann:18,from:14,to:18},
+ {id:"nr",name:"National replenishment extension",amt:54,s:18,e:36,note:"Rest of India holds 24% of the imbalance",pts:1.6,dd:2,from:24,to:32},
+ {id:"fe",name:"Forecasting engine",amt:22,s:0,e:9,note:"Pilot A: +1 fill point, overlaps replenishment",pts:.5,from:9,to:14},
+ {id:"pp",name:"Integrated planning platform",amt:38,s:3,e:24,note:"Needs decision rights first; failed in 2022",pts:.5,from:18,to:24},
+ {id:"ct",name:"Control tower",amt:32,s:3,e:18,note:"Needs reliable stock data",dd:1,from:15,to:20},
+ {id:"iot",name:"IoT inventory tracking",amt:42,s:3,e:24,note:"Unproven below ₹400 case value"},
+ {id:"dt",name:"Digital twin",amt:55,s:6,e:30,note:"No process to use outputs"},
+ {id:"pa",name:"Planning assistant",amt:12,s:0,e:6,note:"Planner capacity is not the constraint"}
+];
+const REG=[
+ {n:"North",rev:1820,inv:258,days:51,fill:82,acc:52,ex:68,sh:21},
+ {n:"West",rev:2050,inv:279,days:52,fill:81,acc:47,ex:81,sh:26},
+ {n:"South",rev:2140,inv:204,days:37,fill:91,acc:64,ex:14,sh:6},
+ {n:"East",rev:1420,inv:148,days:43,fill:87,acc:51,ex:19,sh:18},
+ {n:"Central",rev:990,inv:81,days:31,fill:94,acc:68,ex:3,sh:2}
+];
+const PILOTS={
+ A:{t:"A · Forecasting engine",sp:"CIO",flaws:["No control group","Ran in the three best regions (South, Central, East)","Planners overrode the model in 38% of disagreements, and the model was right in those cases"],trust:"+1 point fill, −2 inventory days",plan:"Deferred",chip:"wn",score:2},
+ B:{t:"B · Distributor app",sp:"Chief Sales Officer",flaws:["Self-selected distributors: 61% digitally capable vs 38% nationally","11 extra field staff and unusually high promotions","Only 39 of 70 still using it at month 9"],trust:"Fill +2 points vs control; combined territory days +3 vs control, because stock moved into ACPL warehouses",plan:"No national app",chip:"no",score:1},
+ C:{t:"C · Automated replenishment",sp:"Supply Chain Head",flaws:["No control group","14-person team corrected about 1,100 records a week","Two upgraded warehouses; untested without the team"],trust:"Loop 12.4→6.1 days, verified by Finance, North and West only; we plan on half the effect",plan:"North and West, stepped-wedge",chip:"ok",score:3}
+};
+/* ---------- state ---------- */
+const DEF={view:"overview",fill:{...OURS.fill},days:{...OURS.days},ppMode:"low",alloc:Object.fromEntries(INITS.map(i=>[i.id,i.base])),opts:{},coo:false,
+ sc:{rec:40,real:100,delay:0,lag:3,over:0,cap:40,hair:0,day:"owned"},
+ g1:{fill:"",days:"",ebitda:""},g2:{fill:"",days:"",ebitda:"",wc:""},
+ om:{supply:85,skew:41,reg:[{n:"North",req:100,bias:14},{n:"West",req:110,bias:18},{n:"South",req:105,bias:2},{n:"East",req:70,bias:7},{n:"Central",req:50,bias:-1}]},
+ region:"North",pilot:"C"};
+const clone=o=>JSON.parse(JSON.stringify(o));
+let S=clone(DEF);
+try{const raw=localStorage.getItem("drishti-v2");if(raw){const o=JSON.parse(raw);S=Object.assign(clone(DEF),o);S.sc=Object.assign(clone(DEF.sc),o.sc||{});}}catch(e){}
+function save(){try{localStorage.setItem("drishti-v2",JSON.stringify(S));}catch(e){}}
+/* ---------- helpers ---------- */
+const $=id=>document.getElementById(id);
+const f1=x=>(Math.round(x*10)/10).toFixed(1), f0=x=>Math.round(x).toString();
+const cr=x=>"₹"+f1(x)+" Cr";
+const pct1=x=>(x==null||!isFinite(x))?"n/a":(x*100>=1000?">999%":(Math.round(x*1000)/10).toFixed(1)+"%");
+const pct=x=>(x==null||!isFinite(x))?"n/a":(x*100>=1000?">999%":f0(x*100)+"%");
+function interp(pts,t){if(t<=pts[0][0])return pts[0][1];for(let k=1;k<pts.length;k++){if(t<=pts[k][0]){const[a,b]=pts[k-1],[c,d]=pts[k];return b+(d-b)*(t-a)/(c-a);}}return pts[pts.length-1][1];}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function chip(cls,txt){return `<span class="chip ${cls}">${esc(txt)}</span>`;}
+/* ---------- service model ---------- */
+function segCost(k,f){const c=SEG[k].curve;if(f<=c[0][0])return 0;return interp(c,Math.min(f,c[c.length-1][0]));}
+function ppVal(k){const r=SEG[k].pp;return S.ppMode==="low"?r[0]:S.ppMode==="high"?r[1]:(r[0]+r[1])/2;}
+function service(fill,days){
+ const tr=Object.values(SEG).reduce((s,x)=>s+x.rev,0);let wc=0,wt=0,cost=0,ann=0,dc=0,dt=0;const tf=Object.values(SEG).reduce((s,x)=>s+x.fg,0);
+ for(const k in SEG){const g=SEG[k];wc+=g.rev*g.cur;wt+=g.rev*fill[k];const c=segCost(k,fill[k]);cost+=c;ann+=Math.max(0,fill[k]-g.cur)*ppVal(k);dc+=g.fg*g.days;dt+=g.fg*days[k];}
+ const nat=wt/tr;const redu=(dc-dt)/tf;const natDays=46-0.748*redu;
+ return{nat,natDays,cost,ann,fillGain:nat-86,daysGain:46-natDays};
+}
+/* ---------- returns model ---------- */
+const FILLP=[[0,0],[3,.03],[6,.26],[9,.485],[12,.62],[18,.82],[22,.956],[30,1],[60,1]];
+const DAYSP=[[0,0],[3,.05],[6,.3],[9,.6],[12,.68],[18,.85],[22,1],[60,1]];
+const CAPP=[[0,0],[8,0],[12,1],[60,1]];
+function ramp(t,a,b){return t<=a?0:t>=b?1:(t-a)/(b-a);}
+function delivery(alloc){
+ let d=0.10;const mdmF=Math.min(1,(alloc.mdm||0)/26);
+ for(const i of INITS){if(!i.share)continue;let f=Math.min(1,(alloc[i.id]||0)/i.base);if(i.id==="rep")f*=0.5+0.5*mdmF;d+=i.share*f;}
+ return Math.min(1,d);
+}
+function build(over){const sc=over||{};const P=Object.assign({},S.sc,sc.sc||{});
+ const sv=service(S.fill,S.days);const alloc=sc.alloc||S.alloc;const opts=sc.opts||S.opts;
+ return{P,sv,alloc,opts,coo:sc.coo!=null?sc.coo:S.coo,shift:sc.shift||0};}
+function dayVal(P){return P.day==="network"?26.7:P.day==="cogs"?14.1:18.8;}
+/* Calibration to the submitted deck (base: IRR 86.6%, payback 29.3 mo, NPV ₹89 Cr; spend ₹32.5/84.5/131 Cr at M9/21/36; gate EBITDA ₹34.5/75.7 Cr) */
+const CAL={contrib:34.21,plant:7.137,wc:15.896,avoided:49.0,lagExtra:2.404,runAfter:20.39,gPer:20,gAvoided:16.6,gPlant:7,ownedShare:153/222};
+const CUMP=[[0,0],[9,32.5],[21,84.5],[36,131],[60,131]];
+const AVP=[[0,0],[3,.05],[6,.2],[9,.381],[12,.55],[18,.85],[22,1],[60,1]];
+const REF=service(OURS.fill,OURS.days);
+function model(over){
+ const B=build(over),P=B.P,sv=B.sv,alloc=B.alloc,opts=B.opts;
+ const rec=P.rec/100,real=P.real/100,ov=P.over/100,cap=P.cap/100,hair=P.hair/100,lag=P.lag+CAL.lagExtra,delay=P.delay+B.shift;
+ const del=delivery(alloc);
+ const plcF=Math.min(1,(alloc.plc||0)/22);
+ const sp=new Array(61).fill(0);
+ const core=INITS.reduce((a,i)=>a+(alloc[i.id]||0),0);
+ for(let t=1;t<=36;t++)sp[t]+=(interp(CUMP,t)-interp(CUMP,t-1))*core/131*(1+ov);
+ const add=(amt,s,e)=>{const n=Math.max(1,e-s);for(let t=s+1;t<=e&&t<=60;t++)sp[t]+=amt*(1+ov)/n;};
+ for(const o of OPTS)if(opts[o.id])add(o.amt,o.s,o.e);
+ const fG=sv.fillGain*del, dG=sv.daysGain*del;
+ function at(tt){
+  let pts=interp(FILLP,tt)*fG, days=interp(DAYSP,tt)*dG, pl=interp(CAPP,tt)*plcF, extra=0;
+  for(const o of OPTS){if(!opts[o.id])continue;const r=ramp(tt,o.from||99,o.to||99);
+   if(o.pts)pts+=o.pts*r; if(o.dd)days+=o.dd*r; if(o.ann)extra+=o.ann*r*(B.coo?0:1);}
+  pts*=real;days*=real;
+  return{pts,days,
+   contrib:pts/REF.fillGain*CAL.contrib*rec/0.4, cc:(pl*CAL.plant+extra)*real,
+   wc:days/REF.daysGain*CAL.wc*dayVal(P)/18.8, av:interp(DAYSP,tt)*CAL.avoided*del*real*(1-hair),
+   gContrib:pts*CAL.gPer*rec, gcc:(pl*CAL.gPlant+extra)*real, gAv:interp(AVP,tt)*CAL.gAvoided*del*real};
+ }
+ const cf=[],ben=[],cum=[];let c=0,pb=null,capBind=false;
+ for(let t=0;t<=60;t++){
+  const x=at(t-lag-delay);
+  const non=x.contrib+x.cc+x.wc;let av=x.av;const lim=cap/(1-cap)*non;if(av>lim+1e-9){av=lim;if(t>12)capBind=true;}
+  const b=(non+av)/12;ben.push(b);
+  const v=b-sp[t]-(t>36?CAL.runAfter/12:0);cf.push(v);const prev=c;c+=v;cum.push(c);
+  if(pb===null&&t>6&&c>=0&&prev<0)pb=t-1+(-prev)/v;
+ }
+ const npvAt=r=>cf.reduce((s,v,t)=>s+v/Math.pow(1+r,t/12),0);
+ let irr=null;let lo=-0.95,hi=20;if(npvAt(lo)>0&&npvAt(hi)<0){for(let k=0;k<120;k++){const m=(lo+hi)/2;npvAt(m)>0?lo=m:hi=m;}irr=lo;}else if(npvAt(lo)<=0)irr=-1;
+ const gk=t=>{const x=at(t-delay);const wc=x.days*26.7;return{fill:86+x.pts,days:46-x.days,ebitda:x.gContrib+x.gcc+x.gAv,wc,wcOwned:wc*CAL.ownedShare};};
+ const cs=m=>sp.slice(0,m+1).reduce((a,b)=>a+b,0);
+ const y3=at(36);const y3lim=cap/(1-cap)*(y3.contrib+y3.cc+y3.wc);const y3capped=Math.min(y3.av,y3lim);
+ const gross=interp(DAYSP,36)*CAL.avoided*del*real;
+ return{cf,cum,sp,ben,pb,irr,npv:npvAt(.18),del,sv,P,g9:gk(9),g22:gk(22),gk,cs9:cs(9),cs21:cs(21),cs36:cs(36),total:cs(60),capBind,
+  build:{contrib:y3.contrib,cc:y3.cc,wc:y3.wc,avGross:gross,avAfterHair:y3.av,av:y3capped,lim:y3lim}};
+}
+/* ---------- gates ---------- */
+function gateEval(M){
+ const v=(o,k,p)=>o[k]===""||o[k]==null||isNaN(+o[k])?{v:p,src:"plan"}:{v:+o[k],src:"actual"};
+ const g1=[["Fill-rate",v(S.g1,"fill",M.g9.fill),"≥",89,"%"],["Inventory days",v(S.g1,"days",M.g9.days),"≤",43,"d"],["EBITDA run-rate",v(S.g1,"ebitda",M.g9.ebitda),"≥",22,"cr"]];
+ const g2=[["Fill-rate",v(S.g2,"fill",M.g22.fill),"≥",92,"%"],["Inventory days",v(S.g2,"days",M.g22.days),"≤",38,"d"],["EBITDA run-rate",v(S.g2,"ebitda",M.g22.ebitda),"≥",70,"cr"],["WC release (network)",v(S.g2,"wc",M.g22.wc),"≥",170,"cr"]];
+ const pass=r=>r[2]==="≥"?r[1].v>=r[3]-1e-9:r[1].v<=r[3]+1e-9;
+ return{g1,g2,p1:g1.every(pass),p2:g2.every(pass),pass};
+}
+function fmtK(val,u){return u==="%"?f1(val)+"%":u==="d"?f1(val):"₹"+f1(val);}
+/* ---------- charts ---------- */
+const tip=$("tip");
+function showTip(e,html){tip.innerHTML=html;tip.hidden=false;tip.style.left=e.clientX+"px";tip.style.top=e.clientY+"px";}
+function hideTip(){tip.hidden=true;}
+function cw(el,d){const w=el&&el.clientWidth;return w&&w>0?Math.max(300,Math.min(1000,w)):(d||640);}
+function niceTicks(lo,hi,n){const span=hi-lo,step0=span/n,mag=Math.pow(10,Math.floor(Math.log10(step0))),r=step0/mag,step=(r<1.5?1:r<3?2:r<7?5:10)*mag;const out=[];for(let v=Math.ceil(lo/step)*step;v<=hi+1e-9;v+=step)out.push(+v.toFixed(6));return out;}
+function lineChart(el,o){
+ const W=cw(el),H=Math.round((o.h||260)*(W<500?0.85:1)),m={l:44,r:o.mr||16,t:14,b:28};const iw=W-m.l-m.r,ih=H-m.t-m.b;
+ const x=v=>m.l+(v-o.x0)/(o.x1-o.x0)*iw, y=v=>m.t+ih-(v-o.y0)/(o.y1-o.y0)*ih;
+ let s=`<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(o.label)}">`;
+ for(const t of niceTicks(o.y0,o.y1,5)){s+=`<line x1="${m.l}" x2="${W-m.r}" y1="${y(t)}" y2="${y(t)}" stroke="var(--rule)" stroke-width="1"/><text x="${m.l-6}" y="${y(t)+4}" text-anchor="end">${o.yf?o.yf(t):t}</text>`;}
+ if(o.zero!=null)s+=`<line x1="${m.l}" x2="${W-m.r}" y1="${y(o.zero)}" y2="${y(o.zero)}" stroke="var(--ink2)" stroke-width="1"/>`;
+ let lastX=-99;for(const t of o.xt){if(x(t)-lastX<38)continue;lastX=x(t);s+=`<text x="${x(t)}" y="${H-8}" text-anchor="middle">${o.xf?o.xf(t):t}</text>`;}
+ (o.vlines||[]).forEach(v=>{s+=`<line x1="${x(v.x)}" x2="${x(v.x)}" y1="${m.t}" y2="${m.t+ih}" stroke="${v.c}" stroke-width="1" stroke-dasharray="3 3"/><text x="${x(v.x)+4}" y="${m.t+10}" class="lbl">${esc(v.t)}</text>`;});
+ (o.series||[]).forEach(se=>{const d=se.pts.map((p,i)=>(i?"L":"M")+x(p[0]).toFixed(1)+" "+y(p[1]).toFixed(1)).join(" ");
+  if(se.area){const a=d+` L${x(se.pts[se.pts.length-1][0])} ${y(o.zero??o.y0)} L${x(se.pts[0][0])} ${y(o.zero??o.y0)} Z`;s+=`<path d="${a}" fill="${se.c}" opacity=".08"/>`;}
+  s+=`<path d="${d}" fill="none" stroke="${se.c}" stroke-width="${se.w||2}" ${se.dash?'stroke-dasharray="5 4"':""} stroke-linejoin="round"/>`;
+  if(se.end){const p=se.pts[se.pts.length-1];s+=`<circle cx="${x(p[0])}" cy="${y(p[1])}" r="4" fill="${se.c}" stroke="var(--sheet)" stroke-width="2"/>`;}
+ });
+ (o.marks||[]).forEach(mk=>{s+=`<circle cx="${x(mk.x)}" cy="${y(mk.y)}" r="5" fill="${mk.c}" stroke="var(--sheet)" stroke-width="2"/>${mk.t?`<text x="${x(mk.x)+8}" y="${y(mk.y)-8}" class="strong">${esc(mk.t)}</text>`:""}`;});
+ s+=`<line class="xh" x1="0" x2="0" y1="${m.t}" y2="${m.t+ih}" stroke="var(--ink2)" stroke-width="1" visibility="hidden"/><rect x="${m.l}" y="${m.t}" width="${iw}" height="${ih}" fill="transparent" class="hit"/></svg>`;
+ el.innerHTML=s;
+ const svg=el.querySelector("svg"),xh=svg.querySelector(".xh"),hit=svg.querySelector(".hit");
+ hit.addEventListener("mousemove",e=>{const r=svg.getBoundingClientRect();const px=(e.clientX-r.left)/r.width*W;let t=Math.round(o.x0+(px-m.l)/iw*(o.x1-o.x0));t=Math.max(o.x0,Math.min(o.x1,t));
+  xh.setAttribute("x1",x(t));xh.setAttribute("x2",x(t));xh.setAttribute("visibility","visible");
+  showTip(e,`M${t} · `+o.series.filter(se=>!se.noTip).map(se=>{const p=se.pts.find(q=>q[0]===t);return p?`${se.name} ${o.tf?o.tf(p[1]):f1(p[1])}`:"";}).filter(Boolean).join(" · "));});
+ hit.addEventListener("mouseleave",()=>{xh.setAttribute("visibility","hidden");hideTip();});
+}
+/* ---------- nav ---------- */
+function renderNav(){
+ $("nav").innerHTML=`<div class="navgrp">The plan</div>`+VIEWS.map(([id,n],i)=>(id==="inputs"?`<div class="navgrp">Run it every week</div>`:"")+`<a href="#${id}" ${S.view===id?'aria-current="page"':""}>${n}</a>`).join("");
+ const wsv=["inputs","orders","council"].includes(S.view);$("wsWho").hidden=!wsv;
+ $("mobnav").innerHTML="<b>DRISHTI</b>"+VIEWS.map(([id,n])=>`<a href="#${id}" ${S.view===id?'aria-current="page"':""}>${n}</a>`).join("");
+ VIEWS.forEach(([id])=>$("v-"+id).hidden=id!==S.view);
+}
+function route(){const h=location.hash.replace("#","");S.view=VIEWS.some(v=>v[0]===h)?h:(S.view||"overview");renderNav();save();window.scrollTo(0,0);if(M)requestAnimationFrame(renderAll);}
+let rsz=0;let lastW=window.innerWidth;window.addEventListener("resize",()=>{if(Math.abs(window.innerWidth-lastW)<40)return;lastW=window.innerWidth;clearTimeout(rsz);rsz=setTimeout(()=>{if(M)renderAll();},200);});
+window.addEventListener("hashchange",route);
+/* ---------- renderers ---------- */
+let M,G;
+function kpi(l,v,s,cls){return `<div class="kpi"><span class="l">${l}</span><span class="v ${cls||""}">${v}</span><span class="s">${s}</span></div>`;}
+function hurdle(M){const okI=M.irr!=null&&M.irr>=.18,okP=M.pb!=null&&M.pb<=30;return{okI,okP};}
+function renderSide(){
+ const h=hurdle(M);const t1=M.cs9<=34+1e-6,t2=M.cs21<=92+1e-6,t3=M.cs36<=150+1e-6;
+ $("sideStatus").innerHTML=`<div class="row"><span>IRR, 5-yr</span><b class="num">${pct(M.irr)}</b></div><div class="row"><span>Payback</span><b class="num">${M.pb?f1(M.pb)+" mo":">60 mo"}</b></div><div class="row"><span>Gate 1</span>${G.p1?chip("ok","Pass"):chip("no","Miss")}</div><div class="row"><span>Gate 2</span>${G.p2?chip("ok","Pass"):chip("no","Miss")}</div><div class="row"><span>Tranches</span>${t1&&t2&&t3?chip("ok","Within"):chip("no","Breach")}</div>`;
+ const edited=JSON.stringify({...S,view:"",region:"",pilot:""})!==JSON.stringify({...DEF,view:"",region:"",pilot:""});
+ $("scenarioLine").textContent=edited?"Scenario · edited":"Scenario · base case";
+}
+function cashChart(el,legEl,extra){
+ const series=[{name:"Current",c:"var(--neel)",pts:M.cum.map((v,t)=>[t,v]),area:true,end:true}];
+ (extra||[]).forEach(e=>series.push(e));
+ const all=series.flatMap(s=>s.pts.map(p=>p[1]));const lo=Math.min(-150,...all),hi=Math.max(50,...all);
+ const marks=M.pb?[{x:Math.min(60,M.pb),y:0,c:"var(--ink)",t:"breakeven M"+f1(M.pb)}]:[];
+ lineChart(el,{label:"Cumulative net cash by month",x0:0,x1:60,y0:Math.floor(lo/50)*50,y1:Math.ceil(hi/50)*50,zero:0,xt:[0,12,24,30,36,48,60],xf:t=>"M"+t,series,marks,vlines:[{x:30,c:"var(--warn)",t:"30-mo hurdle"}],tf:v=>"₹"+f0(v)});
+ if(legEl)legEl.innerHTML=series.map(s=>`<span class="${s.dash?"dash":""}" style="--c:${s.c}">${s.name}</span>`).join("");
+}
+function renderOverview(){
+ const h=hurdle(M);renderHero();
+ $("ovKpis").innerHTML=kpi("Return (5-year IRR)",pct1(M.irr),"needs at least 18%")+kpi("Money back in (months)",M.pb?f1(M.pb):"60+",h.okP?"limit is 30 months":"misses the 30-month limit")+kpi("Value created (NPV)",cr(M.npv),"5 years, at 18%")+kpi("Yearly profit gain",cr(M.g22.ebitda),"EBITDA run-rate, about +90 bps")+kpi("Cash freed from stock","₹"+f0(M.g22.wc)+" Cr",`₹${f0(M.g22.wcOwned)} Cr of it ACPL-owned`)+kpi("Orders filled on time",f1(M.sv.nat)+"%",`from 86% today; stock ${f1(M.sv.natDays)} days`);
+ cashChart($("ovCash"),$("ovCashLeg"));
+ $("ovM9spend").textContent=cr(M.cs9);
+ const row=(n,r)=>{const ok=G.pass(r);return `<tr><td>${n} ${r[0]}</td><td class="n">${fmtK(r[1].v,r[4])}</td><td class="n">${r[2]}${r[4]==="cr"?"₹":""}${r[3]}</td><td>${ok?chip("ok","Pass"):chip("no","Miss")}</td></tr>`;};
+ $("ovGates").innerHTML=`<div class="tbl"><table><thead><tr><th>Measure</th><th class="n">Plan</th><th class="n">Need</th><th></th></tr></thead><tbody>${G.g1.map(r=>row("G1",r)).join("")}${G.g2.map(r=>row("G2",r)).join("")}</tbody></table></div>`;
+}
+function renderDiagnosis(){
+ // grouped bars
+ const W=cw($("dxRegion")),H=230,m={l:36,r:8,t:12,b:28},iw=W-m.l-m.r,ih=H-m.t-m.b,mx=90,gw=iw/REG.length,bw=Math.min(28,gw/3);
+ const y=v=>m.t+ih-v/mx*ih;let s=`<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Excess and shortfall by region">`;
+ for(const t of [0,30,60,90])s+=`<line x1="${m.l}" x2="${W-m.r}" y1="${y(t)}" y2="${y(t)}" stroke="var(--rule)"/><text x="${m.l-6}" y="${y(t)+4}" text-anchor="end">${t}</text>`;
+ REG.forEach((r,i)=>{const cx=m.l+gw*i+gw/2;const sel=r.n===S.region;
+  s+=`<g class="rb" data-r="${r.n}" style="cursor:pointer" opacity="${sel?1:.55}"><rect x="${cx-gw/2}" y="${m.t}" width="${gw}" height="${ih}" fill="transparent"/>`;
+  s+=`<path d="M${cx-bw-1} ${y(0)} V${y(r.ex)+3} q0 -3 3 -3 h${bw-6} q3 0 3 3 V${y(0)} Z" fill="var(--neel)"/>`;
+  s+=`<path d="M${cx+1} ${y(0)} V${y(r.sh)+3} q0 -3 3 -3 h${bw-6} q3 0 3 3 V${y(0)} Z" fill="var(--warn)"/>`;
+  s+=`<text x="${cx-bw/2}" y="${y(r.ex)-5}" text-anchor="middle" class="lbl">${r.ex}</text><text x="${cx+bw/2+1}" y="${y(r.sh)-5}" text-anchor="middle" class="lbl">${r.sh}</text>`;
+  s+=`<text x="${cx}" y="${H-8}" text-anchor="middle" class="${sel?"strong":""}">${r.n}</text></g>`;});
+ s+=`</svg>`;$("dxRegion").innerHTML=s;
+ $("dxRegion").querySelectorAll(".rb").forEach(g=>{g.addEventListener("click",()=>{S.region=g.dataset.r;save();renderDiagnosis();});
+  g.addEventListener("mousemove",e=>{const r=REG.find(q=>q.n===g.dataset.r);showTip(e,`${r.n} · excess ₹${r.ex} Cr · shortfall ₹${r.sh} Cr`);});g.addEventListener("mouseleave",hideTip);});
+ $("dxRegSeg").innerHTML=REG.map(r=>`<button type="button" aria-pressed="${r.n===S.region}" data-r="${r.n}">${r.n}</button>`).join("");
+ $("dxRegSeg").querySelectorAll("button").forEach(b=>b.onclick=()=>{S.region=b.dataset.r;save();renderDiagnosis();});
+ const r=REG.find(q=>q.n===S.region),south=REG[2];$("dxRegTitle").textContent=r.n;
+ const totEx=REG.reduce((a,b)=>a+b.ex+b.sh,0);
+ const lines=[["Fill-rate",r.fill+"%",south.fill+"%",r.fill/100],["Inventory days",r.days,south.days,r.days/60],["Forecast accuracy",r.acc+"%",south.acc+"%",r.acc/100],["Inventory, ₹ Cr",r.inv,south.inv,r.inv/300]];
+ $("dxRegDetail").innerHTML=`<div class="tbl"><table><thead><tr><th>Measure</th><th class="n">${r.n}</th><th class="n">South (frontier)</th></tr></thead><tbody>${lines.map(l=>`<tr><td>${l[0]}</td><td class="n">${l[1]}</td><td class="n">${l[2]}</td></tr>`).join("")}<tr><td>Share of national imbalance</td><td class="n">${f0((r.ex+r.sh)/totEx*100)}%</td><td class="n">${f0((south.ex+south.sh)/totEx*100)}%</td></tr></tbody></table></div>`+
+  (r.n==="North"||r.n==="West"?`<div class="callout bad">${r.n} holds excess and shortfall at once. Together with ${r.n==="North"?"West":"North"} it carries 76% of the imbalance, which is why replenishment starts here.</div>`:r.n==="East"?`<div class="callout">East forecasts no better than North (51% vs 52%) yet fills 5 points higher. Accuracy alone does not explain service.</div>`:`<div class="callout good">${r.n} already runs near the frontier. Targets here are modest; it is the benchmark North and West converge to.</div>`);
+ $("pilotSeg").innerHTML=Object.keys(PILOTS).map(k=>`<button type="button" aria-pressed="${k===S.pilot}" data-p="${k}">Pilot ${k}</button>`).join("");
+ $("pilotSeg").querySelectorAll("button").forEach(b=>b.onclick=()=>{S.pilot=b.dataset.p;save();renderDiagnosis();});
+ const p=PILOTS[S.pilot];
+ $("pilotDetail").innerHTML=`<div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><h3>${p.t}</h3>${chip(p.chip,p.plan)}</div><p class="note">Sponsor: ${p.sp}. Reliability ${"●".repeat(p.score)}${"○".repeat(3-p.score)}</p><div><b style="font-size:12px;color:var(--mute);text-transform:uppercase;letter-spacing:.06em">Flaws</b><ul style="margin:4px 0 0;padding-left:18px;color:var(--ink2)">${p.flaws.map(x=>`<li>${x}</li>`).join("")}</ul></div><div class="callout"><b>Effect we trust:</b> ${p.trust}</div>`;
+}
+function renderService(){
+ const sv=M.sv;const uni=service({A:95,B:95,C:95,D:95,E:95},S.days);
+ $("svKpis").innerHTML=kpi("National fill",f1(sv.nat)+"%","from 86%; Board asked 95%")+kpi("Network days",f1(sv.natDays),"from 46; Board asked under 35")+kpi("Cost of service",cr(sv.cost),`uniform 95% costs ${cr(uni.cost)}`)+kpi("Annual contribution",cr(sv.ann),`payback ${sv.ann>0?f1(sv.cost/sv.ann):"n/a"} years`);
+ const rows=Object.entries(SEG).map(([k,g])=>{const f=S.fill[k],c=segCost(k,f),gain=Math.max(0,f-g.cur),ann=gain*ppVal(k),pb=ann>0?c/ann:null;
+  let flag="";if(k==="A"&&f>93&&!S.opts.ah)flag=chip("wn","Needs A&H capacity");else if(pb!=null&&pb>2.5)flag=chip("wn","Payback over 30 mo");else if(gain>0)flag=chip("ok","Pays back");else flag=chip("nt","Hold");
+  return `<tr><td><b>${k}</b> ${g.name}<div class="note">${f0(g.rev/84.2)}% of revenue · now ${g.cur}%, ${g.days} days</div><div class="segact">${g.act}</div></td>
+   <td data-l="Fill target" style="min-width:150px"><div class="ctl"><input type="range" id="fill-${k}" min="${g.cur}" max="${g.max}" step="0.5" value="${f}" aria-label="Fill target segment ${k}"><output class="num">${f1(f)}%</output></div></td>
+   <td class="n" data-l="Days"><input type="number" id="days-${k}" value="${S.days[k]}" min="15" max="80" step="1" style="width:64px" aria-label="Inventory days target segment ${k}"></td>
+   <td class="n" data-l="3-yr cost">${cr(c)}</td><td class="n" data-l="Payback">${pb!=null?f1(pb)+" y":"–"}</td><td>${flag}</td></tr>`;}).join("");
+ $("svTable").innerHTML=`<thead><tr><th>Segment</th><th>Fill target</th><th class="n">Days</th><th class="n">3-yr cost</th><th class="n">Payback</th><th></th></tr></thead><tbody>${rows}<tr class="sum"><td>National</td><td data-l="Fill">${f1(sv.nat)}%</td><td class="n" data-l="Days">${f1(sv.natDays)}</td><td class="n" data-l="3-yr cost">${cr(sv.cost)}</td><td class="n" data-l="Payback">${sv.ann>0?f1(sv.cost/sv.ann)+" y":"–"}</td><td></td></tr></tbody>`;
+ Object.keys(SEG).forEach(k=>{const r=$("fill-"+k);r.addEventListener("input",()=>{S.fill[k]=+r.value;r.nextElementSibling.textContent=f1(+r.value)+"%";schedule();});r.addEventListener("change",()=>{renderService();});
+  const d=$("days-"+k);d.addEventListener("change",()=>{const v=+d.value;if(isFinite(v)&&v>0){S.days[k]=v;recalc();renderService();}});});
+ $("ppMode").innerHTML=[["low","Low"],["mid","Mid"],["high","High"]].map(([v,n])=>`<button type="button" aria-pressed="${S.ppMode===v}" data-v="${v}">${n}</button>`).join("");
+ $("ppMode").querySelectorAll("button").forEach(b=>b.onclick=()=>{S.ppMode=b.dataset.v;recalc();renderService();});
+ // bars
+ const W=cw($("svBars")),H=200,m={l:28,r:8,t:14,b:26},iw=W-m.l-m.r,ih=H-m.t-m.b,mx=90,gw=iw/5,bw=Math.min(26,gw/3);const y=v=>m.t+ih-v/mx*ih;
+ let s=`<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Cost of service by segment">`;
+ for(const t of [0,30,60,90])s+=`<line x1="${m.l}" x2="${W-m.r}" y1="${y(t)}" y2="${y(t)}" stroke="var(--rule)"/><text x="${m.l-5}" y="${y(t)+4}" text-anchor="end">${t}</text>`;
+ Object.keys(SEG).forEach((k,i)=>{const cx=m.l+gw*i+gw/2,u=segCost(k,95),c=segCost(k,S.fill[k]);
+  const bar=(x0,v,col)=>v<=0?`<line x1="${x0}" x2="${x0+bw}" y1="${y(0)}" y2="${y(0)}" stroke="${col}" stroke-width="2"/>`:`<path d="M${x0} ${y(0)} V${y(v)+3} q0 -3 3 -3 h${bw-6} q3 0 3 3 V${y(0)} Z" fill="${col}"/>`;
+  s+=bar(cx-bw-1,u,"var(--rule2)")+bar(cx+1,c,"var(--neel)");
+  s+=`<text x="${cx-bw/2}" y="${y(u)-5}" text-anchor="middle">${f0(u)}</text><text x="${cx+bw/2+1}" y="${y(c)-5}" text-anchor="middle" class="strong">${f0(c)}</text><text x="${cx}" y="${H-8}" text-anchor="middle">${k}</text>`;});
+ $("svBars").innerHTML=s+`</svg>`;
+ const steps=[["A","92→95%",92,95],["B","92→95%",92,95],["C","95→97%",95,97],["D","88→92%",88,92],["E","92→95%",92,95]];
+ $("svLast").innerHTML=`<thead><tr><th>Step</th><th class="n">Extra cost</th><th class="n">Payback</th><th>Verdict</th></tr></thead><tbody>`+steps.map(([k,l,a,b])=>{const c=segCost(k,b)-segCost(k,a),pb=c/((b-a)*ppVal(k));let v=pb<=2.5?chip("ok","Fund"):k==="A"?chip("wn","Capacity-capped"):chip("no","Stop");return `<tr><td>${k} ${l}</td><td class="n">${cr(c)}</td><td class="n">${f1(pb)} y</td><td>${v}</td></tr>`;}).join("")+`</tbody>`;
+}
+function renderOpModel(){
+ const om=S.om;$("omSupply").value=om.supply;$("omSupplyO").textContent=om.supply+"%";
+ const reqTot=om.reg.reduce((a,r)=>a+r.req,0),supply=reqTot*om.supply/100;
+ const hc=b=>{const a=Math.abs(b);return a<=3?0:Math.min(25,(a-3)/12*25)*(b>0?1:0);};
+ // blanket: everyone cut 15%, then pro-rata to supply
+ const blank=om.reg.map(r=>r.req*0.85),bt=blank.reduce((a,b)=>a+b,0),bs=blank.map(v=>v*Math.min(1,supply/bt));
+ // honest: true demand estimate = req/(1+bias); haircut = hc(bias); allocate pro-rata on haircut requests
+ const hon=om.reg.map(r=>r.req*(1-hc(r.bias)/100)),ht=hon.reduce((a,b)=>a+b,0),hs=hon.map(v=>v*Math.min(1,supply/ht));
+ const truth=om.reg.map(r=>r.req/(1+r.bias/100));
+ const errB=bs.reduce((a,v,i)=>a+Math.abs(v-Math.min(truth[i],v*9)),0),gapB=bs.reduce((a,v,i)=>a+Math.abs(v-truth[i]),0),gapH=hs.reduce((a,v,i)=>a+Math.abs(v-truth[i]),0);
+ $("omTable").innerHTML=`<thead><tr><th>Region</th><th class="n">Requested</th><th class="n">13-wk bias</th><th class="n">Haircut</th><th class="n">Blanket 15%</th><th class="n">Honest supply</th><th class="n">Likely demand</th></tr></thead><tbody>`+
+  om.reg.map((r,i)=>`<tr><td>${r.n}</td><td class="n"><input type="number" id="omReq${i}" value="${r.req}" min="0" step="5" style="width:72px" aria-label="${r.n} requested"></td><td class="n"><input type="number" id="omBias${i}" value="${r.bias}" min="-20" max="40" step="1" style="width:64px" aria-label="${r.n} bias %"></td><td class="n">${f0(hc(r.bias))}%</td><td class="n">${f1(bs[i])}</td><td class="n"><b>${f1(hs[i])}</b></td><td class="n">${f1(truth[i])}</td></tr>`).join("")+
+  `<tr class="sum"><td>Total</td><td class="n">${f0(reqTot)}</td><td></td><td></td><td class="n">${f1(bs.reduce((a,b)=>a+b,0))}</td><td class="n">${f1(hs.reduce((a,b)=>a+b,0))}</td><td class="n">${f1(truth.reduce((a,b)=>a+b,0))}</td></tr></tbody>`;
+ om.reg.forEach((r,i)=>{$("omReq"+i).onchange=e=>{r.req=Math.max(0,+e.target.value||0);save();renderOpModel();};$("omBias"+i).onchange=e=>{r.bias=+e.target.value||0;save();renderOpModel();};});
+ const better=gapB-gapH;
+ $("omNote").innerHTML=`<div class="callout ${better>0?"good":"warn"}">Units in thousand cases. Mis-allocation against likely demand: blanket cut <b class="num">${f1(gapB)}</b>, honest supply <b class="num">${f1(gapH)}</b>. ${better>0?`Calibration moves ${f1(better)} units to where demand is real, and regions that forecast honestly lose nothing.`:"With these inputs the blanket cut is no worse; check the bias figures."}</div>`;
+ $("omSkew").value=om.skew;$("omSkewO").textContent=om.skew+"%";
+ const wk=[];const even=100/13;const rest=(100-om.skew)/10;for(let i=1;i<=13;i++)wk.push(i<=10?rest:om.skew/3);
+ const W=cw($("omSkewChart")),H=150,m={l:30,r:8,t:10,b:24},iw=W-m.l-m.r,ih=H-m.t-m.b,mx=Math.max(16,...wk),bw=iw/13;const y=v=>m.t+ih-v/mx*ih;
+ let s=`<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Share of quarter's primary sales by week">`;
+ for(const t of niceTicks(0,mx,3))s+=`<line x1="${m.l}" x2="${W-m.r}" y1="${y(t)}" y2="${y(t)}" stroke="var(--rule)"/><text x="${m.l-5}" y="${y(t)+4}" text-anchor="end">${t}%</text>`;
+ wk.forEach((v,i)=>{const x0=m.l+i*bw+2,w=bw-4;s+=`<path d="M${x0} ${y(0)} V${y(v)+2} q0 -2 2 -2 h${w-4} q2 0 2 2 V${y(0)} Z" fill="${i>=10?"var(--warn)":"var(--neel)"}"/>`;if((W<500?i%3===0:i%2===0)||i===12)s+=`<text x="${x0+w/2}" y="${H-7}" text-anchor="middle">W${i+1}</text>`;});
+ s+=`<line x1="${m.l}" x2="${W-m.r}" y1="${y(even)}" y2="${y(even)}" stroke="var(--ink2)" stroke-dasharray="4 3"/><text x="${W-m.r}" y="${y(even)-4}" text-anchor="end" class="lbl">even pace ${f1(even)}%</text></svg>`;
+ $("omSkewChart").innerHTML=s;
+ const load=om.skew/23;
+ $("omSkewNote").innerHTML=`<div class="callout ${om.skew<=27?"good":om.skew<=33?"warn":"bad"}">Quarter-end loading <b class="num">${(om.skew/23.08).toFixed(2)}×</b> an even pace. Target is 27% or less (about 1.2×). ${om.skew<=27?"On target: plants can run a level schedule.":"Plants still chase a month-end spike, so they build stock early and run short late."}</div>`;
+}
+function renderInvest(){
+ const t1=M.cs9<=34+1e-6,t2=M.cs21<=92+1e-6,t3=M.cs36<=150+1e-6,totalAlloc=INITS.reduce((a,i)=>a+(S.alloc[i.id]||0),0)+OPTS.reduce((a,o)=>a+(S.opts[o.id]?o.amt:0),0);
+ $("invKpis").innerHTML=kpi("Allocated",cr(totalAlloc*(1+S.sc.over/100)),`${cr(150-totalAlloc*(1+S.sc.over/100))} unallocated of ₹150 Cr`)+kpi("By month 9",cr(M.cs9),t1?"within ₹34 Cr tranche":"breaches ₹34 Cr tranche",t1?"":"")+kpi("By month 21",cr(M.cs21),t2?"within ₹92 Cr released":"breaches ₹92 Cr released")+kpi("Benefit delivery",f0(M.del*100)+"%","of the full programme benefit");
+ const kp=$("invKpis").querySelectorAll(".kpi .v");if(!t1)kp[1].style.color="var(--bad)";if(!t2)kp[2].style.color="var(--bad)";if(!t3)kp[0].style.color="var(--bad)";
+ if(!$("allocRows").dataset.built){
+  $("allocRows").innerHTML=INITS.map(i=>`<div class="alloc"><div class="nm">${i.name}<small><span class="feas" title="Feasibility ${i.feas} of 5">${"●".repeat(i.feas)}${"○".repeat(5-i.feas)}</span> ${i.route} · ${i.note}</small></div><input type="number" id="al-${i.id}" min="0" max="150" step="0.5" aria-label="${i.name} ₹ Cr"><div class="bar"><span id="alb-${i.id}"></span><em style="left:${i.base/40*100}%" title="recommended"></em></div><span id="alf-${i.id}"></span></div>`).join("")+`<p class="note" style="margin-top:8px">Dots rate feasibility out of 5. Routes: Buy is a vendor licence, SI an integrator for data and system links, Build is in-house on existing systems, Outsource is the independent gate audit. Bars scale to ₹40 Cr; the tick marks the recommended amount. Replenishment loses half its benefit if master data is not fully funded.</p>`;
+  INITS.forEach(i=>{$("al-"+i.id).addEventListener("change",e=>{const v=Math.max(0,+e.target.value||0);S.alloc[i.id]=v;recalc();});});
+  $("allocRows").dataset.built="1";
+ }
+ INITS.forEach(i=>{const v=S.alloc[i.id]||0;const inp=$("al-"+i.id);if(document.activeElement!==inp)inp.value=v;$("alb-"+i.id).style.width=Math.min(100,v/40*100)+"%";
+  const f=i.share?Math.min(1,v/i.base):1;$("alf-"+i.id).innerHTML=i.share||i.id==="mdm"?(v>=i.base-1e-9?chip("ok","Full"):v===0?chip("no","Cut"):chip("wn",f0(v/i.base*100)+"%")):(v>=i.base?chip("ok","Full"):chip("wn","Under"));});
+ // spend chart
+ const pts=[];let c=0;M.sp.slice(0,37).forEach((v,t)=>{c+=v;pts.push([t,c]);});
+ const rel=[[0,34],[9,34],[10,34],[10,92],[21,92],[22,92],[22,150],[36,150]];
+ lineChart($("invChart"),{label:"Cumulative spend vs tranches",x0:0,x1:36,y0:0,y1:Math.max(160,Math.ceil(c/20)*20),xt:[0,9,12,21,24,36],xf:t=>"M"+t,h:220,series:[{name:"Spend",c:"var(--neel)",pts,end:true},{name:"Released",c:"var(--ink2)",pts:rel,dash:true,w:1.5,noTip:true}],marks:[{x:9,y:M.cs9,c:t1?"var(--good)":"var(--bad)",t:"₹"+f1(M.cs9)},{x:21,y:M.cs21,c:t2?"var(--good)":"var(--bad)",t:"₹"+f1(M.cs21)}],tf:v=>"₹"+f1(v)});
+ // options with incremental effect
+ const base=model({opts:Object.fromEntries(Object.entries(S.opts).map(([k,v])=>[k,v]))});
+ $("optRows").innerHTML=OPTS.map(o=>{const on=!!S.opts[o.id];const alt=model({opts:{...S.opts,[o.id]:!on}});const withM=on?base:alt,without=on?alt:base;const dn=withM.npv-without.npv;
+  return `<div class="optrow"><input type="checkbox" id="op-${o.id}" ${on?"checked":""} aria-label="Fund ${o.name}"><div><b style="font-weight:500">${o.name}</b><div class="meta">${o.note}</div></div><span class="num">₹${o.amt}</span><span class="num" style="color:${dn>=0?"var(--good)":"var(--bad)"};min-width:70px;text-align:right" title="Change in 5-yr NPV">${dn>=0?"+":"−"}${f0(Math.abs(dn))} NPV</span></div>`;}).join("");
+ OPTS.forEach(o=>{$("op-"+o.id).onchange=e=>{S.opts[o.id]=e.target.checked;recalc();};});
+ $("cooRight").checked=S.coo;
+}
+function renderReturns(){
+ const h=hurdle(M),P=S.sc;
+ const disc=M.build.avAfterHair>0?Math.max(0,1-M.build.av/M.build.avAfterHair):0;
+ $("rtKpis").innerHTML=kpi("5-yr IRR",pct1(M.irr),h.okI?"vs at least 18%":"fails 18% hurdle")+kpi("Payback",M.pb?f1(M.pb)+" mo":">60 mo",h.okP?"vs 30 months or less":"fails 30-month hurdle")+kpi("NPV at 18%",cr(M.npv),"5 years, pre-tax")+kpi("EBITDA run-rate","+₹"+f0(M.g22.ebitda)+" Cr","about +90 bps")+kpi("Working capital","₹"+f0(M.g22.wc)+" Cr",`network; ₹${f0(M.g22.wcOwned)} Cr owned`)+kpi("Avoided-cost share",M.capBind?f0(P.cap)+"% cap binds":"Under cap",M.capBind?f0(disc*100)+"% discarded":"nothing discarded");
+ const kv=$("rtKpis").querySelectorAll(".kpi .v");/*hurdle colours*/kv[0].style.color=h.okI?"":"var(--bad)";kv[1].style.color=h.okP?"":"var(--bad)";
+ const sets=[["sRec","rec",v=>v+"%"],["sReal","real",v=>(v/100).toFixed(2)+"×"],["sDelay","delay",v=>v+" mo"],["sLag","lag",v=>v+" mo"],["sOver","over",v=>"+"+v+"%"],["sCap","cap",v=>v+"%"],["sHair","hair",v=>v+"%"]];
+ sets.forEach(([id,k,fm])=>{const el=$(id);if(document.activeElement!==el)el.value=P[k];$(id+"O").textContent=fm(P[k]);});
+ $("sDay").value=P.day;
+ $("recPreset").innerHTML=[["Finance / Audit",35],["Transformation office",40],["Sales",60]].map(([n,v])=>`<button type="button" aria-pressed="${P.rec===v}" data-v="${v}">${n} ${v}%</button>`).join("");
+ $("recPreset").querySelectorAll("button").forEach(b=>b.onclick=()=>{S.sc.rec=+b.dataset.v;recalc();});
+ const audit=model({sc:{rec:35}}),down=model({sc:{rec:35,real:85,delay:6,over:25}});
+ cashChart($("rtCash"),$("rtLeg"),[{name:"Audit 35% recovery",c:"var(--warn)",pts:audit.cum.map((v,t)=>[t,v]),dash:true,w:1.5},{name:"Combined downside",c:"var(--ink2)",pts:down.cum.map((v,t)=>[t,v]),dash:true,w:1.5}]);
+ const tests=[["Base",{},"87%","29.3 mo"],["No certification lag",{lag:0},"131%","24.1 mo"],["Recovery 60% (Sales)",{rec:60},"156%","22.3 mo"],["Recovery 35% (Audit)",{rec:35},"68%","33.0 mo"],["Realisation ×0.85",{real:85},"56%","35.9 mo"],["Benefits 6 months late",{delay:6},"49%","37.5 mo"],["Overrun +25%",{over:25},"66%","34.3 mo"],["Day valued on COGS",{day:"cogs"},"67%","33.3 mo"],["Avoided cap 30%",{cap:30},"62%","34.3 mo"],["Combined downside",{rec:35,real:85,delay:6,over:25},"−17%",">60 mo"]];
+ $("rtStress").innerHTML=`<thead><tr><th>Scenario</th><th class="n">IRR (deck)</th><th class="n">Payback (deck)</th><th class="n">Live IRR</th><th class="n">Live payback</th></tr></thead><tbody>`+tests.map(([n,o,di,dp])=>{const r=model({sc:Object.assign({},DEF.sc,o)});return `<tr><td>${n}</td><td class="n"><b>${di}</b></td><td class="n"><b>${dp}</b></td><td class="n">${pct(r.irr)}</td><td class="n">${r.pb?f1(r.pb)+" mo":">60 mo"}</td></tr>`;}).join("")+`</tbody>`;
+ // break-points by bisection on payback
+ const bp=(key,lo,hi,dirUp)=>{const ok=v=>{const r=model({sc:{[key]:v}});return r.pb!=null&&r.pb<=30;};if(ok(lo)===ok(hi))return null;let a=lo,b=hi;for(let k=0;k<30;k++){const m=(a+b)/2;ok(m)===ok(lo)?a=m:b=m;}return (a+b)/2;};
+ const bRec=bp("rec",20,70),bReal=bp("real",60,110),bDel=bp("delay",0,12),bOv=bp("over",0,40);
+ const li=(t,v)=>`<tr><td>${t}</td><td class="n">${v}</td></tr>`;
+ $("rtBreak").innerHTML=`<div class="callout"><b>Deck break-points:</b> payback fails below 39% recovery (the Audit Committee tests 35%), or at 98% of base realisation, or with a 0.5-month slip. <b>Stop-loss:</b> if month 12 shows recovery under 37% or realisation under 0.85×, freeze waves 2–3 and the data tail (about ₹53 Cr).</div><p class="note">Live model, holding everything else at current settings:</p><div class="tbl"><table><tbody>${li("Recoverable demand",bRec==null?(M.pb&&M.pb<=30?"clears across 20–70%":"fails across 20–70%"):f1(bRec)+"%")}${li("Realisation",bReal==null?"–":(bReal/100).toFixed(2)+"×")}${li("Benefit slip",bDel==null?(M.pb&&M.pb<=30?"over 12 months":"none tolerated"):f1(bDel)+" months")}${li("Cost overrun",bOv==null?(M.pb&&M.pb<=30?"over 40%":"none tolerated"):"+"+f1(bOv)+"%")}</tbody></table></div>`+
+  `<div class="callout ${bRec!=null&&bRec>35?"warn":"good"}">${bRec!=null&&bRec>35?`The Audit Committee tests recovery at 35%, below the ${f1(bRec)}% break-point. Agree the measurement charter on Day 0 and keep the month-12 stop-loss.`:"Payback holds at the Audit Committee's 35% recovery test."}</div>`;
+ const b=M.build;const tot=b.contrib+b.cc+b.wc+b.av;
+ $("rtBuild").innerHTML=`<tbody>${li("Contribution from recovered fill",f1(b.contrib))}${li("Capacity and options",f1(b.cc))}${li("Working capital carrying (11%)",f1(b.wc))}${li(`Avoided cost (after ${P.hair}% haircut${b.avAfterHair>b.av+1e-6?", capped":""})`,f1(b.av))}<tr class="sum"><td>Return-test benefit</td><td class="n">${f1(tot)}</td></tr><tr><td class="note">Avoided share of claimed benefit</td><td class="n note">${tot>0?f0(b.av/tot*100):0}%</td></tr></tbody>`;
+}
+function renderGates(){
+ // gantt
+ const X=t=>t/36*100;const grp=(n)=>`<div class="lab grp">${n}</div><div class="trk">${[9,22].map(g=>`<i class="gate" style="left:${X(g)}%"></i>`).join("")}</div>`;
+ const bar=(n,s,e,soft)=>`<div class="lab">${n}</div><div class="trk">${[6,12,18,24,30].map(g=>`<i style="left:${X(g)}%"></i>`).join("")}${[9,22].map(g=>`<i class="gate" style="left:${X(g)}%"></i>`).join("")}<span class="${soft?"soft":""}" style="left:${X(s)}%;width:${Math.max(1,X(e)-X(s))}%"></span></div>`;
+ const I=id=>INITS.find(i=>i.id===id);const al=id=>S.alloc[id]>0;
+ let g=`<div class="gantt"><div></div><div class="axis">${[0,6,9,12,18,22,24,30,36].map(t=>`<b style="left:${X(t)}%">${t===9?"G1":t===22?"G2":"M"+t}</b>`).join("")}</div>`;
+ g+=grp("SATYA · TRUTH")+bar("Day-0 measurement charter",0,1)+(al("flow")?bar("Flow Contract: design, 2-region pilot, scale",0,I("flow").e):"")+(al("sic")?bar("Stock Identity Check + calibration ledger",I("sic").s,36,true):"");
+ g+=grp("LAYA · RHYTHM")+bar("Flow Owner, Heartbeat, KPI reset",0,4)+(al("plc")?bar("Product wheel + express slot",2,I("plc").e):"");
+ g+=grp("GATI · VELOCITY")+(al("port")?bar("SKU delist and incubate",I("port").s,I("port").e):"")+(al("qc")?bar("Quick-commerce fast lane",I("qc").s,I("qc").e):"")+(al("plc")?bar("Plant C (output from M8)",0,8):"")+(al("rep")?bar("Replenishment N&W: 3 waves; extend decision M24",I("rep").s,24):"");
+ OPTS.filter(o=>S.opts[o.id]).forEach(o=>{g+=bar(o.name+" (added)",o.s,o.e,true);});
+ g+=grp("ENABLE")+(al("mdm")?bar("Master data and integration",I("mdm").s,I("mdm").e):"")+(al("pmo")?bar("Programme office and audit",0,36,true):"");
+ $("gantt").innerHTML=g+`</div>`;
+ const WATCH={g1:["Tightest early gate","0.2 d if baseline restated","−₹8.5 Cr if dip counted"],g2:["Replenishment wave 3","Tightest gate overall","Net of running costs","₹153 Cr ACPL-owned"]};
+ const tb=(rows,key,o)=>`<thead><tr><th>Measure</th><th class="n">Need</th><th class="n">Plan</th><th>Actual</th><th class="n">Headroom</th><th></th><th>Watch-out</th></tr></thead><tbody>`+rows.map((r,i)=>{const plan=i===0?(key==="g1"?M.g9.fill:M.g22.fill):i===1?(key==="g1"?M.g9.days:M.g22.days):i===2?(key==="g1"?M.g9.ebitda:M.g22.ebitda):M.g22.wc;const k=["fill","days","ebitda","wc"][i];const hr=r[2]==="≥"?r[1].v-r[3]:r[3]-r[1].v;const ok=G.pass(r);
+  return `<tr><td>${r[0]}</td><td class="n">${r[2]} ${r[4]==="cr"?"₹":""}${r[3]}${r[4]==="%"?"%":""}</td><td class="n">${fmtK(plan,r[4])}</td><td><input type="number" id="${key}-${k}" step="0.1" placeholder="plan" value="${esc(o[k])}" style="width:84px" aria-label="${r[0]} actual"></td><td class="n" style="color:${ok?"var(--good)":"var(--bad)"}">${hr>=0?"+":"−"}${f1(Math.abs(hr))}</td><td>${ok?chip("ok","Pass"):chip("no","Miss")}</td><td class="note">${WATCH[key][i]}</td></tr>`;}).join("")+`</tbody>`;
+ $("g1Table").innerHTML=tb(G.g1,"g1",S.g1);$("g2Table").innerHTML=tb(G.g2,"g2",S.g2);
+ ["fill","days","ebitda"].forEach(k=>{$("g1-"+k).onchange=e=>{S.g1[k]=e.target.value;recalc();WSgate();};});
+ ["fill","days","ebitda","wc"].forEach(k=>{$("g2-"+k).onchange=e=>{S.g2[k]=e.target.value;recalc();WSgate();};});
+ const any1=Object.values(S.g1).some(v=>v!==""),any2=Object.values(S.g2).some(v=>v!=="");
+ $("g1chip").innerHTML=(G.p1?chip("ok","Tranche 2 released, ₹58 Cr at M10"):chip("no","Tranche 2 delayed two quarters"))+(any1?" "+chip("nt","Actuals"):"");
+ $("g2chip").innerHTML=(G.p2?chip("ok","Tranche 3 released, ₹58 Cr at M22"):chip("no","Tranche 3 lapses"))+(any2?" "+chip("nt","Actuals"):"");
+ const tight1=G.g1.map(r=>({n:r[0],h:(r[2]==="≥"?r[1].v-r[3]:r[3]-r[1].v)/r[3]})).sort((a,b)=>a.h-b.h)[0];
+ $("g1Out").innerHTML=G.p1?`<div class="callout good">All three conditions clear. Tightest: ${tight1.n.toLowerCase()}. Gate 1 is reached on ${cr(M.cs9)} of the ₹34 Cr, with no new software live.</div>`:
+  `<div class="callout bad"><b>If Gate 1 is missed:</b> tranche 2 slips to month 16 and the programme is revised. Keep Flow Contract, Heartbeat and Plant C running on tranche 1; hold replenishment waves and master data until the re-test. Model impact: ${(()=>{const r=model({shift:6});return `IRR ${pct(r.irr)}, payback ${r.pb?f1(r.pb)+" mo":">60 mo"}`;})()}.</div>`;
+ const spentAfter=M.cs36-M.cs21;
+ $("g2Out").innerHTML=G.p2?`<div class="callout good">All four conditions clear. WC release is on the network basis the gate uses; ACPL-owned release is ${cr(M.g22.wcOwned)}.</div>`:
+  `<div class="callout bad"><b>If Gate 2 is missed:</b> tranche 3 lapses. ${cr(spentAfter)} of planned spend sits after month 21. Fund the tail from the run-rate benefit (${cr(M.g22.ebitda)} a year), withhold the 30% pay-on-proof vendor retention, and drop the replenishment extension decision.</div>`;
+ // fill path
+ const pts=[];for(let t=0;t<=36;t++)pts.push([t,M.gk(t).fill]);
+ const thr=[[0,89],[9,89],[9,92],[22,92],[36,92]];
+ const marks=[];if(S.g1.fill!=="")marks.push({x:9,y:+S.g1.fill,c:"var(--ink)",t:f1(+S.g1.fill)+"%"});if(S.g2.fill!=="")marks.push({x:22,y:+S.g2.fill,c:"var(--ink)",t:f1(+S.g2.fill)+"%"});
+ const ys=[...pts.map(p=>p[1]),...marks.map(m=>m.y),92];
+ lineChart($("gFill"),{label:"Fill-rate path vs gates",x0:0,x1:36,y0:Math.floor(Math.min(84,...ys)),y1:Math.ceil(Math.max(94,...ys)),xt:[0,6,9,12,18,22,30,36],xf:t=>t===9?"G1":t===22?"G2":"M"+t,series:[{name:"Plan",c:"var(--neel)",pts,end:true},{name:"Gate",c:"var(--warn)",pts:thr,dash:true,w:1.5,noTip:true}],marks,yf:v=>v+"%",tf:v=>f1(v)+"%",h:240});
+}
+/* ---------- recalc ---------- */
+let pending=0;function schedule(){cancelAnimationFrame(pending);pending=requestAnimationFrame(()=>{recalcCore();renderVisibleNonService();});}
+function recalcCore(){M=model();G=gateEval(M);save();}
+function renderVisibleNonService(){renderSide();
+ // refresh service KPIs and national row without rebuilding sliders
+ const sv=M.sv;const uni=service({A:95,B:95,C:95,D:95,E:95},S.days);
+ $("svKpis").innerHTML=kpi("National fill",f1(sv.nat)+"%","from 86%; Board asked 95%")+kpi("Network days",f1(sv.natDays),"from 46; Board asked under 35")+kpi("Cost of service",cr(sv.cost),`uniform 95% costs ${cr(uni.cost)}`)+kpi("Annual contribution",cr(sv.ann),`payback ${sv.ann>0?f1(sv.cost/sv.ann):"n/a"} years`);}
+function recalc(){recalcCore();renderAll();}
+function renderAll(){renderSide();renderOverview();renderDiagnosis();renderService();renderOpModel();renderInvest();renderReturns();renderGates();}
+/* ---------- wiring ---------- */
+[["sRec","rec"],["sReal","real"],["sDelay","delay"],["sLag","lag"],["sOver","over"],["sCap","cap"],["sHair","hair"]].forEach(([id,k])=>{$(id).addEventListener("input",e=>{S.sc[k]=+e.target.value;recalcCore();renderSide();renderReturns();});$(id).addEventListener("change",()=>recalc());});
+$("sDay").onchange=e=>{S.sc.day=e.target.value;recalc();};
+$("rtBase").onclick=()=>{S.sc=clone(DEF.sc);recalc();toast("Assumptions set to base values");};
+$("cooRight").onchange=e=>{S.coo=e.target.checked;recalc();};
+$("svUniform").onclick=()=>{S.fill={A:95,B:95,C:95,D:95,E:95};recalc();toast("Loaded the Board's uniform 95%");};
+$("svOurs").onclick=()=>{S.fill={...OURS.fill};S.days={...OURS.days};recalc();toast("Loaded recommended targets");};
+$("omSupply").addEventListener("input",e=>{S.om.supply=+e.target.value;save();renderOpModel();});
+$("omSkew").addEventListener("input",e=>{S.om.skew=+e.target.value;save();renderOpModel();});
+$("resetBtn").onclick=()=>{$("confirmReset").hidden=false;};
+$("resetNo").onclick=()=>{$("confirmReset").hidden=true;};
+$("resetYes").onclick=()=>{const v=S.view;S=clone(DEF);S.view=v;$("confirmReset").hidden=true;recalc();toast("Reset to base case");};
+function toast(m){const t=$("toast");t.textContent=m;t.hidden=false;clearTimeout(toast._t);toast._t=setTimeout(()=>t.hidden=true,2200);}
+$("copySum").onclick=()=>{
+ const txt=`Project Drishti, current scenario
+National fill ${f1(M.sv.nat)}% (from 86%), network days ${f1(M.sv.natDays)} (from 46)
+Spend: ${cr(M.cs9)} by M9, ${cr(M.cs21)} by M21, ${cr(M.cs36)} by M36 (cap ₹150 Cr)
+5-yr IRR ${pct(M.irr)}, payback ${M.pb?f1(M.pb)+" months":"over 60 months"}, NPV@18% ${cr(M.npv)}
+Gate 1: ${G.p1?"pass":"miss"} (fill ${f1(G.g1[0][1].v)}%, days ${f1(G.g1[1][1].v)}, EBITDA ₹${f1(G.g1[2][1].v)} Cr)
+Gate 2: ${G.p2?"pass":"miss"} (fill ${f1(G.g2[0][1].v)}%, days ${f1(G.g2[1][1].v)}, EBITDA ₹${f1(G.g2[2][1].v)} Cr, WC ₹${f1(G.g2[3][1].v)} Cr)
+Assumptions: recovery ${S.sc.rec}%, realisation ${(S.sc.real/100).toFixed(2)}x, delay ${S.sc.delay} mo, overrun ${S.sc.over}%`;
+ const done=()=>toast("Summary copied");
+ try{navigator.clipboard.writeText(txt).then(done,()=>fallback());}catch(e){fallback();}
+ function fallback(){const ta=document.createElement("textarea");ta.value=txt;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();try{document.execCommand("copy");done();}catch(e){toast("Select and copy the text manually");}ta.remove();}
+};
+/* ================= WORKSPACE (shared, needs db) ================= */
+const TEAMS=[["sales","Sales and regions"],["dist","Distributors"],["plants","Plants"],["brands","Brands"],["finance","Finance"],["flow","Flow Owner"]];
+const TEAMN=Object.fromEntries(TEAMS);
+const REGS=["North","West","South","East","Central"];
+const PLANTS=[["A","Snacks"],["B","Beverages"],["C","Snacks"],["D","Personal care"],["E","Foods"],["F","Beverages"],["G","Foods"],["H","Snacks"],["I","Personal care"]];
+const SEGS=["A Core","B Mid and regional","C Premium","D Tail and launches","E Quick-commerce packs"];
+const COLS=[["requested","Requested"],["committed","Committed"],["production","In production"],["dispatched","Dispatched"],["received","Received"],["short","Cannot fill"]];
+const CHANS=[["council","Flow Council"],["plants","Sales and plants"],["dist","Distributors"],["finance","Finance and audit"],["brands","Brands and launches"]];
+function isoWeek(d){const t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));const day=t.getUTCDay()||7;t.setUTCDate(t.getUTCDate()+4-day);const y=t.getUTCFullYear();const w=Math.ceil(((t-Date.UTC(y,0,1))/864e5+1)/7);return y+"-W"+String(w).padStart(2,"0");}
+function addWeeks(wk,n){const[y,w]=wk.split("-W").map(Number);const jan4=new Date(Date.UTC(y,0,4));const mon=new Date(jan4);mon.setUTCDate(jan4.getUTCDate()-((jan4.getUTCDay()||7)-1)+(w-1)*7+n*7);return isoWeek(new Date(mon.getUTCFullYear(),mon.getUTCMonth(),mon.getUTCDate()));}
+const THISWEEK=isoWeek(new Date());
+const WS={db:null,user:null,uid:null,canWrite:null,ro:false,team:null,week:THISWEEK,inTeam:null,req:[],inp:{},msgs:[],acts:[],members:{},prof:{},state:"connecting",ch:"council",fReg:"",fPlant:""};
+try{WS.team=localStorage.getItem("drishti-team");}catch(e){}
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+async function cap(n){for(let i=0;i<20;i++){if(window.claude&&typeof window.claude.use==="function"){try{return await window.claude.use(n);}catch(e){return null;}}await sleep(500);}return null;}
+function pname(id){const p=WS.prof[id];return (p&&p.name)||"Someone";}
+function pav(id){const p=WS.prof[id];return p&&p.avatarUrl?`<img class="av" src="${esc(p.avatarUrl)}" alt="">`:`<span class="av" style="display:inline-block;background:var(--rule2)"></span>`;}
+let profBusy=false;
+async function resolveProfiles(){if(!WS.user||profBusy)return;const ids=new Set();WS.req.forEach(r=>{r.by&&ids.add(r.by);(r.hist||[]).forEach(h=>h.by&&ids.add(h.by));});WS.msgs.forEach(m=>m.by&&ids.add(m.by));WS.acts.forEach(a=>a.by&&ids.add(a.by));Object.values(WS.inp).forEach(i=>i.by&&ids.add(i.by));if(WS.uid)ids.add(WS.uid);
+ const need=[...ids].filter(i=>!WS.prof[i]);if(!need.length)return;profBusy=true;try{const ps=await WS.user.profiles([...ids]);Object.assign(WS.prof,ps);}catch(e){}profBusy=false;renderWS();}
+function ago(ts){if(!ts)return"";const s=(Date.now()-ts)/1000;if(s<60)return"just now";if(s<3600)return f0(s/60)+" min ago";if(s<86400)return f0(s/3600)+" h ago";return new Date(ts).toLocaleDateString(undefined,{day:"numeric",month:"short"});}
+function code(id){return "R-"+id.replace(/[^a-z0-9]/gi,"").slice(0,5).toUpperCase();}
+function wsErr(e){const c=e&&e.code;if(c==="invalid_argument"&&WS.canWrite!==true){WS.ro=true;renderWS();return "You can view this workspace but not change it. Ask the owner for Contributor access.";}
+ if(c==="quota_exceeded")return "The workspace is full. Clear examples or old entries, then try again.";if(c==="resource_exhausted")return "Too many changes at once. Wait a few seconds and try again.";return "Could not save. Check your connection and try again.";}
+async function wsWrite(fn,msgEl){if(!WS.db){toast("Open the published page signed in to use the workspace");return false;}try{await fn();return true;}catch(e){let m;if(e&&e.code==="unavailable"){await sleep(400+Math.random()*600);try{await fn();return true;}catch(e2){m=wsErr(e2);}}else m=wsErr(e);if(msgEl)msgEl.textContent=m;toast(m);return false;}}
+async function wsInit(){
+ const [db,user]=await Promise.all([cap("db"),cap("user")]);WS.db=db;WS.user=user;
+ if(!db){WS.state="off";renderWS();return;}
+ if(user){WS.uid=await user.id();WS.canWrite=await user.can("data.write");if(WS.canWrite===false)WS.ro=true;}
+ WS.state="on";
+ const fail=e=>{WS.state="err";renderWS();};
+ db.collection("requests").orderBy("at","desc").limit(500).onSnapshot(s=>{WS.req=s.docs.map(d=>({id:d.id,...d.data()}));renderWS();resolveProfiles();},fail);
+ db.collection("inputs").orderBy("at","desc").limit(300).onSnapshot(s=>{WS.inp={};s.docs.forEach(d=>WS.inp[d.id]={id:d.id,...d.data()});renderWS();resolveProfiles();},fail);
+ db.collection("msgs").orderBy("at","desc").limit(400).onSnapshot(s=>{WS.msgs=s.docs.map(d=>({id:d.id,...d.data()})).reverse();renderWS();resolveProfiles();},fail);
+ db.collection("acts").orderBy("at","desc").limit(300).onSnapshot(s=>{WS.acts=s.docs.map(d=>({id:d.id,...d.data()}));renderWS();resolveProfiles();},fail);
+ if(WS.uid)db.doc("members/"+WS.uid).onSnapshot(s=>{if(s.exists){const t=s.data().team;if(t&&t!==WS.team){WS.team=t;renderWS();}}},()=>{});
+ db.doc("gates/actuals").onSnapshot(s=>{if(!s.exists)return;const d=s.data();const g1=Object.assign({fill:"",days:"",ebitda:""},d.g1||{}),g2=Object.assign({fill:"",days:"",ebitda:"",wc:""},d.g2||{});if(JSON.stringify(g1)!==JSON.stringify(S.g1)||JSON.stringify(g2)!==JSON.stringify(S.g2)){S.g1=g1;S.g2=g2;recalc();}},()=>{});
+ renderWS();resolveProfiles();
+}
+let gateTimer=0;function WSgate(){if(!WS.db||WS.ro)return;clearTimeout(gateTimer);gateTimer=setTimeout(()=>{wsWrite(()=>WS.db.doc("gates/actuals").set({g1:S.g1,g2:S.g2,by:WS.uid||"",at:Date.now()}));},400);}
+function setTeam(t){WS.team=t;try{localStorage.setItem("drishti-team",t);}catch(e){}if(WS.db&&WS.uid&&!WS.ro)wsWrite(()=>WS.db.doc("members/"+WS.uid).set({team:t,at:Date.now()}));renderWS();}
+/* ---- shared bar ---- */
+function renderWho(){
+ const st=WS.state==="on"?(WS.ro?chip("wn","View only"):chip("ok","Live, shared")):WS.state==="connecting"?chip("nt","Connecting"):WS.state==="err"?chip("no","Connection lost"):chip("wn","Not connected");
+ $("wsWho").innerHTML=`${WS.uid?pav(WS.uid):""}<span>${esc(WS.uid?pname(WS.uid):"You")}</span><label style="display:flex;gap:6px;align-items:center">Team <select id="whoTeam">${!WS.team?'<option value="">Choose your team</option>':""}${TEAMS.map(([v,n])=>`<option value="${v}" ${WS.team===v?"selected":""}>${n}</option>`).join("")}</select></label><span style="margin-left:auto">${st}</span>`;
+ $("whoTeam").onchange=e=>setTeam(e.target.value);
+ const off=$("wsOff");if(WS.state==="off"){off.hidden=false;off.textContent="The shared workspace is not available in this view. Open the published page while signed in to claude.ai; the planning desks still work here.";}else off.hidden=true;
+}
+/* ---- team inputs ---- */
+const FIELDS={
+ sales:{t:"Sell-out forecast and 13-week bias",rows:REGS.map(r=>[r,[["fc","Forecast, k cases"],["bias","Bias %"]]]),note:"Forecast what will sell, not the target."},
+ dist:{t:"Declared stock on hand",rows:REGS.map(r=>[r,[["stock","Stock, k cases"]]]),note:"Stock Identity Check audits a sample each week; declared figures carry a ±5% rebate."},
+ plants:{t:"Capacity available this week",rows:PLANTS.map(([p,c])=>["Plant "+p+" · "+c,[["cap","Capacity, k cases"],["co","Changeover h"]]]),note:"After the 72-hour freeze; 6% of each figure is held for express."},
+ brands:{t:"Promotions and launches",rows:REGS.map(r=>[r,[["promo","Promo uplift, k cases"]]]),note:"Launches need a 12-week supply sign-off before they enter the plan."},
+ finance:{t:"Latest certified figures",rows:[["National",[["fill","Fill %"],["days","Inventory days"],["ebitda","EBITDA run-rate ₹ Cr"],["wc","WC release ₹ Cr"]]]],note:"These are the audited numbers. Send them to a gate below."},
+ flow:{t:"Flow Owner decisions",rows:[],note:"Allocation calls and exceptions for the council."}
+};
+function key(row){return row.replace(/[^A-Za-z]/g,"").slice(0,7);}
+function inpDoc(team,wk){return WS.inp[wk+"_"+team];}
+function renderInputs(){
+ if(!WS.inTeam)WS.inTeam=WS.team||"sales";
+ $("wkLab").textContent=WS.week+(WS.week===THISWEEK?" (this week)":"");$("inWkSmall").textContent=WS.week;
+ $("inTabs").innerHTML=TEAMS.map(([v,n])=>`<button type="button" aria-pressed="${WS.inTeam===v}" data-t="${v}">${n}</button>`).join("");
+ $("inTabs").querySelectorAll("button").forEach(b=>b.onclick=()=>{WS.inTeam=b.dataset.t;renderInputs();});
+ const F=FIELDS[WS.inTeam],d=inpDoc(WS.inTeam,WS.week),vals=(d&&d.v)||{};
+ const mine=WS.team===WS.inTeam,dis=(!WS.db||WS.ro)?"disabled":"";
+ $("inTitle").textContent=F.t;
+ const form=$("inForm");
+ if(form.contains(document.activeElement)&&form.dataset.k===WS.inTeam+WS.week)return; // don't wipe while typing
+ form.dataset.k=WS.inTeam+WS.week;
+ let h="";
+ if(F.rows.length)h+=`<div class="tbl"><table><thead><tr><th></th>${F.rows[0][1].map(f=>`<th class="n">${f[1]}</th>`).join("")}</tr></thead><tbody>`+F.rows.map(([r,fs])=>`<tr><td>${r}</td>${fs.map(([k,l])=>`<td class="n"><input type="number" step="0.1" id="in-${key(r)}-${k}" value="${vals[key(r)+"."+k]??""}" style="width:96px" aria-label="${r} ${l}" ${dis}></td>`).join("")}</tr>`).join("")+`</tbody></table></div>`;
+ h+=`<label class="f">Notes<textarea id="in-notes" maxlength="1000" ${dis}>${esc(d&&d.notes||"")}</textarea></label>`;
+ h+=`<div class="tools"><button class="primary" type="submit" ${dis}>Save ${TEAMN[WS.inTeam]} for ${WS.week}</button>${WS.inTeam==="finance"?`<button type="button" id="toG1" ${dis}>Send to Gate 1</button><button type="button" id="toG2" ${dis}>Send to Gate 2</button>`:""}<span class="note" id="inMsg">${d?`Last saved by ${esc(pname(d.by))} ${ago(d.at)}${d.example?" · example":""}`:"Not submitted yet"}</span></div>`;
+ h+=`<p class="note">${F.note}${!mine&&WS.team?` You are on ${TEAMN[WS.team]}; you can still enter this team's figures if asked to.`:""}</p>`;
+ form.innerHTML=h;
+ if(WS.inTeam==="finance"){const send=g=>{const v=collect();const o=g==="g1"?{fill:v["National.fill"]??"",days:v["National.days"]??"",ebitda:v["National.ebitda"]??""}:{fill:v["National.fill"]??"",days:v["National.days"]??"",ebitda:v["National.ebitda"]??"",wc:v["National.wc"]??""};for(const k in o)o[k]=o[k]===""?"":String(o[k]);S[g]=o;recalc();WSgate();toast(`Sent to ${g==="g1"?"Gate 1":"Gate 2"}`);};$("toG1").onclick=()=>send("g1");$("toG2").onclick=()=>send("g2");}
+}
+function collect(){const F=FIELDS[WS.inTeam],v={};F.rows.forEach(([r,fs])=>fs.forEach(([k])=>{const el=$(`in-${key(r)}-${k}`);if(el&&el.value!=="")v[key(r)+"."+k]=+el.value;}));return v;}
+$("inForm").addEventListener("submit",async e=>{e.preventDefault();const v=collect(),notes=$("in-notes").value.trim();const id=WS.week+"_"+WS.inTeam;
+ const ok=await wsWrite(()=>WS.db.doc("inputs/"+id).set({team:WS.inTeam,week:WS.week,v,notes,by:WS.uid||"",at:Date.now()}),$("inMsg"));if(ok){$("inForm").dataset.k="";toast("Saved "+TEAMN[WS.inTeam]+" inputs");}});
+$("wkPrev").onclick=()=>{WS.week=addWeeks(WS.week,-1);$("inForm").dataset.k="";renderWS();};
+$("wkNext").onclick=()=>{WS.week=addWeeks(WS.week,1);$("inForm").dataset.k="";renderWS();};
+function num(d,k){const v=d&&d.v&&d.v[k];return typeof v==="number"?v:null;}
+function renderBalance(){
+ const wk=WS.week,S1=inpDoc("sales",wk),D1=inpDoc("dist",wk),P1=inpDoc("plants",wk),B1=inpDoc("brands",wk);
+ $("inStatus").innerHTML=`<div class="tbl"><table><tbody>`+TEAMS.map(([v,n])=>{const d=inpDoc(v,wk);return `<tr><td>${n}</td><td>${d?chip("ok","In")+(d.example?" "+chip("nt","Example"):""):chip("wn","Missing")}</td><td class="note">${d?esc(pname(d.by))+", "+ago(d.at):""}</td></tr>`;}).join("")+`</tbody></table></div>`;
+ const open=WS.req.filter(r=>r.week===wk&&!["received","short"].includes(r.status));
+ let tot={dem:0,adj:0,st:0,req:0,com:0};
+ const rows=REGS.map(r=>{const k=key(r);const fc=num(S1,k+".fc"),bias=num(S1,k+".bias")||0,pr=num(B1,k+".promo")||0,st=num(D1,k+".stock");
+  const dem=fc==null?null:fc+pr,adj=dem==null?null:dem/(1+bias/100);const rq=open.filter(x=>x.region===r).reduce((a,x)=>a+(+x.qty||0),0);const cm=open.filter(x=>x.region===r&&x.status!=="requested").reduce((a,x)=>a+(+x.commitQty||+x.qty||0),0);
+  const need=adj==null||st==null?null:Math.max(0,adj-st);const cover=need==null?null:need===0?1:cm/need;
+  if(dem!=null){tot.dem+=dem;tot.adj+=adj;}if(st!=null)tot.st+=st;tot.req+=rq;tot.com+=cm;
+  const c=cover==null?chip("nt","Need inputs"):cover>=.98?chip("ok","Covered"):cover>=.85?chip("wn",f0(cover*100)+"% covered"):chip("no",f0(cover*100)+"% covered");
+  return `<tr><td>${r}</td><td class="n">${dem==null?"–":f1(dem)}</td><td class="n">${adj==null?"–":f1(adj)}</td><td class="n">${st==null?"–":f1(st)}</td><td class="n">${need==null?"–":f1(need)}</td><td class="n">${f1(cm)}</td><td>${c}</td></tr>`;}).join("");
+ $("balReg").innerHTML=`<thead><tr><th>Region</th><th class="n">Demand</th><th class="n">Bias-adjusted</th><th class="n">Stock</th><th class="n">Net need</th><th class="n">Committed</th><th></th></tr></thead><tbody>${rows}<tr class="sum"><td>Total</td><td class="n">${f1(tot.dem)}</td><td class="n">${f1(tot.adj)}</td><td class="n">${f1(tot.st)}</td><td></td><td class="n">${f1(tot.com)}</td><td></td></tr></tbody>`;
+ const prow=PLANTS.map(([p,c])=>{const k=key("Plant "+p+" · "+c);const capv=num(P1,k+".cap");const com=WS.req.filter(x=>x.plant===p&&x.shipWeek===wk&&["committed","production","dispatched","received"].includes(x.status)).reduce((a,x)=>a+(+x.commitQty||0),0);const u=capv?com/capv:null;
+  return `<tr><td>Plant ${p} <span class="note">${c}</span></td><td class="n">${capv==null?"–":f1(capv)}</td><td class="n">${f1(com)}</td><td class="n">${u==null?"–":f0(u*100)+"%"}</td><td>${u==null?chip("nt","No capacity entered"):u>1?chip("no","Over"):u>.92?chip("wn","Tight"):chip("ok","OK")}</td></tr>`;}).join("");
+ $("balPlant").innerHTML=`<thead><tr><th>Plant</th><th class="n">Capacity</th><th class="n">Committed</th><th class="n">Load</th><th></th></tr></thead><tbody>${prow}</tbody>`;
+}
+/* ---- orders board ---- */
+function fillSelects(){
+ const opt=(arr,sel)=>arr.map(([v,n])=>`<option value="${esc(v)}" ${sel===v?"selected":""}>${esc(n)}</option>`).join("");
+ $("rqRegion").innerHTML=opt(REGS.map(r=>[r,r]));$("rqSeg").innerHTML=opt(SEGS.map(s=>[s,s]));
+ $("rqPlant").innerHTML=`<option value="">Let the Flow Owner decide</option>`+opt(PLANTS.map(([p,c])=>[p,"Plant "+p+" · "+c]));
+ $("rqWeek").innerHTML=[0,1,2,3,4].map(i=>addWeeks(THISWEEK,i)).map(w=>`<option value="${w}" ${w===addWeeks(THISWEEK,1)?"selected":""}>${w}${w===THISWEEK?" (this week)":""}</option>`).join("");
+ $("fReg").innerHTML=`<option value="">All regions</option>`+opt(REGS.map(r=>[r,r]),WS.fReg);$("fPlant").innerHTML=`<option value="">All plants</option>`+opt(PLANTS.map(([p])=>[p,"Plant "+p]),WS.fPlant);
+ $("actTeam").innerHTML=opt(TEAMS,WS.team||"flow");
+}
+$("fReg").onchange=e=>{WS.fReg=e.target.value;renderOrders();};$("fPlant").onchange=e=>{WS.fPlant=e.target.value;renderOrders();};
+$("rqForm").addEventListener("submit",async e=>{e.preventDefault();const qty=+$("rqQty").value,sku=$("rqSku").value.trim();if(!(qty>0)||!sku){$("rqMsg").textContent="Enter a quantity above zero and a SKU.";return;}
+ const body={region:$("rqRegion").value,channel:$("rqChan").value,seg:$("rqSeg").value,sku,qty,week:$("rqWeek").value,plant:$("rqPlant").value,express:$("rqExp").checked,status:"requested",commitQty:0,shipWeek:"",by:WS.uid||"",team:WS.team||"",at:Date.now(),hist:[{s:"requested",by:WS.uid||"",at:Date.now()}]};
+ const ok=await wsWrite(()=>WS.db.collection("requests").add(body),$("rqMsg"));if(ok){$("rqQty").value="";$("rqSku").value="";$("rqExp").checked=false;$("rqMsg").textContent="";toast("Request raised");}});
+async function moveReq(r,patch,label){const hist=(r.hist||[]).slice(-19).concat([{s:patch.status||r.status,by:WS.uid||"",at:Date.now(),note:patch.note||""}]);delete patch.note;
+ const ok=await wsWrite(()=>WS.db.doc("requests/"+r.id).update({...patch,hist}));if(ok)toast(label);}
+function renderOrders(){
+ const list=WS.req.filter(r=>(!WS.fReg||r.region===WS.fReg)&&(!WS.fPlant||r.plant===WS.fPlant));const dis=(!WS.db||WS.ro)?"disabled":"";
+ const P1=inpDoc("plants",THISWEEK);
+ $("expTable").innerHTML=`<thead><tr><th>Plant</th><th class="n">Slot (6%)</th><th class="n">Express used</th><th></th></tr></thead><tbody>`+PLANTS.map(([p,c])=>{const capv=num(P1,key("Plant "+p+" · "+c)+".cap");const slot=capv==null?null:capv*.06;const used=WS.req.filter(x=>x.plant===p&&x.express&&x.shipWeek===THISWEEK&&x.status!=="short").reduce((a,x)=>a+(+x.commitQty||0),0);
+  return `<tr><td>Plant ${p}</td><td class="n">${slot==null?"–":f1(slot)}</td><td class="n">${f1(used)}</td><td>${slot==null?chip("nt","No capacity"):used>slot?chip("no","Over slot"):used>slot*.8?chip("wn","Nearly full"):chip("ok","Room")}</td></tr>`;}).join("")+`</tbody>`;
+ const kb=$("kanban");if(kb.contains(document.activeElement))return;
+ kb.innerHTML=COLS.map(([st,n])=>{const cards=list.filter(r=>r.status===st);return `<div class="col"><h3><span>${n}</span><span class="num">${cards.length}</span></h3>${cards.length?cards.map(r=>card(r,dis)).join(""):`<div class="empty">${st==="requested"?(WS.req.length?"No open requests":"No requests yet. Raise the first one above."):"Nothing here"}</div>`}</div>`;}).join("");
+ kb.querySelectorAll("[data-act]").forEach(b=>b.onclick=()=>{const r=WS.req.find(x=>x.id===b.dataset.id);if(!r)return;const a=b.dataset.act;
+  if(a==="commit"){const pl=$("pl-"+r.id).value,q=+$("cq-"+r.id).value,w=$("sw-"+r.id).value;if(!pl||!(q>0)){toast("Pick a plant and a quantity to commit");return;}moveReq(r,{status:"committed",plant:pl,commitQty:q,shipWeek:w},"Committed "+code(r.id));}
+  else if(a==="short"){const box=$("sh-"+r.id);if(box.hidden){box.hidden=false;box.querySelector("input").focus();return;}const why=box.querySelector("input").value.trim();moveReq(r,{status:"short",note:why||"No reason given",reason:why},"Marked "+code(r.id)+" as cannot fill");}
+  else if(a==="discuss"){WS.ch="plants";location.hash="council";setTimeout(()=>{const t=$("msgText");t.value="#"+code(r.id)+" ";t.focus();},50);}
+  else if(a==="reopen")moveReq(r,{status:"requested",commitQty:0,shipWeek:""},"Reopened "+code(r.id));
+  else if(a==="delete"){if(b.dataset.sure!=="1"){b.dataset.sure="1";b.textContent="Confirm delete";return;}wsWrite(()=>WS.db.doc("requests/"+r.id).delete()).then(ok=>ok&&toast("Deleted "+code(r.id)));}
+  else{const nx={committed:"production",production:"dispatched",dispatched:"received"}[r.status];if(nx)moveReq(r,{status:nx},code(r.id)+" moved to "+COLS.find(c=>c[0]===nx)[1].toLowerCase());}});
+}
+function card(r,dis){const last=(r.hist||[]).slice(-1)[0];const msgs=WS.msgs.filter(m=>(m.text||"").includes("#"+code(r.id))).length;const late=r.week<THISWEEK&&!["received","short"].includes(r.status);
+ let body=`<div style="display:flex;justify-content:space-between;gap:6px"><span class="id">${code(r.id)}</span><span>${r.express?chip("wn","Express"):""}${late?" "+chip("no","Late"):""}${r.example?" "+chip("nt","Example"):""}</span></div>
+ <div><b>${esc(r.sku)}</b></div><div class="note">${esc(r.region)} · ${esc(r.channel)} · ${esc((r.seg||"").split(" ")[0])}</div>
+ <div style="display:flex;justify-content:space-between;align-items:baseline"><span class="q">${f1(+r.qty)}<span class="note"> k cases</span></span><span class="note">by ${esc(r.week)}</span></div>`;
+ if(r.status!=="requested")body+=`<div class="note">Plant ${esc(r.plant||"?")} · ${f1(+r.commitQty||0)} committed · ships ${esc(r.shipWeek||"?")}</div>`;
+ if(r.status==="short"&&r.reason)body+=`<div class="callout bad" style="padding:6px 8px">${esc(r.reason)}</div>`;
+ if(r.status==="requested")body+=`<div class="mini"><select id="pl-${r.id}" aria-label="Plant" ${dis}><option value="">Plant</option>${PLANTS.map(([p])=>`<option value="${p}" ${r.plant===p?"selected":""}>Plant ${p}</option>`).join("")}</select><input id="cq-${r.id}" type="number" min="0" step="0.1" value="${r.qty}" aria-label="Commit quantity" ${dis}><select id="sw-${r.id}" aria-label="Ship week" style="grid-column:1/-1" ${dis}>${[0,1,2,3].map(i=>addWeeks(THISWEEK,i)).map(w=>`<option ${w===r.week?"selected":""}>${w}</option>`).join("")}</select></div><div id="sh-${r.id}" hidden><input type="text" maxlength="120" placeholder="Why it cannot be filled" aria-label="Reason"></div>`;
+ const btn=(a,t,pr)=>`<button type="button" data-act="${a}" data-id="${r.id}" class="${pr?"primary":""}" ${dis}>${t}</button>`;
+ let acts="";if(r.status==="requested")acts=btn("commit","Commit",1)+btn("short","Cannot fill");else if(r.status==="committed")acts=btn("next","Start production",1)+btn("reopen","Reopen");else if(r.status==="production")acts=btn("next","Dispatched",1);else if(r.status==="dispatched")acts=btn("next","Mark received",1);else if(r.status==="short")acts=btn("reopen","Reopen");
+ acts+=`<button type="button" data-act="discuss" data-id="${r.id}">Discuss${msgs?" ("+msgs+")":""}</button>`;if(["received","short"].includes(r.status)||r.by===WS.uid)acts+=btn("delete","Delete");
+ body+=`<div class="acts">${acts}</div><div class="note">${last?esc(pname(last.by))+" · "+ago(last.at):""}</div>`;
+ return `<div class="card ${r.express?"express":""}">${body}</div>`;}
+/* ---- council ---- */
+function renderCouncil(){
+ const counts={};WS.msgs.forEach(m=>counts[m.ch]=(counts[m.ch]||0)+1);
+ $("chList").innerHTML=CHANS.map(([v,n])=>`<button type="button" aria-pressed="${WS.ch===v}" data-c="${v}"><span>${n}</span><span class="num note">${counts[v]||0}</span></button>`).join("");
+ $("chList").querySelectorAll("button").forEach(b=>b.onclick=()=>{WS.ch=b.dataset.c;renderCouncil();});
+ const ch=CHANS.find(c=>c[0]===WS.ch);$("chTitle").textContent=ch[1];$("chSub").textContent=WS.ch==="council"?"Tuesdays, 45 minutes":"";
+ const ms=WS.msgs.filter(m=>m.ch===WS.ch);const feed=$("feed");const atBottom=feed.scrollHeight-feed.scrollTop-feed.clientHeight<40;
+ feed.innerHTML=ms.length?ms.map(m=>`<div class="msg">${pav(m.by)}<div><div class="h"><b>${esc(pname(m.by))}</b>${m.team?" · "+esc(TEAMN[m.team]||""):""} · ${ago(m.at)}${m.example?" · example":""}</div><div class="t">${esc(m.text).replace(/#(R-[A-Z0-9]{3,5})/g,'<span class="ref">#$1</span>')}</div></div></div>`).join(""):`<div class="empty">No messages in ${esc(ch[1])} yet. Start the thread below.</div>`;
+ if(atBottom||feed.dataset.ch!==WS.ch)feed.scrollTop=feed.scrollHeight;feed.dataset.ch=WS.ch;
+ const dis=!WS.db||WS.ro;$("msgText").disabled=dis;$("msgForm").querySelector("button").disabled=dis;$("actText").disabled=dis;$("actForm").querySelector("button").disabled=dis;
+ const wk=WS.acts.filter(a=>a.week===THISWEEK).sort((a,b)=>["Mon","Tue","Wed","Thu","Fri"].indexOf(a.day)-["Mon","Tue","Wed","Thu","Fri"].indexOf(b.day));
+ $("actSub").textContent=THISWEEK+" · "+wk.filter(a=>a.done).length+" of "+wk.length+" done";
+ $("actList").innerHTML=wk.length?wk.map(a=>`<div class="act ${a.done?"done":""}"><input type="checkbox" data-a="${a.id}" ${a.done?"checked":""} ${dis?"disabled":""} aria-label="Done"><div><div class="tx">${esc(a.text)}</div><div class="note">${esc(TEAMN[a.team]||"")} · ${esc(pname(a.by))}${a.example?" · example":""}</div></div><span class="chip nt">${esc(a.day)}</span></div>`).join(""):`<div class="empty">No actions this week. Add what the council agreed.</div>`;
+ $("actList").querySelectorAll("input[data-a]").forEach(c=>c.onchange=()=>{const a=WS.acts.find(x=>x.id===c.dataset.a);wsWrite(()=>WS.db.doc("acts/"+a.id).update({done:c.checked,doneBy:WS.uid||"",doneAt:Date.now()}));});
+}
+$("msgForm").addEventListener("submit",async e=>{e.preventDefault();const t=$("msgText").value.trim();if(!t)return;const ok=await wsWrite(()=>WS.db.collection("msgs").add({ch:WS.ch,text:t,by:WS.uid||"",team:WS.team||"",at:Date.now()}),$("msgNote"));if(ok){$("msgText").value="";$("msgNote").textContent="";}});
+$("msgText").addEventListener("keydown",e=>{if(e.key==="Enter"&&(e.metaKey||e.ctrlKey)){e.preventDefault();$("msgForm").requestSubmit();}});
+$("actForm").addEventListener("submit",async e=>{e.preventDefault();const t=$("actText").value.trim();if(!t)return;const ok=await wsWrite(()=>WS.db.collection("acts").add({text:t,team:$("actTeam").value,day:$("actDay").value,week:THISWEEK,done:false,by:WS.uid||"",at:Date.now()}));if(ok){$("actText").value="";toast("Action added");}});
+/* ---- examples (user-triggered, marked) ---- */
+$("exLoad").onclick=async()=>{if(!WS.db||WS.ro){toast("Open the published page signed in with edit access to load examples");return;}
+ const wk=THISWEEK,now=Date.now(),by=WS.uid||"";const ex={example:true,by,at:now};
+ const R=(o)=>Object.fromEntries(Object.entries(o).map(([k,v])=>[k,v]));
+ const inputs={
+  sales:{"North.fc":420,"North.bias":14,"West.fc":470,"West.bias":18,"South.fc":490,"South.bias":2,"East.fc":330,"East.bias":7,"Central.fc":230,"Central.bias":-1},
+  dist:{"North.stock":380,"West.stock":410,"South.stock":300,"East.stock":250,"Central.stock":170},
+  plants:Object.fromEntries(PLANTS.flatMap(([p,c],i)=>{const k=key("Plant "+p+" · "+c);return [[k+".cap",[150,120,95,85,130,80,95,105,80][i]],[k+".co",[4.2,3.1,5.7,2.8,4,2.1,3.2,4.4,2.7][i]]];})),
+  brands:{"North.promo":30,"West.promo":40,"South.promo":20,"East.promo":10,"Central.promo":0},
+  finance:{"National.fill":87.2,"National.days":45.1,"National.ebitda":8.4,"National.wc":24}};
+ const reqs=[
+  {region:"West",channel:"General trade",seg:SEGS[0],sku:"Masala chips 50g, 24-pack",qty:42,week:addWeeks(wk,1),plant:"C",express:false,status:"requested",commitQty:0,shipWeek:""},
+  {region:"North",channel:"Modern trade",seg:SEGS[0],sku:"Classic salted 90g, 12-pack",qty:28,week:wk,plant:"A",express:true,status:"committed",commitQty:28,shipWeek:wk},
+  {region:"South",channel:"Quick commerce",seg:SEGS[4],sku:"Mini pack combo, 6",qty:6.5,week:wk,plant:"H",express:true,status:"production",commitQty:6.5,shipWeek:wk},
+  {region:"East",channel:"E-commerce",seg:SEGS[2],sku:"Cold-pressed juice 1L",qty:9,week:wk,plant:"B",express:false,status:"dispatched",commitQty:9,shipWeek:wk},
+  {region:"Central",channel:"General trade",seg:SEGS[1],sku:"Lemon soda 250ml, 30",qty:14,week:addWeeks(wk,-1),plant:"F",express:false,status:"received",commitQty:14,shipWeek:addWeeks(wk,-1)},
+  {region:"North",channel:"General trade",seg:SEGS[3],sku:"Herbal shampoo sachet launch",qty:18,week:wk,plant:"D",express:false,status:"short",commitQty:0,shipWeek:"",reason:"Launch has no 12-week supply sign-off yet"}];
+ const msgs=[["council","West wants 42k cases of masala chips next week. Plant C is at 94%; can we split with H?","sales"],["council","H can take 15k on Thursday's wheel slot. C keeps the rest.","plants"],["plants","Express slot at Plant A is nearly full this week; route new express asks to H.","flow"],["finance","Week fill 87.2% and days 45.1 certified. Sent to the Gate 1 tracker.","finance"]];
+ const acts=[["Split West chips request between Plants C and H","plants","Wed"],["Audit 10 North distributors for Stock Identity Check","dist","Thu"],["Send launch sign-off pack for herbal sachet","brands","Fri"]];
+ const ok=await wsWrite(async()=>{
+  for(const [t,v] of Object.entries(inputs))await WS.db.doc("inputs/"+wk+"_"+t).set({team:t,week:wk,v,notes:"Example figures for a walkthrough.",...ex});
+  for(const r of reqs)await WS.db.collection("requests").add({...r,team:"",hist:[{s:r.status,by,at:now}],...ex});
+  for(const [c,t,tm] of msgs)await WS.db.collection("msgs").add({ch:c,text:t,team:tm,...ex,at:Date.now()});
+  for(const [t,tm,d] of acts)await WS.db.collection("acts").add({text:t,team:tm,day:d,week:wk,done:false,...ex});
+ });if(ok)toast("Example week loaded");};
+$("exClear").onclick=async()=>{if(!WS.db||WS.ro)return;const docs=[...WS.req.filter(r=>r.example).map(r=>"requests/"+r.id),...Object.values(WS.inp).filter(i=>i.example).map(i=>"inputs/"+i.id),...WS.msgs.filter(m=>m.example).map(m=>"msgs/"+m.id),...WS.acts.filter(a=>a.example).map(a=>"acts/"+a.id)];
+ if(!docs.length){toast("No examples to clear");return;}const ok=await wsWrite(async()=>{for(const p of docs)await WS.db.doc(p).delete();});if(ok)toast("Cleared "+docs.length+" example entries");};
+function renderWS(){renderWho();renderInputs();renderBalance();renderOrders();renderCouncil();}
+/* ---------- landing hero + slider ---------- */
+function renderHero(){
+ $("hcFill").textContent="86% → "+f1(M.sv.nat)+"%";$("hcFillBar").style.width=Math.max(0,Math.min(100,(M.sv.nat-80)/20*100))+"%";
+ $("hcDays").textContent="46 → "+f1(M.sv.natDays);$("hcDaysBar").style.width=Math.max(0,Math.min(100,M.sv.natDays/60*100))+"%";
+ $("hcIrr").textContent=pct1(M.irr);$("hcPb").textContent=M.pb?f1(M.pb)+" mo":"60+ mo";$("hcGates").textContent=(G.p1&&G.p2)?"Both pass":(G.p1?"G2 at risk":"G1 at risk");
+ $("hcGates").style.color=(G.p1&&G.p2)?"var(--good)":"var(--bad)";
+}
+(function slider(){
+ const track=$("slTrack"),n=track.children.length,dots=$("slDots"),box=$("slider");let i=0,timer=0,paused=false;
+ const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+ dots.innerHTML=Array.from({length:n},(_,k)=>`<button type="button" aria-label="Fact ${k+1}"></button>`).join("");
+ function go(k){i=(k+n)%n;track.style.transform=`translateX(-${i*100}%)`;[...dots.children].forEach((d,j)=>d.setAttribute("aria-current",j===i?"true":"false"));[...track.children].forEach((s,j)=>{s.setAttribute("aria-hidden",j!==i);s.querySelectorAll("a").forEach(a=>a.tabIndex=j===i?0:-1);});}
+ function start(){clearInterval(timer);if(!reduce)timer=setInterval(()=>{if(!paused&&S.view==="overview"&&!document.hidden)go(i+1);},6000);}
+ [...dots.children].forEach((d,k)=>d.onclick=()=>{go(k);start();});
+ $("slPrev").onclick=()=>{go(i-1);start();};$("slNext").onclick=()=>{go(i+1);start();};
+ box.addEventListener("mouseenter",()=>paused=true);box.addEventListener("mouseleave",()=>paused=false);
+ box.addEventListener("focusin",()=>paused=true);box.addEventListener("focusout",()=>paused=false);
+ let x0=null;box.addEventListener("touchstart",e=>{x0=e.touches[0].clientX;},{passive:true});
+ box.addEventListener("touchend",e=>{if(x0==null)return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>40){go(i+(dx<0?1:-1));start();}x0=null;});
+ box.addEventListener("keydown",e=>{if(e.key==="ArrowRight"){go(i+1);start();}if(e.key==="ArrowLeft"){go(i-1);start();}});
+ go(0);start();
+})();
+/* ---------- boot ---------- */
+recalcCore();
+if(location.hash)S.view=location.hash.slice(1);
+if(!VIEWS.some(v=>v[0]===S.view))S.view="overview";
+fillSelects();renderNav();renderAll();renderWS();wsInit();
+})();
+</script>
+
+</body></html>
