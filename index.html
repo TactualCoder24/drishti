@@ -365,8 +365,20 @@ a.fn:hover{background:var(--neel-soft)}
 .feed2>div{padding:8px 0;border-bottom:1px solid var(--rule);font-size:14px}
 .feed2>div:last-child{border-bottom:none}
 .feed2 small{display:block;color:var(--mute);font-size:12.5px}
-#scTable th{white-space:normal;min-width:118px;vertical-align:bottom}
-#scTable th .cur{margin-top:4px}
+#scTable th{white-space:normal;vertical-align:bottom}
+#scTable tr[data-pick]{cursor:pointer}
+#scTable tr.sel td{background:var(--neel-soft)}
+#scTable td.nm small{display:block;color:var(--mute);font-size:12px;font-weight:400}
+.pill[aria-pressed="true"]{background:var(--neel);color:var(--sheet)}
+.pickgrp{display:flex;flex-direction:column;gap:8px}
+.pickgrp+.pickgrp{margin-top:14px}
+.pickgrp .lab{font-size:13px;font-weight:600;color:var(--ink2)}
+.pickgrp .lab small{font-weight:400;color:var(--mute);margin-left:6px}
+.scn-head{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.scn-head h2{margin-right:4px}
+.scn-act{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.scn .kpis{grid-template-columns:repeat(3,minmax(0,1fr))}
+.scn ul{margin:0;padding-left:18px;color:var(--ink2);font-size:14px;display:flex;flex-direction:column;gap:4px}
 .phases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
 .phase{background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
 .phase h3{font-size:18px}
@@ -386,6 +398,7 @@ a.fn:hover{background:var(--neel-soft)}
   .card .mini select,.card .mini input{font-size:16px;padding:6px 8px}
   input[type=checkbox]{width:20px;height:20px}
   .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .scn .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
   .formgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .kpi{padding:12px 14px}
   .hero{padding:22px 18px;gap:20px}
@@ -445,7 +458,7 @@ a.fn:hover{background:var(--neel-soft)}
   <div class="work">
   <main>
       <div class="topbar">
-        <div class="chips" id="scnChips"><span class="lab">Try a scenario</span><button class="pill" type="button" data-scn="rec">A · Recommended plan</button><button class="pill" type="button" data-scn="board">B · Board's uniform 95%</button><button class="pill" type="button" data-scn="stress">C · Stress case</button><button class="pill ghost" id="resetBtn" type="button">Reset</button></div>
+        <div class="chips" id="scnChips"><span class="lab">Try a scenario</span><button class="pill" type="button" data-scn="rec">A · Recommended plan</button><button class="pill" type="button" data-scn="board">B · Board's uniform 95%</button><button class="pill" type="button" data-scn="s13">C · Combined downside</button><a class="pill ghost" href="#scenarios" style="text-decoration:none;display:inline-flex;align-items:center">More scenarios</a><button class="pill ghost" id="resetBtn" type="button">Reset</button></div>
         <div class="tools"><button id="copySum" class="ghost" type="button">Copy summary</button></div>
       </div>
 <div id="confirmReset" class="callout warn" hidden style="margin-bottom:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
@@ -795,16 +808,20 @@ a.fn:hover{background:var(--neel-soft)}
             <div class="ctl"><label for="sLag">Finance certification lag</label><output id="sLagO"></output><input id="sLag" type="range" min="0" max="6" step="1"></div>
             <div class="ctl"><label for="sOver">Cost overrun</label><output id="sOverO"></output><input id="sOver" type="range" min="0" max="40" step="1"></div>
             <div class="ctl"><label for="sCap">Avoided-cost cap (share of claimed benefit)</label><output id="sCapO"></output><input id="sCap" type="range" min="10" max="60" step="1"></div>
-            <div class="ctl"><label for="sHair">Finance haircut on avoided cost</label><output id="sHairO"></output><input id="sHair" type="range" min="0" max="80" step="5"></div>
+            <div class="ctl"><label for="sHair">Finance attribution haircut on all benefits</label><output id="sHairO"></output><input id="sHair" type="range" min="0" max="80" step="5"></div>
             <label class="f">Inventory day valued on
-              <select id="sDay"><option value="owned">ACPL-owned stock (₹18.8 Cr/day), Finance view</option><option value="network">Network stock (₹26.7 Cr/day), transformation office view</option><option value="cogs">COGS basis, owned (₹14.1 Cr/day)</option></select></label>
+              <select id="sDay"><option value="owned">ACPL-owned stock only, Finance view (base)</option><option value="network">Distributor stock counted too (model scenario S10)</option><option value="cogs">Inventory day valued on COGS, ₹15.9 Cr (model scenario S8)</option></select></label>
+            <label class="f">Working-capital benefit counted as
+              <select id="sWcb"><option value="board">Yearly carrying value at 11%, Board basis (base)</option><option value="cash">One-off cash release (model scenario S11)</option></select></label>
+            <label class="f">Obsolescence and freight pools
+              <select id="sPools"><option value="mid">Middle of Finance's range, ₹48 Cr and ₹34.5 Cr (base)</option><option value="low">Low end of the range, ₹44 Cr and ₹31 Cr (model scenario S12)</option></select></label>
           </div>
         </div>
         <details class="more"><summary>More detail: stress tests, break-points and benefit build</summary>
         <div class="grid g2">
           <div class="panel">
             <header><h2>Stress tests</h2><small>reference figures, with the live model beside them</small></header>
-            <p class="note">Plan columns are the reference results. Live columns rerun each case on the current targets and budget, starting from base assumptions; small differences are expected.</p>
+            <p class="note">Workbook columns are the results in the financial model (v2). Live columns rerun each case on the current targets and budget, starting from base assumptions; with the base plan they match.</p>
             <div class="tbl"><table id="rtStress"></table></div>
           </div>
           <div class="stack">
@@ -1017,9 +1034,13 @@ a.fn:hover{background:var(--neel-soft)}
       <section class="view" id="v-scenarios" hidden>
         <div class="crumbs">Scenarios</div>
         <h1>If we run it this way, this is what happens</h1>
-        <p class="lede">Five ways to run the programme, side by side. Pick one to load it into the whole app, then read the phase plan for when and how to proceed.</p>
+        <p class="lede">Pick a scenario. Every number comes from the latest financial model (v2), so it matches the workbook. See whether the gates and tranches hold, what breaks, and when and how to proceed. Then load it into the whole app.</p>
         <div style="height:22px"></div>
-        <div class="panel"><header><h2>Compare scenarios</h2><small>plan figures, not actuals</small></header><div class="tbl" id="scTable"></div></div>
+        <div class="panel"><header><h2>Choose a scenario</h2><small id="scCount"></small></header><div id="scPick"></div></div>
+        <div style="height:22px"></div>
+        <div id="scDetail"></div>
+        <div style="height:22px"></div>
+        <div class="panel"><header><h2>All scenarios side by side</h2><small>plan figures, not actuals · tap a row to open it</small></header><div class="tbl" id="scTable"></div></div>
         <div style="height:22px"></div>
         <div class="panel"><header><h2>What to do next</h2><small>for your current settings</small></header><div id="scNext"></div></div>
         <div style="height:22px"></div>
@@ -1132,8 +1153,8 @@ const INITS=[
  {id:"sic",name:"Stock Identity Check",route:"Build",feas:3,base:6,s:3,e:30,share:.07,note:"Audit-based, no hardware"}
 ];
 const OPTS=[
- {id:"ah",name:"Snacks capacity, Plants A and H",amt:30,s:2,e:16,note:"Trigger at M12; COO disputes the benefit",ann:18,from:14,to:18},
- {id:"nr",name:"National replenishment extension",amt:54,s:18,e:36,note:"Rest of India holds 24% of the imbalance",pts:1.6,dd:2,from:24,to:32},
+ {id:"ah",name:"Snacks capacity, Plants A and H",amt:30,s:12,e:24,note:"Trigger at M12. About ₹12 Cr a year (₹6 Cr if it overlaps Plant C); COO disputes it",ann:12.07,from:24,to:25},
+ {id:"nr",name:"National replenishment extension",amt:54,s:18,e:36,note:"Rest of India holds 24% of the imbalance; ₹10.1 Cr a year less ₹4.6 Cr running cost",ann:5.5,from:24,to:32},
  {id:"fe",name:"Forecasting engine",amt:22,s:0,e:9,note:"Pilot A: +1 fill point, overlaps replenishment",pts:.5,from:9,to:14},
  {id:"pp",name:"Integrated planning platform",amt:38,s:3,e:24,note:"Needs decision rights first; failed in 2022",pts:.5,from:18,to:24},
  {id:"ct",name:"Control tower",amt:32,s:3,e:18,note:"Needs reliable stock data",dd:1,from:15,to:20},
@@ -1155,20 +1176,20 @@ const PILOTS={
 };
 /* ---------- state ---------- */
 const DEF={view:"overview",last:"diagnosis",todo:{},fill:{...OURS.fill},days:{...OURS.days},ppMode:"low",alloc:Object.fromEntries(INITS.map(i=>[i.id,i.base])),opts:{},coo:false,
- sc:{rec:40,real:100,delay:0,lag:3,over:0,cap:40,hair:0,day:"owned"},
+ mv:3,sc:{rec:40,real:100,delay:0,lag:3,over:10,cap:40,hair:10,day:"owned",wcb:"board",pools:"mid"},
  g1:{fill:"",days:"",ebitda:""},g2:{fill:"",days:"",ebitda:"",wc:""},
  om:{supply:85,skew:41,reg:[{n:"North",req:100,bias:14},{n:"West",req:110,bias:18},{n:"South",req:105,bias:2},{n:"East",req:70,bias:7},{n:"Central",req:50,bias:-1}]},
  region:"North",pilot:"C"};
 const clone=o=>JSON.parse(JSON.stringify(o));
 let S=clone(DEF);
-try{const raw=localStorage.getItem("drishti-v2");if(raw){const o=JSON.parse(raw);S=Object.assign(clone(DEF),o);S.sc=Object.assign(clone(DEF.sc),o.sc||{});}}catch(e){}
+try{const raw=localStorage.getItem("drishti-v2");if(raw){const o=JSON.parse(raw);S=Object.assign(clone(DEF),o);S.sc=Object.assign(clone(DEF.sc),o.sc||{});if(o.mv!==DEF.mv){S.sc=clone(DEF.sc);S.mv=DEF.mv;}}}catch(e){}
 function save(){try{localStorage.setItem("drishti-v2",JSON.stringify(S));}catch(e){}}
 /* ---------- helpers ---------- */
 const $=id=>document.getElementById(id);
 const f1=x=>(Math.round(x*10)/10).toFixed(1), f0=x=>Math.round(x).toString();
-const cr=x=>"₹"+f1(x)+" Cr";
-const pct1=x=>(x==null||!isFinite(x))?"n/a":(x*100>=1000?">999%":(Math.round(x*1000)/10).toFixed(1)+"%");
-const pct=x=>(x==null||!isFinite(x))?"n/a":(x*100>=1000?">999%":f0(x*100)+"%");
+const cr=x=>(x<-.05?"−₹"+f1(-x):"₹"+f1(x))+" Cr";
+const pct1=x=>(x==null||!isFinite(x))?"n/a":(x*100>=500?">500%":(Math.round(x*1000)/10).toFixed(1)+"%");
+const pct=x=>(x==null||!isFinite(x))?"n/a":(x*100>=500?">500%":f0(x*100)+"%");
 function interp(pts,t){if(t<=pts[0][0])return pts[0][1];for(let k=1;k<pts.length;k++){if(t<=pts[k][0]){const[a,b]=pts[k-1],[c,d]=pts[k];return b+(d-b)*(t-a)/(c-a);}}return pts[pts.length-1][1];}
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
 function chip(cls,txt){return `<span class="chip ${cls}">${esc(txt)}</span>`;}
@@ -1182,61 +1203,85 @@ function service(fill,days){
  return{nat,natDays,cost,ann,fillGain:nat-86,daysGain:46-natDays};
 }
 /* ---------- returns model ---------- */
-const FILLP=[[0,0],[3,.03],[6,.26],[9,.485],[12,.62],[18,.82],[22,.956],[30,1],[60,1]];
-const DAYSP=[[0,0],[3,.05],[6,.3],[9,.6],[12,.68],[18,.85],[22,1],[60,1]];
-const CAPP=[[0,0],[8,0],[12,1],[60,1]];
-function ramp(t,a,b){return t<=a?0:t>=b?1:(t-a)/(b-a);}
-function delivery(alloc){
- let d=0.10;const mdmF=Math.min(1,(alloc.mdm||0)/26);
- for(const i of INITS){if(!i.share)continue;let f=Math.min(1,(alloc[i.id]||0)/i.base);if(i.id==="rep")f*=0.5+0.5*mdmF;d+=i.share*f;}
- return Math.min(1,d);
-}
+/* A port of the Cashflow and Gates tabs of Project_Drishti_Financial_Model_v2.xlsx (the latest model from the finance side).
+   With the base settings it reproduces all 16 scenarios on the workbook's Sensitivity tab. Service targets, the budget split
+   and the optional extras scale it. WBOUT holds the workbook's own results, for reference. */
+const WB={"U":19.9911275782,"ini":[{"id":"flow","s":1,"d":8,"rho":0.65,"G":2,"H":5.9,"I":0.15,"J":0.3,"K":0,"L":0,"M":0,"N":0.55,"O":2,"P":0},{"id":"rep","s":10,"d":8,"rho":0.5,"G":5,"H":3.9,"I":0.4,"J":0.22,"K":0,"L":0,"M":0,"N":0.7,"O":4.4,"P":4.4},{"id":"plc","s":5,"d":8,"rho":0.6,"G":2,"H":1.2,"I":0.03,"J":0.1,"K":0,"L":0,"M":0,"N":1,"O":0.5,"P":0},{"id":"port","s":1,"d":9,"rho":0.8,"G":0.8,"H":1.7,"I":0.33,"J":0,"K":0,"L":0,"M":-9.9,"N":0.85,"O":0,"P":0},{"id":"qc","s":1,"d":4,"rho":0.8,"G":0.8,"H":-0.1,"I":0,"J":0,"K":3,"L":2.9,"M":0,"N":1,"O":0.5,"P":0},{"id":"sic","s":2,"d":9,"rho":0.5,"G":0.5,"H":0.5,"I":0.02,"J":0.05,"K":0,"L":0,"M":0,"N":0.25,"O":1.5,"P":0}],"capex":{"pmo":[0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5],"flow":[1,2,3,3,3,2.5,2,2,1.5,1.5,1.5,1],"mdm":[0.5,1,1.5,1.75,1.75,1.75,1.75,2.45,2.1,2.1,4.925,4.425],"rep":[0,0.5,1,2.45,3.15,3.15,1.75,2.8,2.1,5.2,5.2,4.7],"plc":[4,7,3.825,3.4,0.85,0.425,0.5,0.5,0,0,0.75,0.75],"port":[0.5,0.75,0.75,0.5,0.5,0.5,0.5,0,0,0,0,0],"qc":[0.5,0.5,0.5,0.5,0.5,0.5,0,0,0,0,0,0],"sic":[0.25,0.5,0.75,0.75,0.75,0.5,0.5,0.5,0.5,0.5,0.5,0]},"dip":[0,0,0.25,0.5,0.25,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"dipTotal":15.7137440385,"dayCogs":15.917260274,"restated":47.8614190687,"thr":{"g1":[0.89,43,22],"g2":[0.92,38,70,170]}};
+const WBOUT=[{"irr":0.8447957741,"pb":28.2024711457,"npv":79.1064606958,"spend":140.965625,"ss":77.9692528779},{"irr":0.6387136822,"pb":35.7147356293,"npv":55.7342788175,"spend":140.965625,"ss":68.2582847923},{"irr":1.6300132425,"pb":21.4707811756,"npv":158.8645466691,"spend":140.965625,"ss":111.2077815287},{"irr":0.4417239834,"pb":39.9458175998,"npv":32.3620969391,"spend":140.965625,"ss":58.5473167067},{"irr":0.2024545588,"pb":47.8535567471,"npv":2.8382973635,"spend":140.965625,"ss":46.524898138},{"irr":0.4578694336,"pb":39.3229385749,"npv":45.5676327407,"spend":138.545625,"ss":77.8283811031},{"irr":0.7129949766,"pb":33.4881249016,"npv":67.0244479313,"spend":155.8484375,"ss":76.6342528779},{"irr":0.6374352604,"pb":35.7593656107,"npv":55.8339030466,"spend":140.965625,"ss":68.4783084509},{"irr":0.5781251515,"pb":36.9780484314,"npv":48.9417985949,"spend":140.965625,"ss":65.6549485593},{"irr":1.137116341,"pb":24.6918890692,"npv":109.0030092332,"spend":140.965625,"ss":89.9283226545},{"irr":41.8841183309,"pb":6.1923791564,"npv":176.5688194192,"spend":140.965625,"ss":73.6141520983},{"irr":0.8454720574,"pb":28.1886879449,"npv":79.124433461,"spend":140.965625,"ss":77.9527232822},{"irr":null,"pb":null,"npv":-57.0652080062,"spend":153.0984375,"ss":31.6343256239},{"irr":1.0614785597,"pb":25.408660783,"npv":102.4786425742,"spend":140.965625,"ss":87.6802209635},{"irr":0.5121968,"pb":38.3065804232,"npv":40.9723790297,"spend":140.965625,"ss":62.247075508},{"irr":1.3321230636,"pb":22.7594895631,"npv":96.4122272305,"spend":140.965625,"ss":77.9692528779}];
+const WBBRK={"rec": 38.8036038546, "real": 0.973314884, "delay": 0.969848902};
 function build(over){const sc=over||{};const P=Object.assign({},S.sc,sc.sc||{});
  const sv=service(sc.fill||S.fill,sc.days||S.days);const alloc=sc.alloc||S.alloc;const opts=sc.opts||S.opts;
  return{P,sv,alloc,opts,coo:sc.coo!=null?sc.coo:S.coo,shift:sc.shift||0};}
-function dayVal(P){return P.day==="network"?26.7:P.day==="cogs"?14.1:18.8;}
-/* Calibration to the submitted deck (base: IRR 86.6%, payback 29.3 mo, NPV ₹89 Cr; spend ₹32.5/84.5/131 Cr at M9/21/36; gate EBITDA ₹34.5/75.7 Cr) */
-const CAL={contrib:34.21,plant:7.137,wc:15.896,avoided:49.0,lagExtra:2.404,runAfter:20.39,gPer:20,gAvoided:16.6,gPlant:7,ownedShare:153/222};
-const CUMP=[[0,0],[9,32.5],[21,84.5],[36,131],[60,131]];
-const AVP=[[0,0],[3,.05],[6,.2],[9,.381],[12,.55],[18,.85],[22,1],[60,1]];
 const REF=service(OURS.fill,OURS.days);
+const WB_DAY=26.7,OWN_ALL=10,OWN_RATIO=.703,clamp01=x=>x<0?0:x>1?1:x;
+/* what each initiative's budget buys: 1 = fully funded (replenishment also needs master data) */
+function funding(alloc){
+ const f={},mdmF=Math.min(1,(alloc.mdm||0)/26);
+ for(const i of INITS){if(!i.share)continue;f[i.id]=Math.min(1,(alloc[i.id]||0)/i.base);if(i.id==="rep")f[i.id]*=.5+.5*mdmF;}
+ return f;
+}
+function levers(P){
+ return{rec:P.rec/100,real:P.real/100,hair:P.hair/100,cap:P.cap/100,over:P.over/100,delay:P.delay,lagQ:P.lag/3,
+  day:P.day==="cogs"?WB.dayCogs:WB_DAY,own:P.day==="network"?OWN_ALL:1,cash:P.wcb==="cash",
+  obs:P.pools==="low"?44:48,frt:P.pools==="low"?31:34.5,coc:.11,hold:.035,decay:.05};
+}
+function benefitItems(L,fm,opts,coo,f,alloc){
+ const it=[];
+ for(const w of WB.ini){const k=f[w.id],base=INITS.find(i=>i.id===w.id).base,sc=Math.min(1,(alloc[w.id]||0)/base),rho=Math.min(1,w.rho*L.real);
+  it.push({id:w.id,s:w.s,d:w.d,g:rho*w.G*fm.fill*k,h:rho*w.H*fm.days*k,
+   Z:k*rho*(w.G*fm.fill*WB.U*L.rec+w.L),AA:k*rho*(w.I*L.obs+w.J*L.frt+w.K),
+   AB:k*w.H*fm.days*L.day*Math.min(1,w.N*L.own)*rho,AC:k*w.M,run:w.O*sc,runIn:w.P*sc});}
+ for(const o of OPTS){if(!opts[o.id])continue;const rho=Math.min(1,L.real),pts=o.pts||0,dd=o.dd||0;
+  it.push({id:o.id,s:o.from||99,d:Math.max(1,(o.to||99)-(o.from||99)),g:rho*pts*fm.fill,h:rho*dd,
+   Z:rho*(pts*fm.fill*WB.U*L.rec+(coo?0:(o.ann||0))),AA:0,AB:dd*L.day*Math.min(1,OWN_RATIO*L.own)*rho,AC:0,run:0,runIn:0});}
+ return it;
+}
+function engine(B){
+ const L=B.L,T=20,delay=L.delay+B.shift,it=B.items,n=it.length;
+ const att=(m,x)=>clamp01((m-x.s-delay)/x.d),dec=q=>q<=12?1:Math.pow(1-L.decay,(q-11)/4),ov=q=>q>=4?1+L.over:1;
+ const dot=(a,k)=>{let s=0;for(let i=0;i<n;i++)s+=a[i]*it[i][k];return s;},sum=a=>{let s=0;for(let q=1;q<=T;q++)s+=a[q];return s;};
+ const mid=[],end=[];for(let q=1;q<=T;q++){mid[q]=it.map(x=>att(3*q-1.5,x));end[q]=it.map(x=>att(3*q,x));}
+ const r41=[],r42=[],r43=[],r44=[],r45=[],r46=[];
+ for(let q=1;q<=T;q++){const m=mid[q],k=dec(q)*(1-L.hair),ab=dot(m,"AB");
+  r41[q]=dot(m,"Z")/4*k;r42[q]=dot(m,"AC")/4;r43[q]=dot(m,"AA")/4*k;r44[q]=ab*L.hold/4*k;r45[q]=ab*.11/4*k;
+  r46[q]=dot(end[q].map((v,i)=>v-(q>1?end[q-1][i]:0)),"AB")*(1-L.hair);}
+ const r49=L.cash?r46:r45,c43=sum(r43),c44=sum(r44);
+ const fc=c43+c44<=0?1:Math.min(1,L.cap/(1-L.cap)*(sum(r41)+sum(r42)+sum(r49))/(c43+c44));
+ const r48=[],r50=[],r51=[];for(let q=1;q<=T;q++){r48[q]=(r43[q]+r44[q])*fc;r50[q]=r41[q]+r42[q]+r48[q]+r49[q];}
+ const lk=Math.floor(L.lagQ),lf=L.lagQ-lk,at50=q=>q<1?0:r50[q];
+ for(let q=1;q<=T;q++)r51[q]=(1-lf)*at50(q-lk)+lf*at50(q-lk-1);
+ const capex=new Array(T+1).fill(0),run=new Array(T+1).fill(0),runPost=it.reduce((a,x)=>a+x.run,0)/4*(1+L.over);
+ for(const id in WB.capex){const sc=(B.alloc[id]||0)/INITS.find(i=>i.id===id).base;for(let q=1;q<=12;q++)capex[q]+=WB.capex[id][q-1]*sc*ov(q);}
+ if(B.extra>0)for(let q=1;q<=12;q++)capex[q]+=B.extra/12*ov(q);
+ for(const o of OPTS){if(!B.opts[o.id])continue;const nm=Math.max(1,o.e-o.s);for(let t=o.s+1;t<=o.e;t++){const q=Math.ceil(t/3);if(q<=T)capex[q]+=o.amt/nm*ov(q);}}
+ for(let q=1;q<=T;q++)run[q]=q<=12?dot(mid[q],"runIn")/4*ov(q):runPost;
+ const net=[],cumQ=[0];let c=0,pb=null;
+ for(let q=1;q<=T;q++){const dip=L.dip*WB.dip[q-1]*(B.f.flow||0);net[q]=r51[q]-capex[q]-run[q]-dip;const prev=c;c+=net[q];cumQ[q]=c;
+  if(c>=0&&prev<0){const v=3*(q-1)+3*(-prev/net[q]);pb=pb==null?v:Math.min(pb,v);}}
+ const npv=net.slice(1).reduce((a,v,i)=>a+v/Math.pow(1.18,(i+1)/4),0);
+ const nq=r=>{let s=0;for(let i=1;i<=T;i++)s+=net[i]/Math.pow(1+r,i);return s;};
+ let irr=null,lo=-.99,hi=100;if(nq(lo)*nq(hi)<0){for(let k=0;k<200;k++){const m=(lo+hi)/2;nq(lo)*nq(m)<=0?hi=m:lo=m;}irr=Math.pow(1+(lo+hi)/2,4)-1;}else if(nq(lo)<=0)irr=-1;
+ const sp=new Array(61).fill(0),cf=new Array(61).fill(0),cum=new Array(61).fill(0),ben=new Array(61).fill(0);
+ for(let t=1;t<=60;t++){const q=Math.ceil(t/3),w=(t-3*(q-1))/3;sp[t]=(capex[q]+run[q])/3;cf[t]=net[q]/3;ben[t]=r51[q]/3;cum[t]=cumQ[q-1]+(cumQ[q]-cumQ[q-1])*w;}
+ const cs=m=>{let s=0;for(let t=1;t<=m;t++)s+=sp[t];return s;};
+ const gk=m=>{const a=it.map(x=>att(m,x)),sm=k=>{let s=0;for(let i=0;i<n;i++)s+=a[i]*it[i][k];return s;};
+  const days=46-sm("h"),wo=sm("AB"),gross=(sm("Z")+sm("AA")+wo*L.hold)*(1-L.hair)+sm("AC");
+  return{fill:86+sm("g"),days,ebitda:gross-(sm("run")+(m<=18?6:0)),wc:(46-days)*L.day,wcOwned:wo};};
+ return{cf,cum,sp,ben,pb,irr,npv,nm:irr!=null&&irr>=5,g9:gk(9),g22:gk(22),gk,cs9:cs(9),cs21:cs(21),cs36:cs(36),total:cs(60),capBind:fc<1-1e-9,
+  peak:-Math.min(...cumQ),ss:(r50[12]-runPost)*4,avShare:(r48[12]+r41[12]+r42[12]+r49[12])>0?r48[12]/(r48[12]+r41[12]+r42[12]+r49[12]):0,
+  build:{contrib:r41[12]*4,cc:r42[12]*4,wc:r49[12]*4,avGross:(r43[12]+r44[12])*4,avAfterHair:(r43[12]+r44[12])*4,av:r48[12]*4,lim:0}};
+}
+let DELW=null;
 function model(over){
- const B=build(over),P=B.P,sv=B.sv,alloc=B.alloc,opts=B.opts;
- const rec=P.rec/100,real=P.real/100,ov=P.over/100,cap=P.cap/100,hair=P.hair/100,lag=P.lag+CAL.lagExtra,delay=P.delay+B.shift;
- const del=delivery(alloc);
- const plcF=Math.min(1,(alloc.plc||0)/22);
- const sp=new Array(61).fill(0);
- const core=INITS.reduce((a,i)=>a+(alloc[i.id]||0),0);
- for(let t=1;t<=36;t++)sp[t]+=(interp(CUMP,t)-interp(CUMP,t-1))*core/131*(1+ov);
- const add=(amt,s,e)=>{const n=Math.max(1,e-s);for(let t=s+1;t<=e&&t<=60;t++)sp[t]+=amt*(1+ov)/n;};
- for(const o of OPTS)if(opts[o.id])add(o.amt,o.s,o.e);
- const fG=sv.fillGain*del, dG=sv.daysGain*del;
- function at(tt){
-  let pts=interp(FILLP,tt)*fG, days=interp(DAYSP,tt)*dG, pl=interp(CAPP,tt)*plcF, extra=0;
-  for(const o of OPTS){if(!opts[o.id])continue;const r=ramp(tt,o.from||99,o.to||99);
-   if(o.pts)pts+=o.pts*r; if(o.dd)days+=o.dd*r; if(o.ann)extra+=o.ann*r*(B.coo?0:1);}
-  pts*=real;days*=real;
-  return{pts,days,
-   contrib:pts/REF.fillGain*CAL.contrib*rec/0.4, cc:(pl*CAL.plant+extra)*real,
-   wc:days/REF.daysGain*CAL.wc*dayVal(P)/18.8, av:interp(DAYSP,tt)*CAL.avoided*del*real*(1-hair),
-   gContrib:pts*CAL.gPer*rec, gcc:(pl*CAL.gPlant+extra)*real, gAv:interp(AVP,tt)*CAL.gAvoided*del*real};
- }
- const cf=[],ben=[],cum=[];let c=0,pb=null,capBind=false;
- for(let t=0;t<=60;t++){
-  const x=at(t-lag-delay);
-  const non=x.contrib+x.cc+x.wc;let av=x.av;const lim=cap/(1-cap)*non;if(av>lim+1e-9){av=lim;if(t>12)capBind=true;}
-  const b=(non+av)/12;ben.push(b);
-  const v=b-sp[t]-(t>36?CAL.runAfter/12:0);cf.push(v);const prev=c;c+=v;cum.push(c);
-  if(pb===null&&t>6&&c>=0&&prev<0)pb=t-1+(-prev)/v;
- }
- const npvAt=r=>cf.reduce((s,v,t)=>s+v/Math.pow(1+r,t/12),0);
- let irr=null;let lo=-0.95,hi=20;if(npvAt(lo)>0&&npvAt(hi)<0){for(let k=0;k<120;k++){const m=(lo+hi)/2;npvAt(m)>0?lo=m:hi=m;}irr=lo;}else if(npvAt(lo)<=0)irr=-1;
- const gk=t=>{const x=at(t-delay);const wc=x.days*26.7;return{fill:86+x.pts,days:46-x.days,ebitda:x.gContrib+x.gcc+x.gAv,wc,wcOwned:wc*CAL.ownedShare};};
- const cs=m=>sp.slice(0,m+1).reduce((a,b)=>a+b,0);
- const y3=at(36);const y3lim=cap/(1-cap)*(y3.contrib+y3.cc+y3.wc);const y3capped=Math.min(y3.av,y3lim);
- const gross=interp(DAYSP,36)*CAL.avoided*del*real;
- return{cf,cum,sp,ben,pb,irr,npv:npvAt(.18),del,sv,P,g9:gk(9),g22:gk(22),gk,cs9:cs(9),cs21:cs(21),cs36:cs(36),total:cs(60),capBind,
-  build:{contrib:y3.contrib,cc:y3.cc,wc:y3.wc,avGross:gross,avAfterHair:y3.av,av:y3capped,lim:y3lim}};
+ const B=build(over),P=B.P,sv=B.sv,L=levers(P);L.dip=WB.dipTotal;
+ const f=funding(B.alloc),fm={fill:REF.fillGain>0?sv.fillGain/REF.fillGain:1,days:REF.daysGain>0?sv.daysGain/REF.daysGain:1};
+ const items=benefitItems(L,fm,B.opts,B.coo,f,B.alloc);
+ const E=engine({L,items,f,alloc:B.alloc,opts:B.opts,shift:B.shift,extra:Math.max(0,sv.cost-REF.cost)});
+ if(!DELW){const f1_={};INITS.forEach(i=>{if(i.share)f1_[i.id]=1;});const w={};let tot=0;
+  benefitItems(levers(DEF.sc),{fill:1,days:1},{},false,f1_,DEF.alloc).forEach(x=>{w[x.id]=x.Z+x.AA+x.AB*.145;tot+=w[x.id];});
+  DELW={};for(const id in w)DELW[id]=w[id]/tot;}
+ E.del=Object.keys(DELW).reduce((a,id)=>a+DELW[id]*(f[id]||0),0);
+ E.sv=sv;E.P=P;return E;
 }
 /* ---------- gates ---------- */
 function gateEval(M){
@@ -1299,7 +1344,7 @@ const KIND={
  alerts:["out","Dashboard","Early warnings.","Spotted before they hurt. Turn a warning into an action with an owner."],
  risks:["in","Input","Risk register.","Log risks, owners and how each will be handled. Change the status as work progresses."],
  approvals:["in","Input","Gate approvals.","Finance submits, Audit and Board verify and release. Every step is recorded."],
- scenarios:["out","Dashboard","Compare scenarios.","Side-by-side results for five ways to run the programme. Pick one to load it."]
+ scenarios:["out","Dashboard","Compare scenarios.","Pick one of 18 scenarios from the financial model (v2), see the gates, tranches and what breaks, then load it into the app."]
 };
 function tabOf(v){const g=GROUPS.find(([,ids])=>ids.includes(v));return g?g[0]:(TABS.find(t=>t[1]===v)||TABS[0])[0];}
 function renderNav(){
@@ -1445,8 +1490,8 @@ function renderOpModel(){
  $("omSkewNote").innerHTML=`<div class="callout ${om.skew<=27?"good":om.skew<=33?"warn":"bad"}">Quarter-end loading <b class="num">${(om.skew/23.08).toFixed(2)}×</b> an even pace. Target is 27% or less (about 1.2×). ${om.skew<=27?"On target: plants can run a level schedule.":"Plants still chase a month-end spike, so they build stock early and run short late."}</div>`;
 }
 function renderInvest(){
- const t1=M.cs9<=34+1e-6,t2=M.cs21<=92+1e-6,t3=M.cs36<=150+1e-6,totalAlloc=INITS.reduce((a,i)=>a+(S.alloc[i.id]||0),0)+OPTS.reduce((a,o)=>a+(S.opts[o.id]?o.amt:0),0);
- $("invKpis").innerHTML=kpi("Allocated",cr(totalAlloc*(1+S.sc.over/100)),`${cr(150-totalAlloc*(1+S.sc.over/100))} unallocated of ₹150 Cr`)+kpi("By month 9",cr(M.cs9),t1?"within ₹34 Cr tranche":"breaches ₹34 Cr tranche",t1?"":"")+kpi("By month 21",cr(M.cs21),t2?"within ₹92 Cr released":"breaches ₹92 Cr released")+kpi("Benefit delivery",f0(M.del*100)+"%","of the full programme benefit");
+ const t1=M.cs9<=34+1e-6,t2=M.cs21<=92+1e-6,t3=M.cs36<=150+1e-6;
+ $("invKpis").innerHTML=kpi("Spend in 36 months",cr(M.cs36),`${cr(150-M.cs36)} unallocated of ₹150 Cr`)+kpi("By month 9",cr(M.cs9),t1?"within ₹34 Cr tranche":"breaches ₹34 Cr tranche",t1?"":"")+kpi("By month 21",cr(M.cs21),t2?"within ₹92 Cr released":"breaches ₹92 Cr released")+kpi("Benefit delivery",f0(M.del*100)+"%","of the full programme benefit");
  const kp=$("invKpis").querySelectorAll(".kpi .v");if(!t1)kp[1].style.color="var(--bad)";if(!t2)kp[2].style.color="var(--bad)";if(!t3)kp[0].style.color="var(--bad)";
  if(!$("allocRows").dataset.built){
   $("allocRows").innerHTML=INITS.map(i=>`<div class="alloc"><div class="nm">${i.name}<small><span class="feas" title="Feasibility ${i.feas} of 5">${"●".repeat(i.feas)}${"○".repeat(5-i.feas)}</span> ${i.route} · ${i.note}</small></div><input type="number" id="al-${i.id}" min="0" max="150" step="0.5" aria-label="${i.name} ₹ Cr"><div class="bar"><span id="alb-${i.id}"></span><em style="left:${i.base/40*100}%" title="recommended"></em></div><span id="alf-${i.id}"></span></div>`).join("")+`<p class="note" style="margin-top:8px">Dots rate feasibility out of 5. Routes: Buy is a vendor licence, SI an integrator for data and system links, Build is in-house on existing systems, Outsource is the independent gate audit. Bars scale to ₹40 Cr; the tick marks the recommended amount. Replenishment loses half its benefit if master data is not fully funded.</p>`;
@@ -1473,21 +1518,21 @@ function renderReturns(){
  const kv=$("rtKpis").querySelectorAll(".kpi .v");/*hurdle colours*/kv[0].style.color=h.okI?"":"var(--bad)";kv[1].style.color=h.okP?"":"var(--bad)";
  const sets=[["sRec","rec",v=>v+"%"],["sReal","real",v=>(v/100).toFixed(2)+"×"],["sDelay","delay",v=>v+" mo"],["sLag","lag",v=>v+" mo"],["sOver","over",v=>"+"+v+"%"],["sCap","cap",v=>v+"%"],["sHair","hair",v=>v+"%"]];
  sets.forEach(([id,k,fm])=>{const el=$(id);if(document.activeElement!==el)el.value=P[k];$(id+"O").textContent=fm(P[k]);});
- $("sDay").value=P.day;
+ $("sDay").value=P.day;$("sWcb").value=P.wcb;$("sPools").value=P.pools;
  $("recPreset").innerHTML=[["Finance / Audit",35],["Transformation office",40],["Sales",60]].map(([n,v])=>`<button type="button" aria-pressed="${P.rec===v}" data-v="${v}">${n} ${v}%</button>`).join("");
  $("recPreset").querySelectorAll("button").forEach(b=>b.onclick=()=>{S.sc.rec=+b.dataset.v;recalc();});
  const audit=model({sc:{rec:35}}),down=model({sc:{rec:35,real:85,delay:6,over:25}});
  cashChart($("rtCash"),$("rtLeg"),[{name:"Audit 35% recovery",c:"var(--warn)",pts:audit.cum.map((v,t)=>[t,v]),dash:true,w:1.5},{name:"Combined downside",c:"var(--ink2)",pts:down.cum.map((v,t)=>[t,v]),dash:true,w:1.5}]);
- const tests=[["Base",{},"87%","29.3 mo"],["No certification lag",{lag:0},"131%","24.1 mo"],["Recovery 60% (Sales)",{rec:60},"156%","22.3 mo"],["Recovery 35% (Audit)",{rec:35},"68%","33.0 mo"],["Realisation ×0.85",{real:85},"56%","35.9 mo"],["Benefits 6 months late",{delay:6},"49%","37.5 mo"],["Overrun +25%",{over:25},"66%","34.3 mo"],["Day valued on COGS",{day:"cogs"},"67%","33.3 mo"],["Avoided cap 30%",{cap:30},"62%","34.3 mo"],["Combined downside",{rec:35,real:85,delay:6,over:25},"−17%",">60 mo"]];
- $("rtStress").innerHTML=`<thead><tr><th>Scenario</th><th class="n">IRR (plan)</th><th class="n">Payback (plan)</th><th class="n">Live IRR</th><th class="n">Live payback</th></tr></thead><tbody>`+tests.map(([n,o,di,dp])=>{const r=model({sc:Object.assign({},DEF.sc,o)});return `<tr><td>${n}</td><td class="n"><b>${di}</b></td><td class="n"><b>${dp}</b></td><td class="n">${pct(r.irr)}</td><td class="n">${r.pb?f1(r.pb)+" mo":">60 mo"}</td></tr>`;}).join("")+`</tbody>`;
+ const fmP=x=>x==null?"n/a":pct1(x),fmB=x=>x==null?">60 mo":f1(x)+" mo";
+ $("rtStress").innerHTML=`<thead><tr><th>Scenario</th><th class="n">IRR (workbook)</th><th class="n">Payback (workbook)</th><th class="n">Live IRR</th><th class="n">Live payback</th></tr></thead><tbody>`+SCEN.filter(s=>/^S\d/.test(s[1])).sort((a,b)=>+a[1].slice(1)-+b[1].slice(1)).map(s=>{const w=WBOUT[+s[1].slice(1)-1],r=model({sc:Object.assign({},DEF.sc,s[7].sc||{})});return `<tr><td>${s[1]} · ${s[2]}</td><td class="n"><b>${fmP(w.irr)}</b></td><td class="n"><b>${fmB(w.pb)}</b></td><td class="n">${fmP(r.irr)}</td><td class="n">${fmB(r.pb)}</td></tr>`;}).join("")+`</tbody>`;
  // break-points by bisection on payback
  const bp=(key,lo,hi,dirUp)=>{const ok=v=>{const r=model({sc:{[key]:v}});return r.pb!=null&&r.pb<=30;};if(ok(lo)===ok(hi))return null;let a=lo,b=hi;for(let k=0;k<30;k++){const m=(a+b)/2;ok(m)===ok(lo)?a=m:b=m;}return (a+b)/2;};
  const bRec=bp("rec",20,70),bReal=bp("real",60,110),bDel=bp("delay",0,12),bOv=bp("over",0,40);
  const li=(t,v)=>`<tr><td>${t}</td><td class="n">${v}</td></tr>`;
- $("rtBreak").innerHTML=`<div class="callout"><b>Deck break-points:</b> payback fails below 39% recovery (the Audit Committee tests 35%), or at 98% of base realisation, or with a 0.5-month slip. <b>Stop-loss:</b> if month 12 shows recovery under 37% or realisation under 0.85×, freeze waves 2–3 and the data tail (about ₹53 Cr).</div><p class="note">Live model, holding everything else at current settings:</p><div class="tbl"><table><tbody>${li("Recoverable demand",bRec==null?(M.pb&&M.pb<=30?"clears across 20–70%":"fails across 20–70%"):f1(bRec)+"%")}${li("Realisation",bReal==null?"–":(bReal/100).toFixed(2)+"×")}${li("Benefit slip",bDel==null?(M.pb&&M.pb<=30?"over 12 months":"none tolerated"):f1(bDel)+" months")}${li("Cost overrun",bOv==null?(M.pb&&M.pb<=30?"over 40%":"none tolerated"):"+"+f1(bOv)+"%")}</tbody></table></div>`+
+ $("rtBreak").innerHTML=`<div class="callout"><b>Workbook break-points:</b> payback fails below ${f1(WBBRK.rec)}% recovery (the Audit Committee tests 35%), at ${f0(WBBRK.real*100)}% of base realisation, or with a ${f1(WBBRK.delay)}-month slip. <b>Stop-loss:</b> if month 12 shows recovery under 37% or realisation under 0.85×, freeze waves 2–3 and the data tail (about ₹53 Cr).</div><p class="note">Live model, holding everything else at current settings:</p><div class="tbl"><table><tbody>${li("Recoverable demand",bRec==null?(M.pb&&M.pb<=30?"clears across 20–70%":"fails across 20–70%"):f1(bRec)+"%")}${li("Realisation",bReal==null?"–":(bReal/100).toFixed(2)+"×")}${li("Benefit slip",bDel==null?(M.pb&&M.pb<=30?"over 12 months":"none tolerated"):f1(bDel)+" months")}${li("Cost overrun",bOv==null?(M.pb&&M.pb<=30?"over 40%":"none tolerated"):"+"+f1(bOv)+"%")}</tbody></table></div>`+
   `<div class="callout ${bRec!=null&&bRec>35?"warn":"good"}">${bRec!=null&&bRec>35?`The Audit Committee tests recovery at 35%, below the ${f1(bRec)}% break-point. Agree the measurement charter on Day 0 and keep the month-12 stop-loss.`:"Payback holds at the Audit Committee's 35% recovery test."}</div>`;
  const b=M.build;const tot=b.contrib+b.cc+b.wc+b.av;
- $("rtBuild").innerHTML=`<tbody>${li("Contribution from recovered fill",f1(b.contrib))}${li("Capacity and options",f1(b.cc))}${li("Working capital carrying (11%)",f1(b.wc))}${li(`Avoided cost (after ${P.hair}% haircut${b.avAfterHair>b.av+1e-6?", capped":""})`,f1(b.av))}<tr class="sum"><td>Return-test benefit</td><td class="n">${f1(tot)}</td></tr><tr><td class="note">Avoided share of claimed benefit</td><td class="n note">${tot>0?f0(b.av/tot*100):0}%</td></tr></tbody>`;
+ $("rtBuild").innerHTML=`<tbody>${li("Contribution from recovered fill",f1(b.contrib))}${li("Contribution lost on delisting",f1(b.cc))}${li(P.wcb==="cash"?"Working capital, one-off cash release":"Working capital carrying (11%)",f1(b.wc))}${li(`Avoided cost (after ${P.hair}% attribution haircut${b.avAfterHair>b.av+1e-6?", capped":""})`,f1(b.av))}<tr class="sum"><td>Return-test benefit</td><td class="n">${f1(tot)}</td></tr><tr><td class="note">Avoided share of claimed benefit</td><td class="n note">${tot>0?f0(b.av/tot*100):0}%</td></tr></tbody>`;
 }
 function renderGates(){
  // gantt
@@ -1501,7 +1546,8 @@ function renderGates(){
  OPTS.filter(o=>S.opts[o.id]).forEach(o=>{g+=bar(o.name+" (added)",o.s,o.e,true);});
  g+=grp("ENABLE")+(al("mdm")?bar("Master data and integration",I("mdm").s,I("mdm").e):"")+(al("pmo")?bar("Programme office and audit",0,36,true):"");
  $("gantt").innerHTML=g+`</div>`;
- const WATCH={g1:["Tightest early gate","0.2 d if baseline restated","−₹8.5 Cr if dip counted"],g2:["Replenishment wave 3","Tightest gate overall","Net of running costs","₹153 Cr ACPL-owned"]};
+ const restH=43-(M.g9.days+WB.restated-46),dipH=M.g9.ebitda-WB.dipTotal/.75-22;
+ const WATCH={g1:["Tightest early gate",`${restH>=0?"+":"−"}${f1(Math.abs(restH))} d if the auditor restates the baseline`,`${dipH>=0?"+":"−"}₹${f1(Math.abs(dipH))} Cr if the destocking dip is counted`],g2:["Replenishment wave 3","Tightest gate overall: worth watching every week","Net of running costs",`₹${f0(M.g22.wcOwned)} Cr of it is ACPL-owned`]};
  const tb=(rows,key,o)=>`<thead><tr><th>Measure</th><th class="n">Need</th><th class="n">Plan</th><th>Actual</th><th class="n">Headroom</th><th></th><th>Watch-out</th></tr></thead><tbody>`+rows.map((r,i)=>{const plan=i===0?(key==="g1"?M.g9.fill:M.g22.fill):i===1?(key==="g1"?M.g9.days:M.g22.days):i===2?(key==="g1"?M.g9.ebitda:M.g22.ebitda):M.g22.wc;const k=["fill","days","ebitda","wc"][i];const hr=r[2]==="≥"?r[1].v-r[3]:r[3]-r[1].v;const ok=G.pass(r);
   return `<tr><td>${r[0]}</td><td class="n">${r[2]} ${r[4]==="cr"?"₹":""}${r[3]}${r[4]==="%"?"%":""}</td><td class="n">${fmtK(plan,r[4])}</td><td><input type="number" id="${key}-${k}" step="0.1" placeholder="plan" value="${esc(o[k])}" style="width:84px" aria-label="${r[0]} actual"></td><td class="n" style="color:${ok?"var(--good)":"var(--bad)"}">${hr>=0?"+":"−"}${f1(Math.abs(hr))}</td><td>${ok?chip("ok","Pass"):chip("no","Miss")}</td><td class="note">${WATCH[key][i]}</td></tr>`;}).join("")+`</tbody>`;
  $("g1Table").innerHTML=tb(G.g1,"g1",S.g1);$("g2Table").innerHTML=tb(G.g2,"g2",S.g2);
@@ -1535,6 +1581,8 @@ function renderAll(){renderSide();renderOverview();renderDiagnosis();renderServi
 /* ---------- wiring ---------- */
 [["sRec","rec"],["sReal","real"],["sDelay","delay"],["sLag","lag"],["sOver","over"],["sCap","cap"],["sHair","hair"]].forEach(([id,k])=>{$(id).addEventListener("input",e=>{S.sc[k]=+e.target.value;recalcCore();renderSide();renderReturns();});$(id).addEventListener("change",()=>recalc());});
 $("sDay").onchange=e=>{S.sc.day=e.target.value;recalc();};
+$("sWcb").onchange=e=>{S.sc.wcb=e.target.value;recalc();};
+$("sPools").onchange=e=>{S.sc.pools=e.target.value;recalc();};
 $("rtBase").onclick=()=>{S.sc=clone(DEF.sc);recalc();toast("Assumptions set to base values");};
 $("cooRight").onchange=e=>{S.coo=e.target.checked;recalc();};
 $("svUniform").onclick=()=>{S.fill={A:95,B:95,C:95,D:95,E:95};recalc();toast("Loaded the Board's uniform 95%");};
@@ -1818,15 +1866,30 @@ function renderLive(){
  <div class="lv-att">${L.length?L.map(([t,s,v])=>`<a href="#${v}">${esc(t)}<small>${esc(s)}</small></a>`).join(""):`<div class="lv-note">All clear. Nothing needs attention.</div>`}<div class="lv-note">WMS, ERP, DMS and Sales DB synced<small>09:00</small></div></div>
  <div class="lv-sys">${sys}</div>`;
 }
-const SCENARIOS=[
- ["rec","A","Recommended plan",{}],
- ["board","B","Board's uniform 95%",{fill:{A:95,B:95,C:95,D:95,E:95}}],
- ["stress","C","Stress case",{sc:{rec:25,real:70,delay:6,over:20}}],
- ["late","D","Benefits 6 months late",{sc:{delay:6}}],
- ["snacks","E","Add snacks capacity (₹30 Cr)",{opts:{ah:true}}]
+/* [key, tag, name, group, what changes, why it is run, how to challenge it, settings, flag]. S2 to S16 are the workbook's own scenarios. */
+const SCEN=[
+ ["rec","S1","Recommended plan","plan","Nothing changes from the base case","The plan as modelled: 40% of lost demand comes back, benefits arrive on time and 10% is held for cost contingency from quarter 4.","Payback clears the 30-month limit by under two months. A one-month slip, or delivery 3% below plan, fails it. Agree the Day-0 measurement charter and keep the month-12 stop-loss.",{}],
+ ["board","—","Board's uniform 95%","plan","Every segment is set to 95% fill","What the Board first asked for.","Reaching 95% everywhere costs about ₹205 Cr before any inventory target, more than the whole envelope. Premium is already there; the long tail and quick-commerce cost the most per point and pay back slowest.",{fill:{A:95,B:95,C:95,D:95,E:95}}],
+ ["snacks","—","Add snacks capacity (Plants A and H)","plan","Adds ₹30 Cr from month 12 for Plants A and H","Only worth it if Plant C shows that capacity, not scheduling, is the constraint (the month-12 trigger).","The model puts the benefit at about ₹12 Cr a year, ₹6 Cr if it overlaps Plant C, and nothing if the COO is right. On its own it returns 10% over five years against the 18% hurdle, and it does not fit inside ₹150 Cr.",{opts:{ah:true}}],
+ ["s2","S2","Recovery 35%","rec","Only 35% of lost demand comes back (base 40%)","Finance and the Audit Committee's view.","Payback moves past 30 months. The Audit Committee will test this number, so agree on Day 0 how recovery is measured.",{sc:{rec:35}}],
+ ["s4","S4","Recovery 30%","rec","Only 30% of lost demand comes back","Harder than the Audit Committee's test.","Shows how far recovery can fall before the return itself is at risk.",{sc:{rec:30}}],
+ ["s14","S14","Recovery 45%","rec","45% of lost demand comes back","Midway between the transformation office and Sales.","An upside case. Do not budget against it.",{sc:{rec:45}}],
+ ["s3","S3","Recovery 60%","rec","60% of lost demand comes back","Sales' view.","Upside only. The Audit Committee will not accept 60% without proof.",{sc:{rec:60}}],
+ ["s5","S5","Realisation ×0.7","del","Every initiative delivers 70% of the pilot result","The pilots had no control group and ran in good conditions.","Barely clears the 18% hurdle and takes about four years to pay back. If month 12 looks like this, freeze replenishment waves 2 and 3.",{sc:{real:70}}],
+ ["s15","S15","Realisation ×0.85","del","Every initiative delivers 85% of the pilot result","A moderate haircut on the pilots.","Payback passes 30 months. This is the stop-loss line in the plan: below 0.85× at month 12, freeze waves 2 and 3.",{sc:{real:85}}],
+ ["s6","S6","Benefits 6 months late","del","Every benefit arrives six months later","Change programmes usually run behind.","The gates feel it first. If Gate 1 slips, tranche 2 slips two quarters.",{sc:{delay:6}}],
+ ["s7","S7","Overrun +25%","del","Cost runs 25% over from quarter 4 (base 10%)","Capex and running-cost overrun.","Spend passes the ₹150 Cr envelope. Hold back the master-data tail or re-phase before asking for the next tranche.",{sc:{over:25}}],
+ ["s16","S16","No certification lag","del","Finance recognises benefits in the quarter they happen","Removes the one-quarter certification lag.","An upside. It shows what the lag costs; Finance is unlikely to drop it.",{sc:{lag:0}}],
+ ["s8","S8","Day on COGS","cnt","An inventory day is valued on COGS (₹15.9 Cr), not ₹26.7 Cr","The case's ₹26.7 Cr a day implies more annual cost of goods than ACPL's revenue.","Working-capital release falls to about ₹128 Cr, below the ₹170 Cr Gate 2 test. Agree with the Board which day value the gate uses.",{sc:{day:"cogs"}}],
+ ["s9","S9","Cap 30%","cnt","Avoided cost counts for at most 30% of claimed benefit (base 40%)","A stricter reading of the case's rule.","Less of the obsolescence and freight saving is allowed, and payback moves past 30 months.",{sc:{cap:30}}],
+ ["s10","S10","Distributor stock counted","cnt","Distributor stock is counted as ACPL's","The transformation office's view.","The biggest working-capital benefit, but only if distributors give up stock. Do not plan on it.",{sc:{day:"network"}},"Check the input. The workbook counts this with a multiplier of 10, which treats every initiative's stock as fully ACPL-owned. The exact ratio, 1,230 ÷ 865 = 1.42, gives an IRR near 102% instead of 114%. Read 114% as an upper bound."],
+ ["s11","S11","Cash basis","cnt","Working capital is counted as a one-off cash release, not yearly carrying value","A cash view instead of the Board's 11% view.","The cash comes back early, so the programme appears to pay for itself in about six months. That comes from the counting, not from a better programme.",{sc:{wcb:"cash"}},"The IRR is not meaningful. ₹128 Cr of working capital is counted as cash in the first six quarters, so cash flow is positive from quarter 2 and IRR explodes (4,188% in the workbook). Use payback and NPV."],
+ ["s12","S12","Low-end pools","cnt","Obsolescence pool ₹44 Cr and freight pool ₹31 Cr (base ₹48 Cr and ₹34.5 Cr)","The low end of Finance's range.","Almost no effect. The return does not depend on where in the range the pools sit.",{sc:{pools:"low"}}],
+ ["s13","S13","Combined downside","all","35% recovery, 0.7× realisation, six months late, 25% overrun, day on COGS","Everything goes wrong together.","Loses money and is not paid back. This is why tranche 1 is only ₹34 Cr and why the month-12 stop-loss exists: stop there rather than spend the full ₹150 Cr.",{sc:{rec:35,real:70,delay:6,over:25,day:"cogs"}}]
 ];
+const SGROUPS=[["plan","Plan choices","how the programme is set up"],["rec","Recovery of lost sales","how much of the lost demand really comes back"],["del","Delivery risk","slower, weaker or dearer delivery"],["cnt","How benefits are counted","accounting views from Finance and the Board"],["all","Everything at once",""]];
 function scnState(p){return{fill:p.fill?{...p.fill}:{...OURS.fill},days:{...OURS.days},sc:{...DEF.sc,...(p.sc||{})},alloc:clone(DEF.alloc),opts:{...(p.opts||{})},coo:false};}
-function loadScenario(k){const s=SCENARIOS.find(x=>x[0]===k);Object.assign(S,scnState(s[3]));recalc();toast("Loaded: "+s[2]);}
+function loadScenario(k){const s=SCEN.find(x=>x[0]===k);Object.assign(S,scnState(s[7]));recalc();toast("Loaded: "+s[2]);}
 $("scnChips").addEventListener("click",e=>{const b=e.target.closest("[data-scn]");if(b)loadScenario(b.dataset.scn);});
 const ACT_ROLES=["plants","flow"];
 function canAct(){return !WS.team||ACT_ROLES.includes(WS.team);}
@@ -1995,16 +2058,59 @@ function renderMgExtra(){
 function renderControl(){renderAlerts();renderRisks();renderApprovals();}
 /* ---- scenarios ---- */
 function gateMini(rows){return `<div class="tbl"><table><thead><tr><th>Measure</th><th class="n">Need</th><th class="n">Plan</th><th></th></tr></thead><tbody>`+rows.map(r=>`<tr><td>${r[0]}</td><td class="n">${r[2]} ${r[4]==="cr"?"₹":""}${r[3]}${r[4]==="%"?"%":""}</td><td class="n">${fmtK(r[1].v,r[4])}</td><td>${G.pass(r)?chip("ok","Pass"):chip("no","Miss")}</td></tr>`).join("")+`</tbody></table></div>`;}
+let scSel="rec";
+function scEval(s){
+ const st=scnState(s[7]),m=model({fill:st.fill,days:st.days,sc:st.sc,alloc:st.alloc,opts:st.opts,coo:st.coo});
+ const g1=[["fill-rate",m.g9.fill>=89],["inventory days",m.g9.days<=43],["EBITDA",m.g9.ebitda>=22]],g2=[["fill-rate",m.g22.fill>=92],["inventory days",m.g22.days<=38],["EBITDA",m.g22.ebitda>=70],["working-capital release",m.g22.wc>=170]];
+ const p1=g1.every(x=>x[1]),p2=g2.every(x=>x[1]),t1=m.cs9<=34+1e-6,t2=m.cs21<=92+1e-6,t3=m.cs36<=150+1e-6,bud=t1&&t2&&t3,fits=m.sv.cost<=150;
+ const okI=m.irr!=null&&m.irr>=.18,okP=m.pb!=null&&m.pb<=30,miss=g=>g.filter(x=>!x[1]).map(x=>x[0]).join(", ");
+ const why=[];
+ if(!fits)why.push(`Cost of service is ${cr(m.sv.cost)}, over the ₹150 Cr envelope`);
+ if(!bud)why.push(`Spend breaks a tranche: ${cr(m.cs9)} by month 9 (limit ₹34 Cr), ${cr(m.cs21)} by month 21 (₹92 Cr), ${cr(m.cs36)} by month 36 (₹150 Cr)`);
+ if(!okI)why.push(`The return is ${pct(m.irr)}, below the 18% hurdle`);
+ if(m.npv<0)why.push(`Value created is negative (${cr(m.npv)})`);
+ if(!okP)why.push(m.pb?`Money is back in ${f1(m.pb)} months, past the 30-month limit`:"Money is not back within 60 months");
+ if(!p1)why.push(`Gate 1 is missed on ${miss(g1)}`);
+ if(!p2)why.push(`Gate 2 is missed on ${miss(g2)}`);
+ let v=!okI||m.npv<0?["no","Do not proceed as is"]:!fits||!bud?["no","Over budget"]:okP&&p1&&p2?["ok","Proceed"]:["wn","Proceed with conditions"];
+ if(s[8]&&v[0]==="ok")v=["wn","Check the numbers first"];
+ const on=JSON.stringify(st)===JSON.stringify({fill:S.fill,days:S.days,sc:S.sc,alloc:S.alloc,opts:S.opts,coo:S.coo});
+ return{s,m,g1,g2,p1,p2,t1,t2,t3,bud,fits,okI,okP,why,v,on,miss,tag:s[1]==="—"?"":s[1]+" · "};
+}
+function scHow(R){
+ const m=R.m,w=R.v[1];
+ if(w==="Over budget")return "Do not ask the Board for this as it stands. Re-phase or drop spend until months 9, 21 and 36 sit inside ₹34 Cr, ₹92 Cr and ₹150 Cr, then bring it back.";
+ if(w==="Do not proceed as is")return "Do not ask for the full ₹150 Cr. Release tranche 1 only (₹34 Cr) for the moves that need no new software: the Flow Contract, Plant C and the production wheel, the portfolio clean-up and the quick-commerce lane. Measure for nine months and re-test at Gate 1.";
+ if(w==="Check the numbers first")return "Do not take this figure to the Board as it stands. Decide on the base case, treat this one as a sensitivity, and ask the model owner to fix the input first (see the note above).";
+ if(w==="Proceed")return "Release tranche 1 (₹34 Cr) now. Gate 1 at month 9 releases ₹58 Cr and Gate 2 at month 22 releases the last ₹58 Cr. Keep the weekly rhythm and the early warnings running.";
+ const bits=[];
+ if(!R.okP)bits.push(`payback of ${m.pb?f1(m.pb)+" months":"over 60 months"} against the 30-month limit: agree to accept it, or cut the slowest-payback spend (the master-data tail and replenishment wave 3)`);
+ if(!R.p1)bits.push(`Gate 1 is missed on ${R.miss(R.g1)}: hold replenishment and master data until it is re-tested`);
+ if(!R.p2)bits.push(`Gate 2 is missed on ${R.miss(R.g2)}: agree the fix before month 9 and fund the tail from run-rate benefit if it is missed`);
+ return "Release tranche 1 (₹34 Cr) only, and settle these with the Board first: "+bits.join("; ")+".";
+}
 function renderScenarios(){
- const cur=JSON.stringify({fill:S.fill,days:S.days,sc:S.sc,alloc:S.alloc,opts:S.opts,coo:S.coo});
- const cols=SCENARIOS.map(([k,l,n,p])=>{const st=scnState(p),m=model({fill:st.fill,days:st.days,sc:st.sc,alloc:st.alloc,opts:st.opts,coo:st.coo});
-  const g1=m.g9.fill>=89&&m.g9.days<=43&&m.g9.ebitda>=22,g2=m.g22.fill>=92&&m.g22.days<=38&&m.g22.ebitda>=70&&m.g22.wc>=170,bud=m.cs9<=34+1e-6&&m.cs21<=92+1e-6&&m.cs36<=150+1e-6;
-  const good=m.irr!=null&&m.irr>=.18&&m.pb!=null&&m.pb<=30,fits=m.sv.cost<=150;
-  return{k,l,n,m,g1,g2,bud,fits,on:JSON.stringify(st)===cur,v:!fits||!bud?["no","Over budget"]:good&&g1&&g2?["ok","Proceed"]:good?["wn","Proceed, re-test the weak point"]:["no","Do not proceed as is"]};});
+ const R=SCEN.map(scEval),by=k=>R.find(r=>r.s[0]===k),cur=by(scSel)||R[0],base=by("rec");
+ $("scCount").textContent=R.length+" scenarios · "+R.filter(r=>r.v[0]==="ok").length+" proceed";
+ $("scPick").innerHTML=SGROUPS.map(([g,n,d])=>`<div class="pickgrp"><div class="lab">${n}${d?`<small>${d}</small>`:""}</div><div class="chips">${R.filter(r=>r.s[3]===g).map(r=>`<button class="pill" type="button" data-pick="${r.s[0]}" aria-pressed="${r.s[0]===cur.s[0]}">${r.tag}${esc(r.s[2])}</button>`).join("")}</div></div>`).join("");
+ const m=cur.m,s=cur.s,dI=m.irr!=null&&base.m.irr!=null&&!m.nm?(m.irr-base.m.irr)*100:null,dP=m.pb!=null&&base.m.pb!=null?m.pb-base.m.pb:null,dN=m.npv-base.m.npv;
+ const sgn=(x,u)=>(x>=0?"+":"−")+f1(Math.abs(x))+u;
+ const gr=(n,val,need,ok)=>`<tr><td>${n}</td><td class="n">${need}</td><td class="n">${val}</td><td>${ok?chip("ok","Pass"):chip("no","Miss")}</td></tr>`;
+ const tb=`<div class="tbl"><table><thead><tr><th>Test</th><th class="n">Need</th><th class="n">This scenario</th><th></th></tr></thead><tbody>`+
+  gr("Gate 1 · fill-rate",f1(m.g9.fill)+"%","≥ 89%",cur.g1[0][1])+gr("Gate 1 · inventory days",f1(m.g9.days),"≤ 43",cur.g1[1][1])+gr("Gate 1 · EBITDA",cr(m.g9.ebitda),"≥ ₹22 Cr",cur.g1[2][1])+
+  gr("Gate 2 · fill-rate",f1(m.g22.fill)+"%","≥ 92%",cur.g2[0][1])+gr("Gate 2 · inventory days",f1(m.g22.days),"≤ 38",cur.g2[1][1])+gr("Gate 2 · EBITDA",cr(m.g22.ebitda),"≥ ₹70 Cr",cur.g2[2][1])+gr("Gate 2 · working capital",cr(m.g22.wc),"≥ ₹170 Cr",cur.g2[3][1])+
+  gr("Spend by month 9",cr(m.cs9),"≤ ₹34 Cr",cur.t1)+gr("Spend by month 21",cr(m.cs21),"≤ ₹92 Cr",cur.t2)+gr("Spend by month 36",cr(m.cs36),"≤ ₹150 Cr",cur.t3)+`</tbody></table></div>`;
+ $("scDetail").innerHTML=`<div class="panel scn"><div class="scn-head"><h2>${cur.tag}${esc(s[2])}</h2>${chip(cur.v[0],cur.v[1])}${cur.on?chip("nt","Loaded in the app"):""}</div>
+  <p><b>What changes:</b> ${esc(s[4])}. <span style="color:var(--ink2)">${esc(s[5])}</span></p>
+  ${s[8]?`<div class="callout warn">${esc(s[8])}</div>`:""}
+  <div class="kpis">${kpi("5-year return (IRR)",m.nm?">500%":pct1(m.irr),dI==null?"needs at least 18%":sgn(dI," pts vs base"),cur.okI?"":"bad")+kpi("Money back",m.pb?f1(m.pb)+" mo":">60 mo",dP==null?"limit is 30 months":sgn(dP," mo vs base"))+kpi("Value created (NPV)",cr(m.npv),sgn(dN," vs base"))+kpi("Spend in 36 months",cr(m.cs36),"of ₹150 Cr")+kpi("Most cash out at once",cr(m.peak),"peak funding need")+kpi("Yearly gain at steady state",cr(m.ss),"net of running costs")}</div>
+  <div class="grid g2"><div class="stack"><div><h3 style="margin-bottom:8px">Gates and tranches</h3>${tb}</div></div>
+  <div class="stack"><div><h3 style="margin-bottom:8px">What breaks</h3>${cur.why.length?`<ul>${cur.why.map(w=>`<li>${esc(w)}</li>`).join("")}</ul>`:`<div class="callout good">Nothing breaks. Both hurdles, both gates and all three tranches hold.</div>`}</div>
+  <div><h3 style="margin-bottom:8px">Challenge it</h3><p style="color:var(--ink2);font-size:14px">${esc(s[6])}</p></div>
+  <div><h3 style="margin-bottom:8px">When and how to proceed</h3><div class="callout ${cur.v[0]==="ok"?"good":cur.v[0]==="wn"?"warn":"bad"}">${esc(scHow(cur))}</div></div></div></div>
+  <div class="scn-act"><button type="button" class="primary" data-load="${s[0]}">Use this scenario in the app</button><span class="note">Loads these settings into every page: targets, budget, returns, gates and early warnings.</span></div></div>`;
  const pf=x=>x?chip("ok","Pass"):chip("no","Miss");
- const row=(lab,f)=>`<tr><td>${lab}</td>${cols.map(c=>`<td class="n">${f(c)}</td>`).join("")}</tr>`;
- $("scTable").innerHTML=`<table><thead><tr><th></th>${cols.map(c=>`<th class="n"><div>${c.l} · ${c.n}</div>${c.on?`<span class="chip ok cur">Current</span>`:""}</th>`).join("")}</tr></thead><tbody>`+
-  row("National fill",c=>f1(c.m.sv.nat)+"%")+row("Network days",c=>f1(c.m.sv.natDays))+row("3-year cost of service",c=>cr(c.m.sv.cost))+row("Return (5-year IRR)",c=>pct1(c.m.irr))+row("Money back",c=>c.m.pb?f1(c.m.pb)+" mo":">60 mo")+row("Value created (NPV)",c=>cr(c.m.npv))+row("Spend by month 9",c=>cr(c.m.cs9))+row("Gate 1 (plan)",c=>pf(c.g1))+row("Gate 2 (plan)",c=>pf(c.g2))+row("Spend within tranches",c=>pf(c.bud))+row("Cost of service within ₹150 Cr",c=>pf(c.fits))+row("Verdict",c=>chip(c.v[0],c.v[1]))+row("",c=>`<button type="button" data-load="${c.k}">Use this</button>`)+`</tbody></table>`;
+ $("scTable").innerHTML=`<table><thead><tr><th>Scenario</th><th class="n">IRR</th><th class="n">Payback</th><th class="n">NPV</th><th class="n">Spend, 36 mo</th><th>Gate 1</th><th>Gate 2</th><th>Verdict</th></tr></thead><tbody>`+R.map(r=>`<tr data-pick="${r.s[0]}" class="${r.s[0]===cur.s[0]?"sel":""}"><td class="nm"><b>${r.tag}${esc(r.s[2])}</b>${r.on?` ${chip("nt","Loaded")}`:""}<small>${esc(r.s[4])}</small></td><td class="n">${r.m.nm?">500%":pct1(r.m.irr)}${r.s[8]?" *":""}</td><td class="n">${r.m.pb?f1(r.m.pb)+" mo":">60 mo"}</td><td class="n">${cr(r.m.npv)}</td><td class="n">${f1(r.m.cs36)}</td><td>${pf(r.p1)}</td><td>${pf(r.p2)}</td><td>${chip(r.v[0],r.v[1])}</td></tr>`).join("")+`</tbody></table><p class="note" style="margin-top:8px">* Check this one: see the note when you open it. Hurdles: IRR at least 18%, payback within 30 months.</p>`;
  const hi=alerts().filter(a=>a.sev==="high"),dn=["release","charter","owner"].filter(k=>S.todo&&S.todo[k]).length;
  $("scNext").innerHTML=`<div class="callout ${hi.length?"bad":"good"}">${hi.length?`<b>Fix first:</b> ${esc(hi[0].title)}. ${esc(hi[0].act)}`:dn<3?`<b>Next 30 days:</b> finish the launch checklist (${dn} of 3 done): release the first tranche, sign the Day-0 measurement charter and name the Flow Owner.`:`<b>On track.</b> Keep the weekly rhythm going and watch the early warnings.`}</div>`;
  const ph=(months,title,steps,tail)=>`<div class="phase"><span class="note">${months}</span><h3>${title}</h3><ul>${steps.map(s=>`<li>${s}</li>`).join("")}</ul>${tail}</div>`;
@@ -2014,7 +2120,9 @@ function renderScenarios(){
   ph("Months 10–22","Scale it",["Roll out replenishment in North and West in three waves","Fix master data first and run the Stock Identity Check every week"],gate("Gate 2 · month 22",G.g2,G.p2,"Gate 2 passes. Tranche 3 (₹58 Cr) is released at month 22.","Gate 2 is missed. Tranche 3 lapses; fund the tail from run-rate benefit and withhold the 30% vendor retention."))+
   ph("Months 23–36","Extend",["Decide the national replenishment extension at month 24 using the wave read-outs","Keep payback inside 30 months and fold the weekly rhythm into business as usual"],`<h4>Where this lands</h4><div class="callout ${M.irr>=.18&&M.pb&&M.pb<=30?"good":"bad"}">Return ${pct(M.irr)} · money back ${M.pb?f1(M.pb)+" months":"after 60 months"} · value created ${cr(M.npv)}.</div>`);
 }
-$("scTable").addEventListener("click",e=>{const b=e.target.closest("[data-load]");if(b)loadScenario(b.dataset.load);});
+$("scDetail").addEventListener("click",e=>{const b=e.target.closest("[data-load]");if(b)loadScenario(b.dataset.load);});
+$("scPick").addEventListener("click",e=>{const b=e.target.closest("[data-pick]");if(b){scSel=b.dataset.pick;renderScenarios();}});
+$("scTable").addEventListener("click",e=>{const r=e.target.closest("[data-pick]");if(r){scSel=r.dataset.pick;renderScenarios();$("scPick").scrollIntoView({block:"start"});}});
 /* ---------- boot ---------- */
 recalcCore();
 {const h=location.hash.slice(1);S.view=VIEWS.some(v=>v[0]===h)?h:"overview";if(S.view!=="overview")S.last=S.view;}
