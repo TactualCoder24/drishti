@@ -436,6 +436,53 @@ a.fn:hover{background:var(--neel-soft)}
   .week .d{font-size:10px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ---- overhaul: cockpit, finance, delivery ---- */
+.why{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.why>div{background:var(--sheet);border:1px solid var(--rule);border-left:4px solid var(--neel);border-radius:6px;padding:16px;display:flex;flex-direction:column;gap:6px}
+.why b{font-family:var(--f-head);font-stretch:90%;font-size:17px;color:var(--neel-ink)}
+.why span{font-size:14px;color:var(--ink2);line-height:1.55}
+@media (max-width:1100px){.why{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.why{grid-template-columns:minmax(0,1fr)}}
+.status{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:center;border-radius:8px;padding:16px 20px;border:1px solid var(--rule);background:var(--sheet)}
+.status .st{font-family:var(--f-head);font-stretch:85%;font-weight:750;font-size:22px}
+.status.g{border-left:6px solid var(--good)} .status.a{border-left:6px solid var(--warn)} .status.r{border-left:6px solid var(--bad)}
+.status .sub{color:var(--ink2);font-size:14px;flex:1;min-width:240px}
+.rag .kpi{position:relative}
+.rag .kpi::after{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--rc,transparent)}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--rc,var(--rule2));vertical-align:middle;margin-right:6px}
+.rg{--rc:var(--good)} .ra{--rc:var(--warn)} .rr{--rc:var(--bad)} .rn{--rc:var(--rule2)}
+.ed{width:84px!important;padding:5px 7px!important;font-size:13.5px!important;text-align:right;background:#F2F6FF!important;border-color:#B9C8F0!important}
+.ed.chg{background:#FFF6DA!important;border-color:var(--warn)!important}
+.ed.bad{border-color:var(--bad)!important;background:var(--bad-soft)!important}
+td.ed-c{padding:5px 6px!important}
+.minis{font-size:12px;color:var(--mute)}
+.grid-map td{text-align:center;font-weight:600;font-variant-numeric:tabular-nums;border:2px solid var(--sheet)}
+.grid-map td.mg{background:var(--good-soft);color:var(--good)} .grid-map td.my{background:var(--warn-soft);color:var(--warn)} .grid-map td.mr{background:var(--bad-soft);color:var(--bad)}
+.grid-map td.base{outline:3px solid var(--ink);outline-offset:-3px}
+.grid-map th{text-align:center}
+.vrow-act{display:flex;gap:6px;flex-wrap:wrap}
+.vrow-act button{padding:4px 10px;font-size:12.5px;min-height:30px}
+.logl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.logl li{display:grid;grid-template-columns:120px 150px minmax(0,1fr);gap:10px;padding:9px 0;border-bottom:1px solid var(--rule);font-size:13.5px;align-items:baseline}
+.logl li .k{font-size:12px;font-weight:700;color:var(--neel)}
+.logl li .w{color:var(--mute);font-size:12.5px}
+@media (max-width:820px){.logl li{grid-template-columns:minmax(0,1fr)}}
+.ms-grp{border-top:1px solid var(--rule);padding:12px 0}
+.ms-grp:first-child{border-top:none}
+.ms-grp h3{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:15px}
+.ms-row{display:grid;grid-template-columns:minmax(0,1fr) 90px 140px minmax(0,1fr);gap:10px;align-items:center;padding:6px 0;font-size:13.5px}
+.ms-row select,.ms-row input{font-size:13px}
+@media (max-width:820px){.ms-row{grid-template-columns:minmax(0,1fr) 80px}.ms-row .note-in{grid-column:1/-1}}
+.raci td{text-align:center;font-weight:700} .raci td:first-child{text-align:left;font-weight:500}
+.raci .R{color:var(--neel)} .raci .A{color:var(--bad)} .raci .AR{color:var(--bad)} .raci .C{color:var(--ink2)} .raci .I{color:var(--mute);font-weight:500}
+.bannerv{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;padding:12px 16px;border-radius:6px;background:var(--neel-soft);border:1px solid #C9D3F0;font-size:14px}
+.bannerv.draft{background:var(--warn-soft);border-color:#EBD5A6}
+.bannerv b{font-weight:700}
+#ckKpis{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:820px){#ckKpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+#fmIni td:first-child,#fmCapex td:first-child,#fcTable td:first-child{min-width:170px}
+.delta{font-size:12.5px;font-weight:600} .delta.up{color:var(--good)} .delta.dn{color:var(--bad)}
 </style>
 
 <div class="shell">
@@ -471,13 +518,13 @@ a.fn:hover{background:var(--neel-soft)}
 
       <!-- LANDING (overview) -->
       <section class="view" id="v-overview">
-        <div class="landbar"><div class="brand"><b>DRISHTI</b><span>ACPL supply chain programme</span></div><a class="btn js-dash" href="#diagnosis">Open dashboard</a></div>
+        <div class="landbar"><div class="brand"><b>DRISHTI</b><span>ACPL supply chain programme</span></div><a class="btn js-dash" href="#cockpit">Open dashboard</a></div>
         <div class="hero">
           <div class="hero-txt">
             <span class="hero-eye">ACPL supply chain control room</span>
             <h1 class="hero-h">Serve every order on time without filling warehouses</h1>
             <p class="hero-p">Set service targets, control the ₹150 Cr budget, and run each week's numbers, orders and decisions in one place.</p>
-            <div class="hero-cta"><a class="btn primary js-dash" href="#diagnosis">Open dashboard</a><a class="btn" href="#inputs">Enter this week's numbers</a></div>
+            <div class="hero-cta"><a class="btn primary js-dash" href="#cockpit">Open dashboard</a><a class="btn" href="#inputs">Enter this week's numbers</a></div>
           </div>
           <div class="hero-card" aria-label="Live plan snapshot">
             <span class="hc-l">Plan right now</span>
@@ -489,11 +536,24 @@ a.fn:hover{background:var(--neel-soft)}
           </div>
         </div>
 
+        <div class="sec-h"><h2>Why ACPL runs the programme here, not in emailed spreadsheets</h2><p class="note">The 2022 platform and the 2023 S&amp;OP reset both lapsed because targets, incentives and follow-up never changed. This control room makes the follow-up visible.</p></div>
+        <div class="why">
+          <div><b>One set of numbers</b><span>Finance edits the model here. The cockpit, gates, scenarios and budget all read the same version, so no meeting starts with "which file is right?"</span></div>
+          <div><b>Money released on proof</b><span>Each tranche moves only after Finance certifies, Audit verifies and the Board signs, with every step recorded against frozen Day-0 numbers.</span></div>
+          <div><b>An owner for everything</b><span>Every initiative, milestone, risk, decision and action has a named team. Late items show up under that team, not in a shared inbox.</span></div>
+          <div><b>Warnings before damage</b><span>The 17 risk triggers from the model are checked against live numbers, so a thin gate or a slipping wave is flagged months before the Board meets.</span></div>
+          <div><b>Decisions with their evidence</b><span>Each decision stores the return, payback, spend and gate status it was based on, so the Board can see what it knew at the time.</span></div>
+          <div><b>A weekly rhythm, not a quarterly scramble</b><span>Teams enter one truth pack every Monday; the Flow Council decides on Tuesday from the same screen. Decisions move from quarterly to weekly.</span></div>
+        </div>
+
         <div class="sec-h"><h2>How it works</h2><p class="note">Teams enter numbers on the input screens. The dashboard shows the results. You never type on the dashboard.</p></div>
         <div class="grid g2">
           <div class="panel howp in">
             <header><h2><span class="kd in">Input</span>Where you enter data</h2></header>
             <ul class="howl">
+              <li><a href="#fmodel">Finance model</a><span>Assumptions, initiative parameters and cost phasing; versions and sign-off</span></li>
+              <li><a href="#initiatives">Initiative tracker</a><span>Actual spend and milestone status for each initiative</span></li>
+              <li><a href="#decisions">Decision log</a><span>Approve, reject or defer decisions, with the numbers attached</span></li>
               <li><a href="#inputs">Weekly team inputs</a><span>Each team's numbers for the week</span></li>
               <li><a href="#orders">Orders to plants</a><span>Raise requests, commit and move orders</span></li>
               <li><a href="#council">Team chat and actions</a><span>Messages and the council's action list</span></li>
@@ -506,6 +566,9 @@ a.fn:hover{background:var(--neel-soft)}
           <div class="panel howp out">
             <header><h2><span class="kd out">Dashboard</span>What you read</h2></header>
             <ul class="howl">
+              <li><a href="#cockpit">Cockpit</a><span>Board view: status, KPIs against target, decisions, gates, risks and who is behind</span></li>
+              <li><a href="#fcash">Cash flow and sensitivity</a><span>Quarterly cash flow, survival map, break-evens</span></li>
+              <li><a href="#owners">Who owns what</a><span>Responsibility chart and live owner scorecard</span></li>
               <li><a href="#manager">Manager dashboard</a><span>Requests, cannot-fill rate, gates, who has sent numbers</span></li>
               <li><a href="#diagnosis">What is going wrong</a><span>The diagnosis behind the plan</span></li>
               <li><a href="#alerts">Early warnings</a><span>Problems spotted before they hurt, each with an owner</span></li>
@@ -996,12 +1059,12 @@ a.fn:hover{background:var(--neel-soft)}
       <section class="view" id="v-risks" hidden>
         <div class="crumbs">Control tower · Risk register</div>
         <h1>Name the risk, give it an owner</h1>
-        <p class="lede">Log what could go wrong, who owns it and how it will be handled. High risks that are still open show up in the early warnings.</p>
+        <p class="lede">The financial model names 17 risks, each with a trigger, a live metric, a mitigation and a contingency. Load them, add your own, and keep the status current. High risks (score 15 or more) that are still open show up in the early warnings and on the cockpit.</p>
         <div style="height:22px"></div>
         <div class="kpis" id="rkKpis"></div>
         <div style="height:22px"></div>
         <div class="panel">
-          <header><h2>Risks</h2><div class="tools"><button type="button" id="rkLoad" class="ghost">Load plan risks</button></div></header>
+          <header><h2>Risks</h2><div class="tools"><button type="button" id="rkLoad" class="ghost">Load the model's 17 risks</button></div></header>
           <div class="tbl" id="rkTable"></div>
         </div>
         <div style="height:22px"></div>
@@ -1010,8 +1073,8 @@ a.fn:hover{background:var(--neel-soft)}
           <form id="rkForm" class="stack">
             <div class="formgrid">
               <label class="f">Owner<select id="rkOwner"></select></label>
-              <label class="f">Likelihood<select id="rkL"><option value="1">Low</option><option value="2" selected>Medium</option><option value="3">High</option></select></label>
-              <label class="f">Impact<select id="rkI"><option value="1">Low</option><option value="2" selected>Medium</option><option value="3">High</option></select></label>
+              <label class="f">Likelihood (1–5)<select id="rkL"><option value="1">1 Very low</option><option value="2">2 Low</option><option value="3" selected>3 Medium</option><option value="4">4 High</option><option value="5">5 Very high</option></select></label>
+              <label class="f">Impact (1–5)<select id="rkI"><option value="1">1 Very low</option><option value="2">2 Low</option><option value="3" selected>3 Medium</option><option value="4">4 High</option><option value="5">5 Very high</option></select></label>
             </div>
             <label class="f">What could go wrong<input id="rkTitle" type="text" maxlength="120" required placeholder="e.g. Plant C output is late"></label>
             <label class="f">How we will handle it<input id="rkMit" type="text" maxlength="160" placeholder="e.g. Move the load to Plant H"></label>
@@ -1045,6 +1108,189 @@ a.fn:hover{background:var(--neel-soft)}
         <div class="panel"><header><h2>What to do next</h2><small>for your current settings</small></header><div id="scNext"></div></div>
         <div style="height:22px"></div>
         <div class="phases" id="scPhases"></div>
+      </section>
+
+      <!-- COCKPIT -->
+      <section class="view" id="v-cockpit" hidden>
+        <div class="crumbs">Cockpit · Board view</div>
+        <h1>Is the programme on track, and what needs a decision?</h1>
+        <p class="lede">One screen for the CEO, CFO and Board. Every number is live from the finance model, the delivery tracker and this week's team inputs.</p>
+        <div style="height:18px"></div>
+        <div id="ckStatus"></div>
+        <div style="height:18px"></div>
+        <div class="kpis rag" id="ckKpis"></div>
+        <div style="height:22px"></div>
+        <div class="grid g2">
+          <div class="panel"><header><h2>Decisions waiting</h2><small><a href="#decisions">Decision log</a></small></header><div id="ckDec"></div></div>
+          <div class="panel"><header><h2>Gate readiness</h2><small><a href="#approvals">Gate approvals</a></small></header><div id="ckGates"></div></div>
+        </div>
+        <div style="height:22px"></div>
+        <div class="grid g2">
+          <div class="panel"><header><h2>Initiatives</h2><small><a href="#initiatives">Initiative tracker</a></small></header><div id="ckInit"></div></div>
+          <div class="panel"><header><h2>Top risks and warnings</h2><small><a href="#risks">Risk register</a></small></header><div id="ckRisk"></div></div>
+        </div>
+        <div style="height:22px"></div>
+        <div class="grid g2">
+          <div class="panel"><header><h2>Programme feasibility tests</h2><small>live from the model</small></header><div id="ckFeas"></div></div>
+          <div class="panel"><header><h2>Since the approved baseline</h2><small><a href="#fver">Versions</a></small></header><div id="ckBase"></div></div>
+        </div>
+        <div style="height:22px"></div>
+        <div class="panel"><header><h2>Who is behind</h2><small><a href="#owners">Who owns what</a></small></header><div id="ckOwners"></div></div>
+      </section>
+
+      <!-- DECISION LOG -->
+      <section class="view" id="v-decisions" hidden>
+        <div class="crumbs">Cockpit · Decision log</div>
+        <h1>Decisions, with the numbers they were based on</h1>
+        <p class="lede">Every decision records who took it, when, why, and the return, payback, spend and gate status at that moment. Trigger decisions come due at the month the plan set for them.</p>
+        <div style="height:22px"></div>
+        <div class="kpis" id="dcKpis"></div>
+        <div style="height:22px"></div>
+        <div class="panel"><header><h2>Decisions</h2><small id="dcSub"></small></header><div class="tbl" id="dcTable"></div></div>
+        <div style="height:22px"></div>
+        <div class="panel">
+          <header><h2>Add a decision</h2></header>
+          <form id="dcForm" class="stack">
+            <div class="formgrid">
+              <label class="f">Decision owner<select id="dcOwner"></select></label>
+              <label class="f">Due at programme month<input id="dcDue" type="number" min="0" max="60" step="1" value="0"></label>
+            </div>
+            <label class="f">Decision needed<input id="dcTitle" type="text" maxlength="140" required placeholder="e.g. Move wave 2 forward to month 12"></label>
+            <label class="f">Why it is needed<input id="dcWhy" type="text" maxlength="200" placeholder="e.g. Month-7 fill below 88%"></label>
+            <div class="tools"><button class="primary" type="submit">Add decision</button><span class="note" id="dcMsg"></span></div>
+          </form>
+        </div>
+      </section>
+
+      <!-- FINANCE: ASSUMPTIONS -->
+      <section class="view" id="v-fmodel" hidden>
+        <div class="crumbs">Finance · Assumptions</div>
+        <h1>The financial model, run here by Finance</h1>
+        <p class="lede">These are the inputs of Project_Drishti_Financial_Model.xlsx. Change any of them and every page updates: returns, gates, scenarios and the cockpit. Each change is logged with your team and the time.</p>
+        <div style="height:18px"></div>
+        <div id="fmBanner"></div>
+        <div style="height:18px"></div>
+        <div class="kpis" id="fmKpis"></div>
+        <div style="height:22px"></div>
+        <div class="panel">
+          <header><h2>Programme assumptions</h2><div class="tools"><button type="button" class="ghost" id="fmResetAll">Reset all to base</button></div></header>
+          <div class="tbl" id="fmGlobal"></div>
+        </div>
+        <div style="height:22px"></div>
+        <div class="panel">
+          <header><h2>Initiative parameters</h2><small>per funded initiative; blue cells are inputs</small></header>
+          <div class="tbl" id="fmIni"></div>
+          <p class="note">Realisation is the share of the pilot effect achieved at scale. Fill points and inventory days are national gross effects before realisation. Run costs are ₹ Cr a year.</p>
+        </div>
+        <div style="height:22px"></div>
+        <div class="panel">
+          <header><h2>Cost phasing by quarter</h2><small>₹ Cr, capex before contingency</small></header>
+          <div class="tbl" id="fmCapex"></div>
+        </div>
+      </section>
+
+      <!-- FINANCE: CASH FLOW -->
+      <section class="view" id="v-fcash" hidden>
+        <div class="crumbs">Finance · Cash flow</div>
+        <h1>Quarter by quarter: what is certified, spent and returned</h1>
+        <p class="lede">The same 20-quarter cash flow as the workbook's Cashflow tab, recalculated from the current assumptions, budget and targets.</p>
+        <div style="height:22px"></div>
+        <div class="kpis" id="fcKpis"></div>
+        <div style="height:22px"></div>
+        <div class="panel"><header><h2>Cash flow</h2><small>₹ Cr per quarter</small></header><div class="tbl" id="fcTable"></div></div>
+        <div style="height:22px"></div>
+        <div class="panel"><header><h2>KPI trajectory</h2><small>the workbook's Gates tab, every 3 months</small></header><div class="tbl" id="fcGates"></div></div>
+      </section>
+
+      <!-- FINANCE: SENSITIVITY -->
+      <section class="view" id="v-fsens" hidden>
+        <div class="crumbs">Finance · Sensitivity</div>
+        <h1>Where the plan breaks, and what protects it</h1>
+        <p class="lede">Each cell re-runs the full model. Green means payback inside 30 months with every gate test passing; yellow means payback holds but a gate fails; red means payback is beyond 30 months.</p>
+        <div style="height:22px"></div>
+        <div class="grid g-wide">
+          <div class="panel"><header><h2>Survival map</h2><small>payback in months</small></header><div class="tbl" id="fsMap"></div>
+            <div class="legend"><span class="sq" style="--c:var(--good-soft)">Payback ≤30, all gates pass</span><span class="sq" style="--c:var(--warn-soft)">Payback ≤30, a gate fails</span><span class="sq" style="--c:var(--bad-soft)">Payback over 30</span></div></div>
+          <div class="stack">
+            <div class="panel"><header><h2>Monthly certification</h2><small>payback, months</small></header><div class="tbl" id="fsCert"></div></div>
+            <div class="panel"><header><h2>Break-evens</h2><small>payback exactly 30 months</small></header><div class="tbl" id="fsBrk"></div></div>
+          </div>
+        </div>
+        <div style="height:22px"></div>
+        <div class="panel"><header><h2>Leave one out</h2><small>what each funded lever is worth</small></header><div class="tbl" id="fsLoo"></div></div>
+        <div style="height:22px"></div>
+        <div class="panel"><header><h2>Disputed numbers and tripwires</h2><small>our call, and what would change it</small></header><div class="tbl" id="fsDisp"></div></div>
+      </section>
+
+      <!-- FINANCE: VERSIONS -->
+      <section class="view" id="v-fver" hidden>
+        <div class="crumbs">Finance · Versions and sign-off</div>
+        <h1>One approved version of the numbers</h1>
+        <p class="lede">Finance saves a version and submits it. Audit and Board approve it as the baseline or send it back. The approved baseline is frozen; every later change is measured against it.</p>
+        <div style="height:22px"></div>
+        <div class="grid g2">
+          <div class="panel">
+            <header><h2>Save the current model</h2></header>
+            <form id="fvForm" class="stack">
+              <label class="f">Version name<input id="fvName" type="text" maxlength="80" required placeholder="e.g. Day-0 baseline, Board pack October"></label>
+              <label class="f">What changed and why<input id="fvNote" type="text" maxlength="200" placeholder="e.g. Monthly certification agreed with the auditor"></label>
+              <div class="tools"><button class="primary" type="submit">Save version</button><span class="note" id="fvMsg"></span></div>
+            </form>
+          </div>
+          <div class="panel">
+            <header><h2>Excel</h2><small>work offline, then bring it back</small></header>
+            <p class="note">Download the model as an Excel file with assumptions, initiative parameters, cost phasing, budget, cash flow, gates, survival map and the change log. Edit the inputs in Excel and upload it to apply the changes here.</p>
+            <div class="tools"><button type="button" class="primary" id="fvExport">Download Excel</button><label class="btn" for="fvImport" style="cursor:pointer">Upload Excel</label><input type="file" id="fvImport" accept=".xlsx,.xls" hidden></div>
+            <span class="note" id="fvXmsg"></span>
+          </div>
+        </div>
+        <div style="height:22px"></div>
+        <div class="panel"><header><h2>Versions</h2><small id="fvSub"></small></header><div class="tbl" id="fvList"></div></div>
+        <div style="height:22px"></div>
+        <div class="panel">
+          <header><h2>Compare</h2><div class="tools"><select id="fvA" aria-label="First version"></select><span class="note">with</span><select id="fvB" aria-label="Second version"></select></div></header>
+          <div class="tbl" id="fvCmp"></div>
+        </div>
+        <div style="height:22px"></div>
+        <div class="panel"><header><h2>Change log</h2><small>model changes only; see the activity log for everything</small></header><div id="fvLog"></div></div>
+      </section>
+
+      <!-- DELIVERY: INITIATIVES -->
+      <section class="view" id="v-initiatives" hidden>
+        <div class="crumbs">Delivery · Initiative tracker</div>
+        <h1>Every rupee and milestone has an owner</h1>
+        <p class="lede">Budget against actual spend, milestones against the plan, and a status each owner can see. Finance enters actual spend; owners update their milestones.</p>
+        <div style="height:18px"></div>
+        <div class="panel"><div class="ctl"><label for="dlMonth">Programme month (today)</label><output id="dlMonthO"></output><input id="dlMonth" type="range" min="0" max="36" step="1"></div><p class="note">Month 0 is the Board approval. Late milestones and plan-to-date spend use this month.</p></div>
+        <div style="height:18px"></div>
+        <div class="kpis" id="dlKpis"></div>
+        <div style="height:22px"></div>
+        <div class="panel"><header><h2>Initiatives</h2><small>₹ Cr</small></header><div class="tbl" id="dlTable"></div></div>
+        <div style="height:22px"></div>
+        <div class="panel"><header><h2>Milestones</h2><small id="dlMsSub"></small></header><div id="dlMs"></div></div>
+      </section>
+
+      <!-- DELIVERY: OWNERS -->
+      <section class="view" id="v-owners" hidden>
+        <div class="crumbs">Delivery · Who owns what</div>
+        <h1>Clear owners, visible follow-through</h1>
+        <p class="lede">The responsibility chart says who does the work (R), who answers for it (A), who is consulted (C) and who is kept informed (I). The scorecard below shows, live, where each team stands.</p>
+        <div style="height:22px"></div>
+        <div class="panel"><header><h2>Owner scorecard</h2><small>live</small></header><div class="tbl" id="raScore"></div></div>
+        <div style="height:22px"></div>
+        <div class="panel"><header><h2>Responsibility chart</h2><small>R does · A answers for · C consulted · I informed</small></header><div class="tbl" id="raTable"></div></div>
+      </section>
+
+      <!-- DELIVERY: ACTIVITY LOG -->
+      <section class="view" id="v-log" hidden>
+        <div class="crumbs">Delivery · Activity log</div>
+        <h1>Who changed what, and when</h1>
+        <p class="lede">Model edits, versions, decisions, approvals, milestones, spend, scenarios and risks, newest first.</p>
+        <div style="height:22px"></div>
+        <div class="panel">
+          <header><h2>Activity</h2><div class="tools"><select id="lgTeam" aria-label="Filter by team"></select><select id="lgKind" aria-label="Filter by type"></select><button type="button" class="ghost" id="lgCsv">Download CSV</button></div></header>
+          <div id="lgList"></div>
+        </div>
       </section>
 
       <!-- MANAGER DASHBOARD -->
@@ -1121,7 +1367,7 @@ a.fn:hover{background:var(--neel-soft)}
   <div class="foot-wrap"><footer class="foot">
         <div class="foot-brand"><b>DRISHTI</b><span>Control room for ACPL's three-year supply chain programme. Truth, rhythm, then speed.</span></div>
         <div class="foot-col"><h3>The plan</h3><a href="#overview">Landing page</a><a href="#diagnosis">What is going wrong</a><a href="#service">Service targets</a><a href="#opmodel">New ways of working</a></div>
-        <div class="foot-col"><h3>Money and timing</h3><a href="#invest">Budget</a><a href="#returns">Returns and risk</a><a href="#gates">Timeline and gates</a></div>
+        <div class="foot-col"><h3>Money and timing</h3><a href="#cockpit">Cockpit</a><a href="#fmodel">Finance model</a><a href="#fver">Versions and sign-off</a><a href="#initiatives">Initiative tracker</a><a href="#decisions">Decision log</a><a href="#invest">Budget</a><a href="#returns">Returns and risk</a><a href="#gates">Timeline and gates</a></div>
         <div class="foot-col"><h3>Every week</h3><a href="#inputs">Weekly team inputs</a><a href="#orders">Orders to plants</a><a href="#council">Team chat and actions</a><a href="#manager">Manager dashboard</a><a href="#flow">Process flow</a></div>
         <details class="foot-note"><summary>About the numbers</summary><p>The model uses monthly cash flows over 60 months, values working capital at 11% a year, certifies benefits one quarter after delivery and treats pilot costs as sunk. Figures are estimates that you can test on the Returns and risk desk. Background: Lee, Padmanabhan &amp; Whang (1997) on demand distortion; precedents draw on Hammond (HBS), iSixSigma Asia, HUL (2018), Danone (vendor-reported) and DeHoratius &amp; Raman (2008); ACPL case Appendices 1–6 for the source data.</p></details>
       </footer></div>
@@ -1133,7 +1379,7 @@ a.fn:hover{background:var(--neel-soft)}
 (function(){
 "use strict";
 /* ---------- data ---------- */
-const VIEWS=[["overview","Overview"],["diagnosis","What is going wrong"],["service","Service targets"],["opmodel","New ways of working"],["invest","Budget"],["returns","Returns and risk"],["gates","Timeline and gates"],["inputs","Weekly team inputs"],["orders","Orders to plants"],["council","Team chat and actions"],["manager","Manager dashboard"],["flow","Process flow"],["alerts","Early warnings"],["risks","Risk register"],["approvals","Gate approvals"],["scenarios","Scenarios"]];
+const VIEWS=[["overview","Overview"],["diagnosis","What is going wrong"],["service","Service targets"],["opmodel","New ways of working"],["invest","Budget"],["returns","Returns and risk"],["gates","Timeline and gates"],["inputs","Weekly team inputs"],["orders","Orders to plants"],["council","Team chat and actions"],["manager","Manager dashboard"],["flow","Process flow"],["alerts","Early warnings"],["risks","Risk register"],["approvals","Gate approvals"],["scenarios","Scenarios"],["cockpit","Cockpit"],["decisions","Decision log"],["fmodel","Assumptions"],["fcash","Cash flow"],["fsens","Sensitivity"],["fver","Versions and sign-off"],["initiatives","Initiative tracker"],["owners","Who owns what"],["log","Activity log"]];
 const SEG={
  A:{act:"Last 3 points need A and H capacity (unfunded); 95% only on trigger",name:"Core high-volume",rev:3705,cur:86,curve:[[86,0],[92,24],[95,49],[97,88]],pp:[3.3,4.5],days:44,fg:395,max:97},
  B:{act:"Stop at 92%; 92 to 95% pays back in 3.5 years",name:"Mid and regional",rev:2021,cur:85,curve:[[85,0],[92,18],[95,41]],pp:[2.2,3.0],days:41,fg:236,max:95},
@@ -1176,7 +1422,7 @@ const PILOTS={
 };
 /* ---------- state ---------- */
 const DEF={view:"overview",last:"diagnosis",todo:{},fill:{...OURS.fill},days:{...OURS.days},ppMode:"low",alloc:Object.fromEntries(INITS.map(i=>[i.id,i.base])),opts:{},coo:false,
- mv:3,sc:{rec:40,real:100,delay:0,lag:3,over:10,cap:40,hair:10,day:"owned",wcb:"board",pools:"mid"},
+ fin:{g:{},ini:{},capex:{}},pm:0,mv:3,sc:{rec:40,real:100,delay:0,lag:3,over:10,cap:40,hair:10,day:"owned",wcb:"board",pools:"mid"},
  g1:{fill:"",days:"",ebitda:""},g2:{fill:"",days:"",ebitda:"",wc:""},
  om:{supply:85,skew:41,reg:[{n:"North",req:100,bias:14},{n:"West",req:110,bias:18},{n:"South",req:105,bias:2},{n:"East",req:70,bias:7},{n:"Central",req:50,bias:-1}]},
  region:"North",pilot:"C"};
@@ -1208,6 +1454,10 @@ function service(fill,days){
    and the optional extras scale it. WBOUT holds the workbook's own results, for reference. */
 const WB={"U":19.9911275782,"ini":[{"id":"flow","s":1,"d":8,"rho":0.65,"G":2,"H":5.9,"I":0.15,"J":0.3,"K":0,"L":0,"M":0,"N":0.55,"O":2,"P":0},{"id":"rep","s":10,"d":8,"rho":0.5,"G":5,"H":3.9,"I":0.4,"J":0.22,"K":0,"L":0,"M":0,"N":0.7,"O":4.4,"P":4.4},{"id":"plc","s":5,"d":8,"rho":0.6,"G":2,"H":1.2,"I":0.03,"J":0.1,"K":0,"L":0,"M":0,"N":1,"O":0.5,"P":0},{"id":"port","s":1,"d":9,"rho":0.8,"G":0.8,"H":1.7,"I":0.33,"J":0,"K":0,"L":0,"M":-9.9,"N":0.85,"O":0,"P":0},{"id":"qc","s":1,"d":4,"rho":0.8,"G":0.8,"H":-0.1,"I":0,"J":0,"K":3,"L":2.9,"M":0,"N":1,"O":0.5,"P":0},{"id":"sic","s":2,"d":9,"rho":0.5,"G":0.5,"H":0.5,"I":0.02,"J":0.05,"K":0,"L":0,"M":0,"N":0.25,"O":1.5,"P":0}],"capex":{"pmo":[0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5],"flow":[1,2,3,3,3,2.5,2,2,1.5,1.5,1.5,1],"mdm":[0.5,1,1.5,1.75,1.75,1.75,1.75,2.45,2.1,2.1,4.925,4.425],"rep":[0,0.5,1,2.45,3.15,3.15,1.75,2.8,2.1,5.2,5.2,4.7],"plc":[4,7,3.825,3.4,0.85,0.425,0.5,0.5,0,0,0.75,0.75],"port":[0.5,0.75,0.75,0.5,0.5,0.5,0.5,0,0,0,0,0],"qc":[0.5,0.5,0.5,0.5,0.5,0.5,0,0,0,0,0,0],"sic":[0.25,0.5,0.75,0.75,0.75,0.5,0.5,0.5,0.5,0.5,0.5,0]},"dip":[0,0,0.25,0.5,0.25,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"dipTotal":15.7137440385,"dayCogs":15.917260274,"restated":47.8614190687,"thr":{"g1":[0.89,43,22],"g2":[0.92,38,70,170]}};
 const WBOUT=[{"irr":0.8447957741,"pb":28.2024711457,"npv":79.1064606958,"spend":140.965625,"ss":77.9692528779},{"irr":0.6387136822,"pb":35.7147356293,"npv":55.7342788175,"spend":140.965625,"ss":68.2582847923},{"irr":1.6300132425,"pb":21.4707811756,"npv":158.8645466691,"spend":140.965625,"ss":111.2077815287},{"irr":0.4417239834,"pb":39.9458175998,"npv":32.3620969391,"spend":140.965625,"ss":58.5473167067},{"irr":0.2024545588,"pb":47.8535567471,"npv":2.8382973635,"spend":140.965625,"ss":46.524898138},{"irr":0.4578694336,"pb":39.3229385749,"npv":45.5676327407,"spend":138.545625,"ss":77.8283811031},{"irr":0.7129949766,"pb":33.4881249016,"npv":67.0244479313,"spend":155.8484375,"ss":76.6342528779},{"irr":0.6374352604,"pb":35.7593656107,"npv":55.8339030466,"spend":140.965625,"ss":68.4783084509},{"irr":0.5781251515,"pb":36.9780484314,"npv":48.9417985949,"spend":140.965625,"ss":65.6549485593},{"irr":1.137116341,"pb":24.6918890692,"npv":109.0030092332,"spend":140.965625,"ss":89.9283226545},{"irr":41.8841183309,"pb":6.1923791564,"npv":176.5688194192,"spend":140.965625,"ss":73.6141520983},{"irr":0.8454720574,"pb":28.1886879449,"npv":79.124433461,"spend":140.965625,"ss":77.9527232822},{"irr":null,"pb":null,"npv":-57.0652080062,"spend":153.0984375,"ss":31.6343256239},{"irr":1.0614785597,"pb":25.408660783,"npv":102.4786425742,"spend":140.965625,"ss":87.6802209635},{"irr":0.5121968,"pb":38.3065804232,"npv":40.9723790297,"spend":140.965625,"ss":62.247075508},{"irr":1.3321230636,"pb":22.7594895631,"npv":96.4122272305,"spend":140.965625,"ss":77.9692528779}];
+const WB0=JSON.parse(JSON.stringify(WB));
+const FIN0={decay:.05,coc:.11,hold:.035,disc:.18,obs:48,frt:34.5,day:26.7,dip:WB.dipTotal,own:1};
+function fin(k){const g=S.fin&&S.fin.g;return g&&g[k]!=null&&g[k]!==""&&isFinite(+g[k])?+g[k]:FIN0[k];}
+function applyFin(){const F=S.fin||{};WB.ini=WB0.ini.map(w=>Object.assign({},w,(F.ini||{})[w.id]||{}));for(const id in WB0.capex){const o=(F.capex||{})[id];WB.capex[id]=(o&&o.length===12?o:WB0.capex[id]).map(Number);}}
 const WBBRK={"rec": 38.8036038546, "real": 0.973314884, "delay": 0.969848902};
 function build(over){const sc=over||{};const P=Object.assign({},S.sc,sc.sc||{});
  const sv=service(sc.fill||S.fill,sc.days||S.days);const alloc=sc.alloc||S.alloc;const opts=sc.opts||S.opts;
@@ -1222,8 +1472,8 @@ function funding(alloc){
 }
 function levers(P){
  return{rec:P.rec/100,real:P.real/100,hair:P.hair/100,cap:P.cap/100,over:P.over/100,delay:P.delay,lagQ:P.lag/3,
-  day:P.day==="cogs"?WB.dayCogs:WB_DAY,own:P.day==="network"?OWN_ALL:1,cash:P.wcb==="cash",
-  obs:P.pools==="low"?44:48,frt:P.pools==="low"?31:34.5,coc:.11,hold:.035,decay:.05};
+  day:P.day==="cogs"?WB.dayCogs:fin("day"),own:P.day==="network"?OWN_ALL:fin("own"),cash:P.wcb==="cash",
+  obs:P.pools==="low"?44:fin("obs"),frt:P.pools==="low"?31:fin("frt"),coc:fin("coc"),hold:fin("hold"),decay:fin("decay"),disc:fin("disc")};
 }
 function benefitItems(L,fm,opts,coo,f,alloc){
  const it=[];
@@ -1243,7 +1493,7 @@ function engine(B){
  const mid=[],end=[];for(let q=1;q<=T;q++){mid[q]=it.map(x=>att(3*q-1.5,x));end[q]=it.map(x=>att(3*q,x));}
  const r41=[],r42=[],r43=[],r44=[],r45=[],r46=[];
  for(let q=1;q<=T;q++){const m=mid[q],k=dec(q)*(1-L.hair),ab=dot(m,"AB");
-  r41[q]=dot(m,"Z")/4*k;r42[q]=dot(m,"AC")/4;r43[q]=dot(m,"AA")/4*k;r44[q]=ab*L.hold/4*k;r45[q]=ab*.11/4*k;
+  r41[q]=dot(m,"Z")/4*k;r42[q]=dot(m,"AC")/4;r43[q]=dot(m,"AA")/4*k;r44[q]=ab*L.hold/4*k;r45[q]=ab*L.coc/4*k;
   r46[q]=dot(end[q].map((v,i)=>v-(q>1?end[q-1][i]:0)),"AB")*(1-L.hair);}
  const r49=L.cash?r46:r45,c43=sum(r43),c44=sum(r44);
  const fc=c43+c44<=0?1:Math.min(1,L.cap/(1-L.cap)*(sum(r41)+sum(r42)+sum(r49))/(c43+c44));
@@ -1255,10 +1505,10 @@ function engine(B){
  if(B.extra>0)for(let q=1;q<=12;q++)capex[q]+=B.extra/12*ov(q);
  for(const o of OPTS){if(!B.opts[o.id])continue;const nm=Math.max(1,o.e-o.s);for(let t=o.s+1;t<=o.e;t++){const q=Math.ceil(t/3);if(q<=T)capex[q]+=o.amt/nm*ov(q);}}
  for(let q=1;q<=T;q++)run[q]=q<=12?dot(mid[q],"runIn")/4*ov(q):runPost;
- const net=[],cumQ=[0];let c=0,pb=null;
- for(let q=1;q<=T;q++){const dip=L.dip*WB.dip[q-1]*(B.f.flow||0);net[q]=r51[q]-capex[q]-run[q]-dip;const prev=c;c+=net[q];cumQ[q]=c;
+ const net=[],cumQ=[0],dipA=new Array(T+1).fill(0);let c=0,pb=null;
+ for(let q=1;q<=T;q++){const dip=L.dip*WB.dip[q-1]*(B.f.flow||0);dipA[q]=dip;net[q]=r51[q]-capex[q]-run[q]-dip;const prev=c;c+=net[q];cumQ[q]=c;
   if(c>=0&&prev<0){const v=3*(q-1)+3*(-prev/net[q]);pb=pb==null?v:Math.min(pb,v);}}
- const npv=net.slice(1).reduce((a,v,i)=>a+v/Math.pow(1.18,(i+1)/4),0);
+ const npv=net.slice(1).reduce((a,v,i)=>a+v/Math.pow(1+L.disc,(i+1)/4),0);
  const nq=r=>{let s=0;for(let i=1;i<=T;i++)s+=net[i]/Math.pow(1+r,i);return s;};
  let irr=null,lo=-.99,hi=100;if(nq(lo)*nq(hi)<0){for(let k=0;k<200;k++){const m=(lo+hi)/2;nq(lo)*nq(m)<=0?hi=m:lo=m;}irr=Math.pow(1+(lo+hi)/2,4)-1;}else if(nq(lo)<=0)irr=-1;
  const sp=new Array(61).fill(0),cf=new Array(61).fill(0),cum=new Array(61).fill(0),ben=new Array(61).fill(0);
@@ -1267,13 +1517,14 @@ function engine(B){
  const gk=m=>{const a=it.map(x=>att(m,x)),sm=k=>{let s=0;for(let i=0;i<n;i++)s+=a[i]*it[i][k];return s;};
   const days=46-sm("h"),wo=sm("AB"),gross=(sm("Z")+sm("AA")+wo*L.hold)*(1-L.hair)+sm("AC");
   return{fill:86+sm("g"),days,ebitda:gross-(sm("run")+(m<=18?6:0)),wc:(46-days)*L.day,wcOwned:wo};};
- return{cf,cum,sp,ben,pb,irr,npv,nm:irr!=null&&irr>=5,g9:gk(9),g22:gk(22),gk,cs9:cs(9),cs21:cs(21),cs36:cs(36),total:cs(60),capBind:fc<1-1e-9,
+ const Qd={contrib:r41,cap:r42,av:r48,wc:r49,gross:r50,cert:r51,capex,run,dip:dipA,net,cum:cumQ,fc};
+ return{Q:Qd,cf,cum,sp,ben,pb,irr,npv,nm:irr!=null&&irr>=5,g9:gk(9),g22:gk(22),gk,cs9:cs(9),cs21:cs(21),cs36:cs(36),total:cs(60),capBind:fc<1-1e-9,
   peak:-Math.min(...cumQ),ss:(r50[12]-runPost)*4,avShare:(r48[12]+r41[12]+r42[12]+r49[12])>0?r48[12]/(r48[12]+r41[12]+r42[12]+r49[12]):0,
   build:{contrib:r41[12]*4,cc:r42[12]*4,wc:r49[12]*4,avGross:(r43[12]+r44[12])*4,avAfterHair:(r43[12]+r44[12])*4,av:r48[12]*4,lim:0}};
 }
 let DELW=null;
 function model(over){
- const B=build(over),P=B.P,sv=B.sv,L=levers(P);L.dip=WB.dipTotal;
+ applyFin();const B=build(over),P=B.P,sv=B.sv,L=levers(P);L.dip=fin("dip");
  const f=funding(B.alloc),fm={fill:REF.fillGain>0?sv.fillGain/REF.fillGain:1,days:REF.daysGain>0?sv.daysGain/REF.daysGain:1};
  const items=benefitItems(L,fm,B.opts,B.coo,f,B.alloc);
  const E=engine({L,items,f,alloc:B.alloc,opts:B.opts,shift:B.shift,extra:Math.max(0,sv.cost-REF.cost)});
@@ -1326,8 +1577,8 @@ function lineChart(el,o){
 }
 /* ---------- nav ---------- */
 const DASH=VIEWS.filter(v=>v[0]!=="overview");
-const GROUPS=[["Plan",["diagnosis","service","opmodel","invest","returns","gates"]],["Weekly run",["inputs","orders","council"]],["Control tower",["alerts","risks","approvals"]]];
-const TABS=[["Plan","diagnosis"],["Weekly run","inputs"],["Control tower","alerts"],["Manager dashboard","manager"],["Scenarios","scenarios"],["Process flow","flow"]];
+const GROUPS=[["Cockpit",["cockpit","decisions","manager"]],["Plan",["diagnosis","service","opmodel","invest","returns","gates"]],["Finance",["fmodel","fcash","fsens","fver"]],["Delivery",["initiatives","owners","log"]],["Weekly run",["inputs","orders","council","flow"]],["Control tower",["alerts","risks","approvals"]]];
+const TABS=[["Cockpit","cockpit"],["Plan","diagnosis"],["Finance","fmodel"],["Delivery","initiatives"],["Weekly run","inputs"],["Control tower","alerts"],["Scenarios","scenarios"]];
 const VN=Object.fromEntries(VIEWS);
 const KIND={
  diagnosis:["out","Dashboard","Read-only.","Explains what is going wrong. There is nothing to enter here."],
@@ -1344,12 +1595,21 @@ const KIND={
  alerts:["out","Dashboard","Early warnings.","Spotted before they hurt. Turn a warning into an action with an owner."],
  risks:["in","Input","Risk register.","Log risks, owners and how each will be handled. Change the status as work progresses."],
  approvals:["in","Input","Gate approvals.","Finance submits, Audit and Board verify and release. Every step is recorded."],
+ cockpit:["out","Dashboard","Board view.","Status, KPIs against target, decisions, gates, risks and who is behind. Nothing to type here."],
+ decisions:["in","Input","Decision log.","Approve, reject or defer. Each decision keeps the numbers it was based on."],
+ fmodel:["in","Input","Edit the model.","Finance changes assumptions here. Every change is logged and every page updates."],
+ fcash:["out","Dashboard","Cash flow.","Calculated from the assumptions. Change inputs on the Assumptions page."],
+ fsens:["out","Dashboard","Sensitivity.","Each cell re-runs the full model with the current assumptions."],
+ fver:["in","Input","Versions and sign-off.","Save, submit and approve versions. Download or upload the model as Excel."],
+ initiatives:["in","Input","Track delivery.","Finance enters actual spend; owners update milestone status."],
+ owners:["out","Dashboard","Accountability.","Who does what, and where each team stands this week."],
+ log:["out","Dashboard","Audit trail.","Every change in the app, newest first."],
  scenarios:["out","Dashboard","Compare scenarios.","Pick one of 18 scenarios from the financial model (v2), see the gates, tranches and what breaks, then load it into the app."]
 };
 function tabOf(v){const g=GROUPS.find(([,ids])=>ids.includes(v));return g?g[0]:(TABS.find(t=>t[1]===v)||TABS[0])[0];}
 function renderNav(){
  document.body.classList.toggle("landing",S.view==="overview");
- document.querySelectorAll(".js-dash").forEach(a=>a.setAttribute("href","#manager"));
+ document.querySelectorAll(".js-dash").forEach(a=>a.setAttribute("href","#cockpit"));
  const tab=tabOf(S.view),g=GROUPS.find(([n])=>n===tab),at=g?g[1].indexOf(S.view):-1;
  $("abTabs").innerHTML=TABS.map(([n,to])=>`<a href="#${to}" ${tab===n?'aria-current="page"':""}>${n}</a>`).join("");
  $("abSteps").hidden=!g;
@@ -1385,7 +1645,7 @@ function gateTable(){
 }
 function renderOverview(){
  const h=hurdle(M);renderHero();
- $("ovKpis").innerHTML=kpi("Return (5-year IRR)",pct1(M.irr),"needs at least 18%")+kpi("Money back in (months)",M.pb?f1(M.pb):"60+",h.okP?"limit is 30 months":"misses the 30-month limit")+kpi("Value created (NPV)",cr(M.npv),"5 years, at 18%")+kpi("Yearly profit gain",cr(M.g22.ebitda),"EBITDA run-rate, about +90 bps")+kpi("Cash freed from stock","₹"+f0(M.g22.wc)+" Cr",`₹${f0(M.g22.wcOwned)} Cr of it ACPL-owned`)+kpi("Orders filled on time",f1(M.sv.nat)+"%",`from 86% today; stock ${f1(M.sv.natDays)} days`);
+ $("ovKpis").innerHTML=kpi("Return (5-year IRR)",pct1(M.irr),"needs at least 18%")+kpi("Money back in (months)",M.pb?f1(M.pb):"60+",h.okP?"limit is 30 months":"misses the 30-month limit")+kpi("Value created (NPV)",cr(M.npv),"5 years, at 18%")+kpi("Yearly profit gain",cr(M.g22.ebitda),"EBITDA run-rate, about +90 bps")+kpi("Cash freed from stock","₹"+f0(M.g22.wc)+" Cr",`₹${f0(M.g22.wcOwned)} Cr of it ACPL-owned`)+kpi("Orders filled on time",f1(M.g22.fill)+"%",`from 86% today; stock ${f1(M.g22.days)} days`);
  cashChart($("ovCash"),$("ovCashLeg"));
  const TODO=[["release","Release the first ₹34 Cr tranche",`The plan spends ${cr(M.cs9)} by month 9 with no new software.`],["charter","Sign the Day-0 measurement charter","Finance and the auditor agree the starting numbers."],["owner","Name one Flow Owner","Someone who can change distributor schemes, plant schedules and allocation."]];
  const tick=k=>!!(S.todo&&S.todo[k]);
@@ -1401,7 +1661,7 @@ function renderManager(){
  $("mgKpis").innerHTML=kpi("Requests",tot,"all weeks")+kpi("Received",got,"delivered to the region")+kpi("Cannot fill",short,"closed without supply")+kpi("Late",late,"open and past their week")+kpi("Teams sent numbers",sent+" of "+data.length,THISWEEK);
  const mx=Math.max(1,...COLS.map(([st])=>R.filter(r=>r.status===st).length));
  $("mgStages").innerHTML=COLS.map(([st,n])=>{const c=R.filter(r=>r.status===st).length;return `<div class="hb"><span>${n}</span><div class="bar"><span style="width:${c/mx*100}%"></span></div><b class="num">${c}</b></div>`;}).join("");
- const rate=tot?short/tot:0,lim=(100-M.sv.nat)/100,scale=.2,col=rate>lim?"var(--bad)":"var(--good)";
+ const rate=tot?short/tot:0,lim=(100-M.g22.fill)/100,scale=.2,col=rate>lim?"var(--bad)":"var(--good)";
  $("mgRate").innerHTML=tot?`<div class="kpi" style="padding:0;border:none"><span class="v" style="color:${col}">${f1(rate*100)}%</span><span class="s">plan limit ${f1(lim*100)}% (100% minus the ${f1(M.sv.nat)}% fill target)</span></div><div class="bar" style="margin:16px 0 8px"><span style="width:${Math.min(1,rate/scale)*100}%;background:${col}"></span><em style="left:${Math.min(1,lim/scale)*100}%"></em></div><p class="note">The marker is the plan limit. Above it, review the shortfalls below.</p>`:`<div class="empty">No requests yet, so there is no rate to show.</div>`;
  const need=R.filter(r=>r.status==="requested"||r.status==="short"||(isOpen(r)&&r.week<THISWEEK)).sort((a,b)=>(a.week>b.week)-(a.week<b.week)).slice(0,10);
  $("mgTable").innerHTML=need.length?`<table><thead><tr><th>Code</th><th>Region</th><th>SKU</th><th class="n">k cases</th><th>Needed by</th><th>Status</th><th></th></tr></thead><tbody>`+need.map(r=>`<tr><td class="num">${code(r.id)}</td><td>${esc(r.region)}</td><td>${esc(r.sku)}</td><td class="n">${f1(+r.qty)}</td><td>${esc(r.week)}</td><td>${r.status==="short"?chip("no","Cannot fill"):chip("wn","Waiting for a plant")}${r.week<THISWEEK&&isOpen(r)?" "+chip("no","Late"):""}${r.reason?`<div class="note">${esc(r.reason)}</div>`:""}</td><td><a href="#orders">Open</a></td></tr>`).join("")+`</tbody></table>`:`<div class="empty">Nothing is waiting for a decision.<br><button type="button" id="mgDemo" class="ghost" style="margin-top:10px">Load the example week</button></div>`;
@@ -1438,7 +1698,7 @@ function renderDiagnosis(){
 }
 function renderService(){
  const sv=M.sv;const uni=service({A:95,B:95,C:95,D:95,E:95},S.days);
- $("svKpis").innerHTML=kpi("National fill",f1(sv.nat)+"%","from 86%; Board asked 95%")+kpi("Network days",f1(sv.natDays),"from 46; Board asked under 35")+kpi("Cost of service",cr(sv.cost),`uniform 95% costs ${cr(uni.cost)}`)+kpi("Annual contribution",cr(sv.ann),`payback ${sv.ann>0?f1(sv.cost/sv.ann):"n/a"} years`);
+ $("svKpis").innerHTML=kpi("Fill, segment targets",f1(sv.nat)+"%",`FY29 blend; model plan ${f1(M.g22.fill)}% at Gate 2`)+kpi("Days, segment targets",f1(sv.natDays),`model plan ${f1(M.g22.days)} at Gate 2; Board asked under 35`)+kpi("Cost of service",cr(sv.cost),`uniform 95% costs ${cr(uni.cost)}`)+kpi("Annual contribution",cr(sv.ann),`payback ${sv.ann>0?f1(sv.cost/sv.ann):"n/a"} years`);
  const rows=Object.entries(SEG).map(([k,g])=>{const f=S.fill[k],c=segCost(k,f),gain=Math.max(0,f-g.cur),ann=gain*ppVal(k),pb=ann>0?c/ann:null;
   let flag="";if(k==="A"&&f>93&&!S.opts.ah)flag=chip("wn","Needs A&H capacity");else if(pb!=null&&pb>2.5)flag=chip("wn","Payback over 30 mo");else if(gain>0)flag=chip("ok","Pays back");else flag=chip("nt","Hold");
   return `<tr><td><b>${k}</b> ${g.name}<div class="note">${f0(g.rev/84.2)}% of revenue · now ${g.cur}%, ${g.days} days</div><div class="segact">${g.act}</div></td>
@@ -1575,9 +1835,9 @@ function recalcCore(){M=model();G=gateEval(M);save();}
 function renderVisibleNonService(){renderSide();
  // refresh service KPIs and national row without rebuilding sliders
  const sv=M.sv;const uni=service({A:95,B:95,C:95,D:95,E:95},S.days);
- $("svKpis").innerHTML=kpi("National fill",f1(sv.nat)+"%","from 86%; Board asked 95%")+kpi("Network days",f1(sv.natDays),"from 46; Board asked under 35")+kpi("Cost of service",cr(sv.cost),`uniform 95% costs ${cr(uni.cost)}`)+kpi("Annual contribution",cr(sv.ann),`payback ${sv.ann>0?f1(sv.cost/sv.ann):"n/a"} years`);}
+ $("svKpis").innerHTML=kpi("Fill, segment targets",f1(sv.nat)+"%",`FY29 blend; model plan ${f1(M.g22.fill)}% at Gate 2`)+kpi("Days, segment targets",f1(sv.natDays),`model plan ${f1(M.g22.days)} at Gate 2; Board asked under 35`)+kpi("Cost of service",cr(sv.cost),`uniform 95% costs ${cr(uni.cost)}`)+kpi("Annual contribution",cr(sv.ann),`payback ${sv.ann>0?f1(sv.cost/sv.ann):"n/a"} years`);}
 function recalc(){recalcCore();renderAll();}
-function renderAll(){renderSide();renderOverview();renderDiagnosis();renderService();renderOpModel();renderInvest();renderReturns();renderGates();renderManager();renderMgExtra();renderControl();renderScenarios();}
+function renderAll(){renderSide();renderOverview();renderNewViews();renderDiagnosis();renderService();renderOpModel();renderInvest();renderReturns();renderGates();renderManager();renderMgExtra();renderControl();renderScenarios();}
 /* ---------- wiring ---------- */
 [["sRec","rec"],["sReal","real"],["sDelay","delay"],["sLag","lag"],["sOver","over"],["sCap","cap"],["sHair","hair"]].forEach(([id,k])=>{$(id).addEventListener("input",e=>{S.sc[k]=+e.target.value;recalcCore();renderSide();renderReturns();});$(id).addEventListener("change",()=>recalc());});
 $("sDay").onchange=e=>{S.sc.day=e.target.value;recalc();};
@@ -1595,7 +1855,7 @@ $("resetYes").onclick=()=>{const v=S.view;S=clone(DEF);S.view=S.last=v;$("confir
 function toast(m){const t=$("toast");t.textContent=m;t.hidden=false;clearTimeout(toast._t);toast._t=setTimeout(()=>t.hidden=true,2200);}
 $("copySum").onclick=()=>{
  const txt=`Project Drishti, current scenario
-National fill ${f1(M.sv.nat)}% (from 86%), network days ${f1(M.sv.natDays)} (from 46)
+National fill ${f1(M.g22.fill)}% (from 86%), network days ${f1(M.g22.days)} (from 46)
 Spend: ${cr(M.cs9)} by M9, ${cr(M.cs21)} by M21, ${cr(M.cs36)} by M36 (cap ₹150 Cr)
 5-yr IRR ${pct(M.irr)}, payback ${M.pb?f1(M.pb)+" months":"over 60 months"}, NPV@18% ${cr(M.npv)}
 Gate 1: ${G.p1?"pass":"miss"} (fill ${f1(G.g1[0][1].v)}%, days ${f1(G.g1[1][1].v)}, EBITDA ₹${f1(G.g1[2][1].v)} Cr)
@@ -1662,6 +1922,7 @@ async function wsInit(){
  const db=localDb(),user=localUser();WS.db=db;WS.user=user;
  WS.uid=await user.id();WS.canWrite=await user.can("data.write");
  WS.state="on";
+ newWsSubs();
  const fail=e=>{WS.state="err";renderWS();};
  db.collection("requests").orderBy("at","desc").limit(500).onSnapshot(s=>{WS.req=s.docs.map(d=>({id:d.id,...d.data()}));renderWS();resolveProfiles();},fail);
  db.collection("inputs").orderBy("at","desc").limit(300).onSnapshot(s=>{WS.inp={};s.docs.forEach(d=>WS.inp[d.id]={id:d.id,...d.data()});renderWS();resolveProfiles();},fail);
@@ -1821,11 +2082,11 @@ $("exLoad").onclick=async()=>{if(!WS.db||WS.ro){toast("The workspace is still st
  });if(ok)toast("Example week loaded");};
 $("exClear").onclick=async()=>{if(!WS.db||WS.ro)return;const docs=[...WS.req.filter(r=>r.example).map(r=>"requests/"+r.id),...Object.values(WS.inp).filter(i=>i.example).map(i=>"inputs/"+i.id),...WS.msgs.filter(m=>m.example).map(m=>"msgs/"+m.id),...WS.acts.filter(a=>a.example).map(a=>"acts/"+a.id)];
  if(!docs.length){toast("No examples to clear");return;}const ok=await wsWrite(async()=>{for(const p of docs)await WS.db.doc(p).delete();});if(ok)toast("Cleared "+docs.length+" example entries");};
-function renderWS(){renderWho();renderInputs();renderBalance();renderOrders();renderCouncil();renderRoles();renderManager();renderMgExtra();renderControl();renderAttention();}
+function renderWS(){renderNewWS();renderWho();renderInputs();renderBalance();renderOrders();renderCouncil();renderRoles();renderManager();renderMgExtra();renderControl();renderAttention();}
 /* ---------- landing hero ---------- */
 function renderHero(){
- $("hcFill").textContent="86% → "+f1(M.sv.nat)+"%";$("hcFillBar").style.width=Math.max(0,Math.min(100,(M.sv.nat-80)/20*100))+"%";
- $("hcDays").textContent="46 → "+f1(M.sv.natDays);$("hcDaysBar").style.width=Math.max(0,Math.min(100,M.sv.natDays/60*100))+"%";
+ $("hcFill").textContent="86% → "+f1(M.g22.fill)+"%";$("hcFillBar").style.width=Math.max(0,Math.min(100,(M.g22.fill-80)/20*100))+"%";
+ $("hcDays").textContent="46 → "+f1(M.g22.days);$("hcDaysBar").style.width=Math.max(0,Math.min(100,M.g22.days/60*100))+"%";
  $("hcIrr").textContent=pct1(M.irr);$("hcPb").textContent=M.pb?f1(M.pb)+" mo":"60+ mo";$("hcGates").textContent=(G.p1&&G.p2)?"Both pass":(G.p1?"G2 at risk":"G1 at risk");
  $("hcGates").style.color=(G.p1&&G.p2)?"var(--good)":"var(--bad)";
 }
@@ -1835,9 +2096,9 @@ const ROLES=[
  ["dist","Distributors","Declare the stock you hold each week.","inputs"],
  ["plants","Plants","Enter capacity, then commit quantity and a ship week on the orders board.","orders"],
  ["brands","Brands","Share promotions and launches before they enter the plan.","inputs"],
- ["finance","Finance","Enter certified figures and submit them for the funding gates.","inputs"],
- ["board","Audit and Board","Verify the certified figures, then release or delay each funding tranche.","approvals"],
- ["flow","Flow Owner and leadership","Set targets, move the budget, track the gates and run Tuesday's council.","service"]
+ ["finance","Finance","Run the financial model, enter actual spend, and submit versions and gate figures for sign-off.","fmodel"],
+ ["board","Audit and Board","See the cockpit, take decisions, approve the baseline and release or delay each tranche.","cockpit"],
+ ["flow","Flow Owner and leadership","Track initiatives and owners, set targets, and run Tuesday's council.","initiatives"]
 ];
 function renderHdr(){const s=$("hdrTeam");if(!s.options.length){s.innerHTML=`<option value="">Choose your team</option>`+TEAMS.map(([v,n])=>`<option value="${v}">${n}</option>`).join("");s.onchange=e=>setTeam(e.target.value);}s.value=WS.team||"";}
 function renderRoles(){$("roles").innerHTML=ROLES.map(([v,n,d,to])=>`<a class="role ${WS.team===v?"on":""}" href="#${to}" data-team="${v}"><b>${n}</b><span>${d}</span><i>${WS.team===v?"Your team · open":"Open"}</i></a>`).join("");}
@@ -1859,9 +2120,9 @@ function renderLive(){
  const today=new Date().toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});
  const L=attention().slice(0,3);
  const sys=["WMS","ERP","DMS","Sales DB"].map(n=>`<div title="Demo status"><b>${n}</b><i>Connected</i></div>`).join("");
- $("livePanel").innerHTML=`<div class="lv-tiles"><div><span>Today</span><b>${today}</b></div><div><span>Fill plan</span><b>${f1(M.sv.nat)}%</b></div><div><span>Return</span><b>${pct(M.irr)}</b></div></div>
+ $("livePanel").innerHTML=`<div class="lv-tiles"><div><span>Today</span><b>${today}</b></div><div><span>Fill plan</span><b>${f1(M.g22.fill)}%</b></div><div><span>Return</span><b>${pct(M.irr)}</b></div></div>
  <h3>Live plan summary<span class="kd out">Read-only</span></h3>
- <div><div class="lv-row"><span>National fill</span><b>86% → ${f1(M.sv.nat)}%</b></div><div class="lv-row"><span>Network days</span><b>46 → ${f1(M.sv.natDays)}</b></div><div class="lv-row"><span>Money back</span><b>${M.pb?f1(M.pb)+" mo":">60 mo"}</b></div><div class="lv-row"><span>Spend by month 9</span><b>${cr(M.cs9)}</b></div><div class="lv-row"><span>Gate 1</span>${G.p1?chip("ok","Pass"):chip("no","Miss")}</div><div class="lv-row"><span>Gate 2</span>${G.p2?chip("ok","Pass"):chip("no","Miss")}</div><div class="lv-row"><span>Budget</span>${t1&&t2&&t3?chip("ok","Within limits"):chip("no","Over a limit")}</div></div>
+ <div><div class="lv-row"><span>National fill</span><b>86% → ${f1(M.g22.fill)}%</b></div><div class="lv-row"><span>Network days</span><b>46 → ${f1(M.g22.days)}</b></div><div class="lv-row"><span>Money back</span><b>${M.pb?f1(M.pb)+" mo":">60 mo"}</b></div><div class="lv-row"><span>Spend by month 9</span><b>${cr(M.cs9)}</b></div><div class="lv-row"><span>Gate 1</span>${G.p1?chip("ok","Pass"):chip("no","Miss")}</div><div class="lv-row"><span>Gate 2</span>${G.p2?chip("ok","Pass"):chip("no","Miss")}</div><div class="lv-row"><span>Budget</span>${t1&&t2&&t3?chip("ok","Within limits"):chip("no","Over a limit")}</div></div>
  <h3>Notifications</h3>
  <div class="lv-att">${L.length?L.map(([t,s,v])=>`<a href="#${v}">${esc(t)}<small>${esc(s)}</small></a>`).join(""):`<div class="lv-note">All clear. Nothing needs attention.</div>`}<div class="lv-note">WMS, ERP, DMS and Sales DB synced<small>09:00</small></div></div>
  <div class="lv-sys">${sys}</div>`;
@@ -1902,10 +2163,10 @@ function roleNote(){
 const DAYS=["Mon","Tue","Wed","Thu","Fri"];
 const todayIdx=()=>(new Date().getDay()+6)%7;
 const isOverdue=a=>!a.done&&(a.week<THISWEEK||(a.week===THISWEEK&&DAYS.indexOf(a.day)<todayIdx()));
-const LVLS=[["1","Low"],["2","Medium"],["3","High"]];
+const LVLS=[["1","1 Very low"],["2","2 Low"],["3","3 Medium"],["4","4 High"],["5","5 Very high"]];
 const RSTAT=[["open","Open"],["mitigating","Mitigating"],["closed","Closed"]];
 const rScore=r=>(+r.l||1)*(+r.i||1);
-const rLevel=s=>s>=6?"High":s>=3?"Medium":"Low";
+const rLevel=s=>s>=15?"High":s>=8?"Medium":"Low";
 const lvName=v=>(LVLS.find(x=>x[0]===String(v))||["","?"])[1];
 const sevChip=s=>s==="high"?chip("no","High"):s==="med"?chip("wn","Medium"):chip("nt","Low");
 const APR_STAGE={draft:["nt","Not submitted"],submitted:["wn","Waiting for verification"],verified:["ok","Verified, waiting for the Board"],released:["ok","Tranche released"],delayed:["no","Tranche delayed"],rejected:["no","Sent back to Finance"]};
@@ -1941,9 +2202,9 @@ function alerts(){
    if(cov<.85)add("cover-"+r,cov<.5?"high":"med",r+" is only "+f0(cov*100)+"% covered",`Net need ${f1(need)}k cases, committed ${f1(cm)}k`,"orders","Raise and commit requests for the gap, or agree what will not be supplied.","sales");});
   const od=WS.acts.filter(isOverdue);
   if(od.length)add("actions-overdue","high",od.length+(od.length>1?" actions are overdue":" action is overdue"),[...new Set(od.map(a=>TEAMN[a.team]||"No owner"))].join(", "),"council","Close each action or agree a new date at the council.","flow");
-  const tot=R.length,short=R.filter(r=>r.status==="short").length,lim=(100-M.sv.nat)/100;
+  const tot=R.length,short=R.filter(r=>r.status==="short").length,lim=(100-M.g22.fill)/100;
   if(tot>=3&&short/tot>lim)add("cannot-fill","med","Cannot-fill rate is above the plan limit",`${f1(short/tot*100)}% against a limit of ${f1(lim*100)}%`,"manager","Review the shortfalls on the Manager dashboard and agree supply or substitutes.","flow");
-  WS.risks.filter(r=>r.status!=="closed"&&rScore(r)>=6).forEach(r=>add("risk-"+r.id,r.status==="mitigating"?"low":"med","High risk: "+r.title,`${lvName(r.l)} likelihood, ${lvName(r.i)} impact · ${TEAMN[r.owner]||"no owner"} · ${r.status==="mitigating"?"mitigation under way":"not yet being handled"}`,"risks",r.mitigation||"Agree a mitigation and an owner.",r.owner||"flow"));
+  WS.risks.filter(r=>r.status!=="closed"&&rScore(r)>=15).forEach(r=>add("risk-"+r.id,r.status==="mitigating"?"low":"med","High risk: "+r.title,`${lvName(r.l)} likelihood, ${lvName(r.i)} impact · ${TEAMN[r.owner]||"no owner"} · ${r.status==="mitigating"?"mitigation under way":"not yet being handled"}`,"risks",r.mitigation||"Agree a mitigation and an owner.",r.owner||"flow"));
   ["g1","g2"].forEach(g=>{const d=WS.apr[g];if(!d)return;const n=g==="g1"?"Gate 1":"Gate 2";
    if(d.stage==="submitted")add("apr-"+g+"-ver","med",n+" figures wait for verification","Submitted by Finance","approvals","Audit and Board verify the figures or send them back.","board");
    if(d.stage==="verified")add("apr-"+g+"-rel","med",n+" is verified and waits for the Board","Verified by Audit and Board","approvals","Release or delay the tranche.","board");
@@ -1970,22 +2231,16 @@ function renderAlerts(){
 }
 $("alList").addEventListener("click",e=>{const b=e.target.closest("[data-mk]");if(!b)return;const id=b.dataset.mk,box=$("alList");makeAction(id,box.querySelector('[data-o="'+id+'"]').value,box.querySelector('[data-d="'+id+'"]').value);});
 /* ---- risk register ---- */
-const PLAN_RISKS=[
- ["Distributors push back on the Flow Contract","₹9 Cr margin guarantee; 2-region pilot before scaling","sales",2,3],
- ["Pilot C gains fade without the 14-person team","Stepped-wedge rollout gives a built-in control group","flow",2,2],
- ["Disputes over baselines at audit","Day-0 measurement charter signed before work starts","finance",1,3],
- ["Plants A, C and H run above 89% utilisation","Plant C output from month 8; trigger the A and H decision at month 12","plants",2,2],
- ["Quick-commerce SKUs at risk of stock-outs","Fast lane for the 11 at-risk SKUs first (₹31 Cr revenue)","brands",2,2]
-];
+const PLAN_RISKS=[["Gate 2 inventory days miss the 38-day limit by a rounding error", "Day-0 charter freezes the stock-measurement method; Flow Contract stock-truth rebate; wave 3 starts M16", "finance", 4, 5, {"rid": "R1", "trig": "Network days above 39.5 at M15; wave 3 slips", "cont": "Raise rebalancing sprint from 33% to 40% of excess (about 0.3 days); raise raw-material release; hold tranche 3 until measured", "role": "CFO + Flow Owner", "cat": "Gate", "rl": 3}], ["Auditor restates the baseline for the 12% distributor under-reporting", "Agree gate basis (declared, constant method) in Day-0 charter before first disbursement; Stock Identity Check and calibration ledger from M2", "finance", 4, 5, {"rid": "R2", "trig": "Physical audit of 120 distributors differs from declared stock by more than 5%", "cont": "If restated, ask Board to re-base thresholds by the audited gap; do not trade off the gate itself", "role": "CFO + Internal Audit", "cat": "Gate", "rl": 2}], ["Gate 1 fill-rate headroom is only 0.3 points", "Five levers need no new software; QC lane and portfolio clean-up start M1; month-7 early warning", "flow", 3, 5, {"rid": "R3", "trig": "Month-7 fill below 88.0% or days above 43.5", "cont": "Pull forward rebalancing wave 2; extend QC lane to 12 SKUs; tranche 2 slips two quarters but does not lapse", "role": "Flow Owner", "cat": "Gate", "rl": 3}], ["Gate 1 EBITDA fails if the distributor destock dip is counted", "Agree in the Day-0 charter that the one-off destock dip is certified as non-recurring", "finance", 3, 4, {"rid": "R4", "trig": "Finance certifies dip as a run-rate loss", "cont": "Phase distributor destock after M9 if Finance will not agree", "role": "CFO", "cat": "Gate", "rl": 2}], ["Payback exceeds 30 months", "Conservative base (benefits counted a quarter late, 10% haircut, 22% avoided cost discarded); 30% vendor and 15% contractor holdbacks", "finance", 3, 5, {"rid": "R5", "trig": "Cumulative net cash behind plan by more than 3 at M18", "cont": "Monthly Finance certification (about 22.8 months); month-12 stop-loss freezes waves 2 to 3 and the data tail", "role": "CFO", "cat": "Return", "rl": 3}], ["Recovery of stock-out demand is below the break-even", "Base sits at the low end of the transformation office range (40 to 55%); Finance test at 35% is shown", "finance", 3, 5, {"rid": "R6", "trig": "M12 recovery reads below 37%", "cont": "Stop-loss at M12: freeze waves 2 to 3; agree recovery basis for gates in the Day-0 charter", "role": "CFO + CSO", "cat": "Return", "rl": 3}], ["Pilot benefits do not scale (realisation below 96% of base)", "Stepped-wedge waves; rho of 0.5 on replenishment against an uncontrolled pilot; 30% pay-on-proof", "flow", 3, 4, {"rid": "R7", "trig": "Wave 1 order-to-delivery loop above 8 days", "cont": "Hold wave 2 until wave 1 is Finance-verified; keep the pilot data team through wave 1", "role": "Supply Chain Head", "cat": "Return", "rl": 3}], ["Benefits arrive late (more than about one month)", "Day-0 mobilisation: design work finished before M1; Flow Owner named at approval", "flow", 3, 4, {"rid": "R8", "trig": "Flow Contract go-live later than M3", "cont": "Re-sequence spend into later quarters; defer data tail", "role": "Programme Office", "cat": "Return", "rl": 3}], ["Owned-only working capital misses the 170 gate", "Flow Contract and stock-truth rebate make distributors cut stock; track distributor-side reduction separately; network basis is the gate basis", "sales", 4, 4, {"rid": "R9", "trig": "Distributor stock reduction below 10 Cr by M12", "cont": "Increase rebate tier; extend 2-region pilot before national scale", "role": "CSO + CFO", "cat": "Gate", "rl": 3}], ["Cost overrun breaches the 150 cap", "10% contingency drawn in base; 9 Cr reserve covers about 14%; vendor and contractor holdbacks", "finance", 3, 4, {"rid": "R10", "trig": "Quarterly spend above plan by more than 10%", "cont": "Cut scope (data tail, wave 3) instead of seeking funds; stop-loss at M12", "role": "Programme Office", "cat": "Cost", "rl": 2}], ["At 35% recovery Gate 2 EBITDA is short", "Pre-agree recovery basis in the Day-0 charter; upside levers (sprint, raw materials) sit outside the base", "finance", 3, 4, {"rid": "R11", "trig": "Audit Committee insists on 35% recovery basis", "cont": "Release tranche 3 against a revised plan; use the reserve to fund the shortfall actions", "role": "CFO", "cat": "Gate", "rl": 3}], ["Forecast accuracy stays at 64%, below the 70% Board target", "Accuracy is not the binding constraint (Pilot A: +10 pts accuracy gave +1 pt fill); bias removal through Honest Supply rule; 70% shown as a stretch route", "flow", 4, 2, {"rid": "R12", "trig": "General-trade bias still above 3% at M18", "cont": "Fund forecasting engine only if vendor puts at least 50% of fee at risk against 70% and budget allows", "role": "Flow Owner", "cat": "Target", "rl": 3}], ["Plant C capacity benefit is disputed or does not appear", "Production wheel and express slot first (no capex); Plant C is the experiment that tests capacity versus scheduling", "plants", 3, 3, {"rid": "R13", "trig": "M12 Plant C adds less than 7 Cr a year or utilisation stays above 92% after the wheel", "cont": "Do not release Plants A and H spend; redeploy the unspent Plant C phase to scheduling", "role": "COO", "cat": "Delivery", "rl": 2}], ["Replenishment does not hold up without the 14-person data team", "Data remediation funded in master data (26 Cr); team falls from 14 to 6 only after wave 1 proves out; weekly cleansing kept", "flow", 3, 4, {"rid": "R14", "trig": "Order amendments above 10% in wave 1", "cont": "Extend team through wave 2; hold national extension decision at M24", "role": "Supply Chain Head", "cat": "Delivery", "rl": 3}], ["Distributors and Sales resist the Flow Contract", "Co-owned by CSO; 6-quarter guarantee; tiered offer; two-region pilot before scale; KPI change precedes scheme change", "sales", 4, 4, {"rid": "R15", "trig": "Last-3-week share of quarterly sales above 35% at M12", "cont": "Slow national scale; extend guarantee within contingency; escalate to CEO", "role": "CSO", "cat": "People", "rl": 3}], ["Planning reset lapses again, as in 2023", "KPIs, slabs and plant targets change first; Flow Owner has decision rights; CFO owns baseline", "flow", 4, 4, {"rid": "R16", "trig": "Heartbeat attendance below 80% or KPIs not reset by M3", "cont": "CEO reviews monthly until two consecutive quarters of normal loading", "role": "CEO + Flow Owner", "cat": "People", "rl": 3}], ["Quick-commerce delisting of 11 SKUs (31 Cr revenue at risk)", "Daily fast lane; 11 at-risk SKUs to 94% first; fast lane live by M5", "sales", 4, 3, {"rid": "R17", "trig": "Platform fill below 90% for two consecutive weeks", "cont": "Dedicated stock buffer for the 11 SKUs; weekly platform review", "role": "Quick-commerce lead", "cat": "Commercial", "rl": 2}]];
 function renderRisks(){
  const dis=WS.ro?"disabled":"";
  if(!$("rkOwner").options.length)$("rkOwner").innerHTML=TEAMS.map(([v,n])=>`<option value="${v}">${n}</option>`).join("");
  const R=WS.risks,openR=R.filter(r=>r.status!=="closed");
- $("rkKpis").innerHTML=kpi("Open risks",openR.length,R.length+" logged")+kpi("High",openR.filter(r=>rScore(r)>=6).length,"likelihood × impact 6 or more")+kpi("Medium",openR.filter(r=>rScore(r)>=3&&rScore(r)<6).length,"score 3 to 5")+kpi("Being handled",R.filter(r=>r.status==="mitigating").length,"mitigation under way")+kpi("Closed",R.filter(r=>r.status==="closed").length,"resolved");
+ $("rkKpis").innerHTML=kpi("Open risks",openR.length,R.length+" logged")+kpi("High",openR.filter(r=>rScore(r)>=15).length,"likelihood × impact 15 or more")+kpi("Medium",openR.filter(r=>rScore(r)>=8&&rScore(r)<15).length,"score 8 to 14")+kpi("Being handled",R.filter(r=>r.status==="mitigating").length,"mitigation under way")+kpi("Closed",R.filter(r=>r.status==="closed").length,"resolved");
  const t=$("rkTable");if(t.contains(document.activeElement))return;
  const sel=(id,f,opts,v)=>`<select data-id="${id}" data-f="${f}" aria-label="${f}" ${dis}>${opts.map(([o,n])=>`<option value="${o}" ${String(v)===String(o)?"selected":""}>${n}</option>`).join("")}</select>`;
  const rows=[...R].sort((a,b)=>(a.status==="closed")-(b.status==="closed")||rScore(b)-rScore(a));
- t.innerHTML=rows.length?`<table><thead><tr><th>Risk</th><th>Owner</th><th>Likelihood</th><th>Impact</th><th>Level</th><th>Status</th><th></th></tr></thead><tbody>`+rows.map(r=>{const lv=rLevel(rScore(r));return `<tr><td><b>${esc(r.title)}</b>${r.mitigation?`<div class="note">${esc(r.mitigation)}</div>`:""}</td><td>${sel(r.id,"owner",TEAMS,r.owner)}</td><td>${sel(r.id,"l",LVLS,r.l)}</td><td>${sel(r.id,"i",LVLS,r.i)}</td><td>${chip(lv==="High"?"no":lv==="Medium"?"wn":"ok",lv)}</td><td>${sel(r.id,"status",RSTAT,r.status)}</td><td><button type="button" class="ghost" data-del="${r.id}" aria-label="Delete risk" ${dis}>×</button></td></tr>`;}).join("")+`</tbody></table>`:`<div class="empty">No risks logged yet. Add one below, or load the risks already named in the plan.</div>`;
+ t.innerHTML=rows.length?`<table><thead><tr><th>Risk</th><th>Owner</th><th>Likelihood</th><th>Impact</th><th>Level</th><th>Status</th><th></th></tr></thead><tbody>`+rows.map(r=>{const lv=rLevel(rScore(r));return `<tr><td><b>${r.rid?esc(r.rid)+" · ":""}${esc(r.title)}</b>${r.trig?`<div class="minis">Trigger: ${esc(r.trig)}</div>`:""}${r.mitigation?`<div class="note">${esc(r.mitigation)}</div>`:""}${r.cont?`<div class="minis">If triggered: ${esc(r.cont)}</div>`:""}${r.role?`<div class="minis">Owner: ${esc(r.role)}</div>`:""}${r.rid?riskLive(r.rid):""}</td><td>${sel(r.id,"owner",TEAMS,r.owner)}</td><td>${sel(r.id,"l",LVLS,r.l)}</td><td>${sel(r.id,"i",LVLS,r.i)}</td><td>${chip(lv==="High"?"no":lv==="Medium"?"wn":"ok",lv)}</td><td>${sel(r.id,"status",RSTAT,r.status)}</td><td><button type="button" class="ghost" data-del="${r.id}" aria-label="Delete risk" ${dis}>×</button></td></tr>`;}).join("")+`</tbody></table>`:`<div class="empty">No risks logged yet. Add one below, or load the risks already named in the plan.</div>`;
 }
 $("rkTable").addEventListener("change",e=>{const el=e.target.closest("select[data-f]");if(!el)return;wsWrite(()=>WS.db.doc("risks/"+el.dataset.id).update({[el.dataset.f]:el.value,at:Date.now()}));});
 $("rkTable").addEventListener("click",e=>{const b=e.target.closest("[data-del]");if(!b)return;if(b.dataset.sure!=="1"){b.dataset.sure="1";b.textContent="Sure?";return;}wsWrite(()=>WS.db.doc("risks/"+b.dataset.del).delete()).then(ok=>ok&&toast("Risk deleted"));});
@@ -1993,7 +2248,7 @@ $("rkForm").addEventListener("submit",async e=>{e.preventDefault();const title=$
  const ok=await wsWrite(()=>WS.db.collection("risks").add({title,mitigation:$("rkMit").value.trim(),owner:$("rkOwner").value,l:$("rkL").value,i:$("rkI").value,status:"open",by:WS.uid||"",at:Date.now()}),$("rkMsg"));
  if(ok){$("rkTitle").value="";$("rkMit").value="";$("rkMsg").textContent="";toast("Risk added");}});
 $("rkLoad").onclick=async()=>{const have=new Set(WS.risks.map(r=>r.title));const add=PLAN_RISKS.filter(r=>!have.has(r[0]));if(!add.length){toast("The plan risks are already in the register");return;}
- const ok=await wsWrite(async()=>{for(const [title,mitigation,owner,l,i] of add)await WS.db.collection("risks").add({title,mitigation,owner,l:String(l),i:String(i),status:"open",source:"plan",by:WS.uid||"",at:Date.now()});});if(ok)toast("Loaded "+add.length+" plan risks");};
+ const ok=await wsWrite(async()=>{for(const [title,mitigation,owner,l,i,x] of add)await WS.db.collection("risks").add(Object.assign({title,mitigation,owner,l:String(l),i:String(i),status:"open",source:"plan",by:WS.uid||"",at:Date.now()},x||{}));});if(ok){toast("Loaded "+add.length+" plan risks");logEvent("risk","Loaded "+add.length+" risks from the financial model");}};
 /* ---- gate approvals ---- */
 function aprDoc(g){return WS.apr[g]||{stage:"draft",hist:[]};}
 function aprMay(role){return !WS.team||WS.team===role;}
@@ -2033,7 +2288,7 @@ function renderApprovals(){
  });
 }
 $("v-approvals").addEventListener("click",e=>{const b=e.target.closest("button[data-g]");if(!b||b.disabled)return;const g=b.dataset.g,to=b.dataset.to,note=($("apr-note-"+g).value||"").trim();
- if(to==="rejected"&&!note){toast("Add a note so Finance knows what to fix");return;}aprAct(g,to,note);});
+ if(to==="rejected"&&!note){toast("Add a note so Finance knows what to fix");return;}b.blur();aprAct(g,to,note);});
 /* ---- manager dashboard: accountability and activity ---- */
 function renderMgExtra(){
  const W=alerts().slice(0,4);
@@ -2123,10 +2378,382 @@ function renderScenarios(){
 $("scDetail").addEventListener("click",e=>{const b=e.target.closest("[data-load]");if(b)loadScenario(b.dataset.load);});
 $("scPick").addEventListener("click",e=>{const b=e.target.closest("[data-pick]");if(b){scSel=b.dataset.pick;renderScenarios();}});
 $("scTable").addEventListener("click",e=>{const r=e.target.closest("[data-pick]");if(r){scSel=r.dataset.pick;renderScenarios();$("scPick").scrollIntoView({block:"start"});}});
+/* ================= OVERHAUL: finance model, cockpit, delivery, accountability ================= */
+const RAGC={g:"rg",a:"ra",r:"rr",n:"rn"},RAGN={g:"On track",a:"Watch",r:"Off track",n:"Not started"};
+const ragChip=r=>chip(r==="g"?"ok":r==="a"?"wn":r==="r"?"no":"nt",RAGN[r]);
+const worst=a=>a.includes("r")?"r":a.includes("a")?"a":"g";
+const sgn=(v,d=1)=>(v>0?"+":v<0?"−":"")+Math.abs(v).toFixed(d);
+const teamName=t=>TEAMN[t]||"No team";
+const myTeam=()=>WS.team||"";
+function may(role){return !WS.team||WS.team===role;}
+/* ---------- activity log ---------- */
+WS.log=[];WS.dec={};WS.ms={};WS.spend={};WS.ver=[];
+async function logEvent(kind,text){if(!WS.db)return;try{await WS.db.collection("log").add({kind,text,team:myTeam(),by:WS.uid||"",at:Date.now()});}catch(e){}}
+const LOGK=[["model","Model"],["version","Version"],["decision","Decision"],["delivery","Delivery"],["gate","Gate"],["scenario","Scenario"],["risk","Risk"],["weekly","Weekly"]];
+/* wrap existing actions so they land in the log */
+{const _apr=aprAct;aprAct=async function(g,to,note){await _apr(g,to,note);logEvent("gate",`${g==="g1"?"Gate 1":"Gate 2"}: ${APR_STAGE[to][1]}${note?" · "+note:""}`);};}
+{const _ls=loadScenario;loadScenario=function(k){_ls(k);const s=SCEN.find(x=>x[0]===k);logEvent("scenario","Loaded scenario: "+(s?s[2]:k));};}
+
+/* ---------- model helpers ---------- */
+const GLOB=[
+ ["rec","Recoverable stock-out demand","%","sc",1,"Low end of the office range (40 to 55%); Audit tests 35%",0,100],
+ ["hair","Finance attribution haircut on all benefits","%","sc",1,"Excludes market, price/mix and inflation",0,60],
+ ["lag","Finance certification lag","months","sc",1,"3 = quarterly (benefits recognised a quarter late); 0 = monthly certification",0,6],
+ ["decay","Annual benefit decay after year 3","%","fin",100,"The 2022 and 2023 attempts lapsed",0,50],
+ ["over","Capex and run-cost overrun from Q4","%","sc",1,"Base draws a 10% contingency inside ₹150 Cr; S7 tests +25%",0,60],
+ ["cap","Avoided-cost cap (share of claimed benefit)","%","sc",1,"Case rule",10,60],
+ ["coc","Cost of capital on released working capital","%","fin",100,"Board return test",0,30],
+ ["hold","Cash holding cost","%","fin",100,"Treated as avoided cost",0,10],
+ ["disc","Discount rate for NPV","%","fin",100,"Hurdle rate",5,40],
+ ["obs","Addressable obsolescence pool","₹ Cr","fin",1,"Mid-point of Finance range 44 to 52",0,120],
+ ["frt","Addressable emergency freight pool","₹ Cr","fin",1,"Mid-point of Finance range 31 to 38",0,100],
+ ["day","Value of one network inventory day","₹ Cr","fin",1,"₹1,230 Cr ÷ 46 days",5,40],
+ ["dip","One-off destocking contribution dip","₹ Cr","fin",1,"Derived in Diagnostics",0,60],
+ ["real","Realisation multiplier","%","sc",1,"100 = base realisation by initiative",30,130],
+ ["delay","Benefit delay, every initiative","months","sc",1,"0 in base",0,12],
+ ["own","ACPL-owned share multiplier","×","fin",1,"S10 counts distributor stock as ACPL's",0,10]
+];
+const SELS=[["day","Inventory day valued on",[["owned","ACPL-owned stock only (base)"],["network","Network stock"],["cogs","COGS basis"]]],["wcb","Working-capital benefit counted as",[["board","Yearly carrying value at 11% (base)"],["cash","One-off cash release"]]],["pools","Obsolescence and freight pools",[["mid","Middle of Finance's range (base)"],["low","Low end (₹44 Cr and ₹31 Cr)"]]]];
+const INIC=[["s","Start month",0,36,1],["d","Ramp months",1,36,1],["rho","Realisation",0,1,.05],["G","Fill pts",0,10,.1],["H","Inv. days",-5,15,.1],["I","Obsolescence capture",0,1,.01],["J","Freight capture",0,1,.01],["K","Penalty avoided ₹/yr",0,20,.1],["L","Extra contribution ₹/yr",0,20,.1],["M","Contribution change ₹/yr",-30,20,.1],["N","ACPL-owned share",0,1,.05],["O","Run cost ₹/yr",0,20,.1],["P","Run cost in build ₹/yr",0,20,.1]];
+const ININ={flow:"I1 Flow Contract and signals",rep:"I3 Replenishment N&W",plc:"I4 Plant C and wheel",port:"I5 Portfolio rationalisation",qc:"I6 Quick-commerce lane",sic:"I7 Stock Identity Check"};
+const CAPN={pmo:"I0 Programme office and audit",flow:"I1 Flow Contract and signals",mdm:"I2 Master data and integration",rep:"I3 Replenishment N&W",plc:"I4 Plant C and wheel",port:"I5 Portfolio rationalisation",qc:"I6 Quick-commerce lane",sic:"I7 Stock Identity Check"};
+function gVal(g){return g[3]==="sc"?S.sc[g[0]]:fin(g[0])*g[4];}
+function gBase(g){return g[3]==="sc"?DEF.sc[g[0]]:FIN0[g[0]]*g[4];}
+function modelInputsDiff(snapA,snapB){
+ const out=[],A=snapA,B=snapB,num=(x,d=2)=>typeof x==="number"?+x.toFixed(d):x;
+ GLOB.forEach(g=>{const a=g[3]==="sc"?A.sc[g[0]]:((A.fin.g||{})[g[0]]!=null?A.fin.g[g[0]]:FIN0[g[0]])*g[4],b=g[3]==="sc"?B.sc[g[0]]:((B.fin.g||{})[g[0]]!=null?B.fin.g[g[0]]:FIN0[g[0]])*g[4];if(Math.abs(a-b)>1e-9)out.push([g[1],num(a),num(b),g[2]]);});
+ SELS.forEach(([k,n,o])=>{if(A.sc[k]!==B.sc[k])out.push([n,(o.find(x=>x[0]===A.sc[k])||[0,A.sc[k]])[1],(o.find(x=>x[0]===B.sc[k])||[0,B.sc[k]])[1],""]);});
+ WB0.ini.forEach(w=>INIC.forEach(([k,n])=>{const a=((A.fin.ini||{})[w.id]||{})[k]??w[k],b=((B.fin.ini||{})[w.id]||{})[k]??w[k];if(Math.abs(a-b)>1e-9)out.push([ININ[w.id]+": "+n,num(a),num(b),""]);}));
+ Object.keys(WB0.capex).forEach(id=>{const a=((A.fin.capex||{})[id]||WB0.capex[id]).reduce((x,y)=>x+ +y,0),b=((B.fin.capex||{})[id]||WB0.capex[id]).reduce((x,y)=>x+ +y,0);if(Math.abs(a-b)>1e-9)out.push([CAPN[id]+": capex total",num(a),num(b),"₹ Cr"]);});
+ INITS.forEach(i=>{const a=A.alloc[i.id],b=B.alloc[i.id];if(Math.abs((a||0)-(b||0))>1e-9)out.push(["Budget: "+i.name,a,b,"₹ Cr"]);});
+ Object.keys(SEG).forEach(k=>{if(A.fill[k]!==B.fill[k])out.push(["Fill target, segment "+k,A.fill[k],B.fill[k],"%"]);});
+ OPTS.forEach(o=>{if(!!A.opts[o.id]!==!!B.opts[o.id])out.push(["Option: "+o.name,A.opts[o.id]?"On":"Off",B.opts[o.id]?"On":"Off",""]);});
+ return out;
+}
+function snapNow(){return clone({sc:S.sc,fin:S.fin,alloc:S.alloc,fill:S.fill,days:S.days,opts:S.opts,coo:S.coo});}
+function outOf(Mx){const Gx=gp(Mx);return{irr:Mx.irr,pb:Mx.pb,npv:Mx.npv,spend:Mx.cs36,ss:Mx.ss,cs9:Mx.cs9,cs21:Mx.cs21,g9:Mx.g9,g22:Mx.g22,p1:Gx.p1,p2:Gx.p2};}
+function gp(Mx){const p1=Mx.g9.fill>=89-1e-9&&Mx.g9.days<=43+1e-9&&Mx.g9.ebitda>=22-1e-9,p2=Mx.g22.fill>=92-1e-9&&Mx.g22.days<=38+1e-9&&Mx.g22.ebitda>=70-1e-9&&Mx.g22.wc>=170-1e-9;return{p1,p2};}
+function runWith(snap,sc){const keep=clone({sc:S.sc,fin:S.fin,alloc:S.alloc,fill:S.fill,days:S.days,opts:S.opts,coo:S.coo});Object.assign(S,clone(snap));if(sc)Object.assign(S.sc,sc);let r;try{r=model();}finally{Object.assign(S,keep);applyFin();}return r;}
+const pbTxt=pb=>pb==null?">60":f1(pb);
+/* ---------- versions ---------- */
+function baseline(){return WS.ver.filter(v=>v.status==="approved").sort((a,b)=>b.at-a.at)[0]||null;}
+const VST={draft:["nt","Draft"],submitted:["wn","Submitted by Finance"],approved:["ok","Approved baseline"],returned:["no","Sent back"],superseded:["nt","Superseded"]};
+
+/* ---------- finance: assumptions ---------- */
+function setGlob(g,v,src){const key=g[0],old=gVal(g);
+ if(g[3]==="sc")S.sc[key]=v;else{S.fin.g=S.fin.g||{};S.fin.g[key]=v/g[4];}
+ recalc();logEvent("model",`${g[1]}: ${+old.toFixed(3)} → ${+(+v).toFixed(3)} ${g[2]}${src?" ("+src+")":""}`);}
+function renderFmodel(){
+ const B=baseline(),Mb=B?B.out:null;
+ const st=B?`<span class="dot ${JSON.stringify(snapNow())===JSON.stringify(B.snap)?"rg":"ra"}"></span><b>${JSON.stringify(snapNow())===JSON.stringify(B.snap)?"Matches the approved baseline":"Working draft"}</b> · baseline "${esc(B.name)}" approved ${ago(B.at)}`:`<span class="dot ra"></span><b>No approved baseline yet.</b> Save a version and submit it for approval on the Versions page.`;
+ $("fmBanner").innerHTML=`<div class="bannerv ${B?"":"draft"}">${st}<span style="flex:1"></span><a class="btn" href="#fver">Versions and sign-off</a></div>`;
+ const d=(v,b,fmt,up)=>Mb&&b!=null&&v!=null?`<span class="delta ${(v-b)*(up?1:-1)>=0?"up":"dn"}">${fmt(v-b)} vs baseline</span>`:"";
+ $("fmKpis").innerHTML=kpi("5-year IRR",pct1(M.irr),Mb?d(M.irr*100,Mb.irr*100,x=>sgn(x)+" pts",1):"hurdle 18%")+kpi("Payback",pbTxt(M.pb)+" mo",Mb?d(M.pb,Mb.pb,x=>sgn(x)+" mo",0):"limit 30 months")+kpi("NPV at "+f0(fin("disc")*100)+"%",cr(M.npv),Mb?d(M.npv,Mb.npv,x=>sgn(x)+" Cr",1):"5 years")+kpi("Spend in 36 months",cr(M.cs36),"of ₹150 Cr")+kpi("Gate 1",G.p1?"Pass":"Miss",`fill ${f1(M.g9.fill)}%, ${f1(M.g9.days)} days`)+kpi("Gate 2",G.p2?"Pass":"Miss",`fill ${f1(M.g22.fill)}%, ${f1(M.g22.days)} days`);
+ const box=$("fmGlobal");
+ if(!box.contains(document.activeElement)){
+  box.innerHTML=`<table><thead><tr><th>Parameter</th><th class="n">Base</th><th class="n">Current</th><th>Unit</th><th>Rationale</th><th></th></tr></thead><tbody>`+GLOB.map((g,i)=>{const v=gVal(g),b=gBase(g),ch=Math.abs(v-b)>1e-9;
+   return `<tr><td>${esc(g[1])}</td><td class="n">${+b.toFixed(3)}</td><td class="ed-c n"><input class="ed ${ch?"chg":""}" type="number" step="any" data-g="${i}" value="${+(+v).toFixed(4)}" aria-label="${esc(g[1])}"></td><td class="minis">${g[2]}</td><td class="minis">${esc(g[5])}</td><td>${ch?`<button type="button" class="ghost" data-gr="${i}" style="min-height:28px;padding:2px 8px;font-size:12px">Base</button>`:""}</td></tr>`;}).join("")+
+   SELS.map(([k,n,o])=>`<tr><td>${n}</td><td class="n minis">${(o.find(x=>x[0]===DEF.sc[k])||["",""])[1].replace(" (base)","")}</td><td colspan="3"><select data-s="${k}" aria-label="${n}">${o.map(([v,t])=>`<option value="${v}" ${S.sc[k]===v?"selected":""}>${t}</option>`).join("")}</select></td><td></td></tr>`).join("")+`</tbody></table>`;
+ }
+ const ib=$("fmIni");
+ if(!ib.contains(document.activeElement)){
+  ib.innerHTML=`<table><thead><tr><th>Initiative</th>${INIC.map(c=>`<th class="n">${c[1]}</th>`).join("")}</tr></thead><tbody>`+WB.ini.map(w=>`<tr><td>${ININ[w.id]}</td>${INIC.map(([k,,mn,mx,st])=>{const b=WB0.ini.find(x=>x.id===w.id)[k],ch=Math.abs(w[k]-b)>1e-9;return `<td class="ed-c n"><input class="ed ${ch?"chg":""}" type="number" min="${mn}" max="${mx}" step="${st}" data-i="${w.id}" data-k="${k}" value="${+(+w[k]).toFixed(4)}" title="Base ${b}" aria-label="${ININ[w.id]} ${k}"></td>`;}).join("")}</tr>`).join("")+`</tbody></table>`;
+ }
+ const cb=$("fmCapex");
+ if(!cb.contains(document.activeElement)){
+  const ids=Object.keys(WB0.capex);let colT=new Array(12).fill(0);
+  cb.innerHTML=`<table><thead><tr><th>Initiative</th>${[...Array(12)].map((_,q)=>`<th class="n">Q${q+1}</th>`).join("")}<th class="n">Total</th><th class="n">Approved</th><th></th></tr></thead><tbody>`+ids.map(id=>{const row=WB.capex[id],t=row.reduce((a,b)=>a+b,0),ap=WB0.capex[id].reduce((a,b)=>a+b,0);row.forEach((v,q)=>colT[q]+=v);
+   return `<tr><td>${CAPN[id]}</td>${row.map((v,q)=>`<td class="ed-c n"><input class="ed ${Math.abs(v-WB0.capex[id][q])>1e-9?"chg":""}" style="width:62px!important" type="number" min="0" step="0.05" data-c="${id}" data-q="${q}" value="${+v.toFixed(3)}" aria-label="${CAPN[id]} Q${q+1}"></td>`).join("")}<td class="n"><b>${f1(t)}</b></td><td class="n">${f1(ap)}</td><td>${Math.abs(t-ap)<1e-6?chip("ok","OK"):chip("wn",(t>ap?"+":"−")+f1(Math.abs(t-ap)))}</td></tr>`;}).join("")+
+   `<tr class="sum"><td>Total</td>${colT.map(v=>`<td class="n">${f1(v)}</td>`).join("")}<td class="n">${f1(colT.reduce((a,b)=>a+b,0))}</td><td class="n">${f1(Object.values(WB0.capex).flat().reduce((a,b)=>a+b,0))}</td><td></td></tr></tbody></table>`;
+ }
+}
+$("fmGlobal").addEventListener("change",e=>{const el=e.target;
+ if(el.dataset.s){const k=el.dataset.s,old=S.sc[k];S.sc[k]=el.value;recalc();const o=SELS.find(x=>x[0]===k);logEvent("model",`${o[1]}: ${(o[2].find(x=>x[0]===old)||[0,old])[1]} → ${(o[2].find(x=>x[0]===el.value)||[0,el.value])[1]}`);return;}
+ if(el.dataset.g==null)return;const g=GLOB[+el.dataset.g],v=+el.value;
+ if(el.value===""||!isFinite(v)||v<g[6]||v>g[7]){el.classList.add("bad");toast(`${g[1]} must be between ${g[6]} and ${g[7]} ${g[2]}`);return;}
+ el.blur();setGlob(g,v);});
+$("fmGlobal").addEventListener("click",e=>{const b=e.target.closest("[data-gr]");if(!b)return;const g=GLOB[+b.dataset.gr];setGlob(g,gBase(g),"reset to base");});
+$("fmIni").addEventListener("change",e=>{const el=e.target;if(!el.dataset.i)return;const id=el.dataset.i,k=el.dataset.k,c=INIC.find(x=>x[0]===k),v=+el.value;
+ if(el.value===""||!isFinite(v)||v<c[2]||v>c[3]){el.classList.add("bad");toast(`${c[1]} must be between ${c[2]} and ${c[3]}`);return;}
+ const old=WB.ini.find(w=>w.id===id)[k];S.fin.ini=S.fin.ini||{};S.fin.ini[id]=Object.assign({},S.fin.ini[id]||{},{[k]:v});el.blur();recalc();logEvent("model",`${ININ[id]}, ${c[1]}: ${old} → ${v}`);});
+$("fmCapex").addEventListener("change",e=>{const el=e.target;if(!el.dataset.c)return;const id=el.dataset.c,q=+el.dataset.q,v=+el.value;
+ if(el.value===""||!isFinite(v)||v<0){el.classList.add("bad");toast("Spend must be zero or more");return;}
+ const row=(S.fin.capex&&S.fin.capex[id]?S.fin.capex[id]:WB0.capex[id]).slice(),old=row[q];row[q]=v;S.fin.capex=S.fin.capex||{};S.fin.capex[id]=row;el.blur();recalc();logEvent("model",`${CAPN[id]}, Q${q+1} capex: ${old} → ${v} ₹ Cr`);});
+$("fmResetAll").onclick=()=>{const b=$("fmResetAll");if(b.dataset.sure!=="1"){b.dataset.sure="1";b.textContent="Confirm reset";setTimeout(()=>{b.dataset.sure="";b.textContent="Reset all to base";},4000);return;}
+ b.dataset.sure="";b.textContent="Reset all to base";S.fin={g:{},ini:{},capex:{}};["rec","hair","lag","over","cap","real","delay","day","wcb","pools"].forEach(k=>S.sc[k]=DEF.sc[k]);recalc();logEvent("model","All model assumptions reset to base");toast("Model reset to base");};
+
+/* ---------- finance: cash flow ---------- */
+function renderFcash(){
+ const Q=M.Q,T=20,qs=[...Array(T)].map((_,i)=>i+1),sum=a=>qs.reduce((s,q)=>s+(a[q]||0),0);
+ $("fcKpis").innerHTML=kpi("5-year IRR",pct1(M.irr),"quarterly cash flow, annualised")+kpi("Payback",pbTxt(M.pb)+" mo","from first disbursement")+kpi("NPV",cr(M.npv),"at "+f0(fin("disc")*100)+"%")+kpi("Peak funding need",cr(M.peak),"most cash out at once")+kpi("Steady-state net gain",cr(M.ss),"per year, net of running cost")+kpi("Avoided-cost share",M.capBind?f0(S.sc.cap)+"% cap binds":"under cap",M.capBind?f0((1-Q.fc)*100)+"% of avoided cost discarded":"nothing discarded");
+ const rows=[["Contribution from recovered sales",Q.contrib],["Capacity and penalties",Q.cap],["Avoided cost (after cap)",Q.av],["Working-capital benefit",Q.wc],["Benefit as it occurs",Q.gross,1],["Benefit certified by Finance",Q.cert,1],["Capex",Q.capex.map(v=>-v)],["Running cost",Q.run.map(v=>-v)],["Destocking dip",Q.dip.map(v=>-v)],["Net cash flow",Q.net,1],["Cumulative",Q.cum,1]];
+ const cell=v=>`<td class="n" style="${v<0?"color:var(--bad)":""}">${Math.abs(v)<.005?"–":(v<0?"−":"")+Math.abs(v).toFixed(1)}</td>`;
+ $("fcTable").innerHTML=`<table style="min-width:1500px"><thead><tr><th>₹ Cr</th>${qs.map(q=>`<th class="n">Q${q}</th>`).join("")}<th class="n">Total</th></tr></thead><tbody>`+rows.map(([n,a,b])=>`<tr ${b?'class="sum"':""}><td style="white-space:nowrap">${n}</td>${qs.map(q=>cell(a[q]||0)).join("")}${n==="Cumulative"?"<td></td>":cell(sum(a))}</tr>`).join("")+`</tbody></table>`;
+ const ms=[0,3,6,9,12,15,18,21,24,27,30,33,36];
+ $("fcGates").innerHTML=`<table><thead><tr><th>Month</th>${ms.map(m=>`<th class="n">M${m}</th>`).join("")}</tr></thead><tbody>`+
+  [["Fill-rate %",m=>f1(M.gk(m).fill)],["Network inventory days",m=>f1(M.gk(m).days)],["Net EBITDA run-rate ₹ Cr",m=>f1(M.gk(m).ebitda)],["WC release, network ₹ Cr",m=>f0(M.gk(m).wc)],["WC release, ACPL-owned ₹ Cr",m=>f0(M.gk(m).wcOwned)],["Spend to date ₹ Cr",m=>f1(M.sp.slice(1,m+1).reduce((a,b)=>a+b,0))]].map(([n,f])=>`<tr><td>${n}</td>${ms.map(m=>`<td class="n" style="${m===9||m===22?"font-weight:700":""}">${f(m)}</td>`).join("")}</tr>`).join("")+`</tbody></table><p class="note">Gate 1 is at month 9 and Gate 2 at month 22 (shown in the KPI tables on Timeline and gates).</p>`;
+}
+/* ---------- finance: sensitivity ---------- */
+const DISPUTED=[["Recoverable stock-out demand","Finance 35%, office 40–55%, Sales 60%; Audit tests 35%","Plan at 40%, the low end of the office range, and certify against 35%","Payback fails below 38.8%: move to monthly certification (26.1 mo at 35%), not to bigger tech spend"],
+ ["Working-capital basis","Finance: ACPL-owned ₹142 Cr; office: network ₹215 Cr","Gates on network, return test on owned only; network upside is not banked","Never flips the plan; counting distributor stock would lift IRR to 114% as pure upside"],
+ ["Snacks capacity loss","Office ₹18–24 Cr/yr; COO says scheduling, not capacity","Fund Plant C (₹16 Cr) as an experiment; leave A and H (₹30 Cr) unfunded","Plant C adds ≥₹7 Cr/yr with utilisation ≥92% after the wheel at M12: release A and H"],
+ ["Forecast accuracy","Vendor 72%; independent review 62–65% in GT and quick commerce","Board target cut from 70% to 64%; 60% of GT error is bias, which software cannot fix","Bias removed and North and West data clean, with vendor fee at risk against 65%: revisit at M24"],
+ ["Pilot B distributor app","Sales: fill +5 pts; data: warehouse days +7, territory days 85→87","Flow Contract first, as stock only moved upstream","A two-region pilot cuts combined territory days with ≥60% consistent use: scale to capable distributors"],
+ ["Regional excess and shortfall","Office estimates; two regional heads dispute them","Sequence North and West first (76% of imbalance); Day-0 physical audit settles it","Audit shows North and West well below that share: re-order replenishment waves to include East"],
+ ["Avoided-cost cap","Case cap 40%; Audit may test lower","Cap binds in base (22% of avoided cost discarded); returns lean on contribution and working capital","At a 30% cap payback is 37.0 mo: shift spend toward contribution levers (Segment C, quick-commerce lane)"]];
+let sensKey="",sensCache=null;
+function sensCalc(){
+ const key=JSON.stringify(snapNow());if(key===sensKey&&sensCache)return sensCache;
+ const cur=snapNow(),rec=[30,35,40,45,50,55,60],rl=[70,85,93,100];
+ const map=rec.map(r=>rl.map(x=>{const m=runWith(cur,{rec:r,real:x});const g=gp(m);return{pb:m.pb,ok:g.p1&&g.p2};}));
+ const cert=[["Base: 40%, 100%",40,100],["Audit test: 35%, 100%",35,100],["40%, 93% realisation",40,93],["35%, 93% realisation",35,93],["40%, 85% realisation",40,85]].map(([n,r,x])=>[n,runWith(cur,{rec:r,real:x,lag:3}).pb,runWith(cur,{rec:r,real:x,lag:0}).pb]);
+ const bis=(k,lo,hi)=>{const f=v=>{const m=runWith(cur,{[k]:v});return m.pb==null?99:m.pb;};let a=lo,b=hi,fa=f(a)-30,fb=f(b)-30;if(fa*fb>0)return null;for(let i=0;i<40;i++){const c=(a+b)/2,fc=f(c)-30;if(fa*fc<=0){b=c;fb=fc;}else{a=c;fa=fc;}}return(a+b)/2;};
+ const brk={rec:bis("rec",20,80),real:bis("real",50,130),delay:bis("delay",0,12)};
+ const loo=INITS.filter(i=>i.share).map(i=>{const s=clone(cur);s.alloc[i.id]=0;const m=runWith(s);return[i,m];});
+ sensKey=key;sensCache={rec,rl,map,cert,brk,loo};return sensCache;
+}
+function renderFsens(){
+ if(S.view!=="fsens")return;
+ const C=sensCalc();
+ $("fsMap").innerHTML=`<table class="grid-map"><thead><tr><th style="text-align:left">Demand recovery</th>${C.rl.map(x=>`<th>${x}%${x===70?": severe":x===85?": effect fades":x===93?": minor slip":": replicates"}</th>`).join("")}</tr></thead><tbody>`+C.rec.map((r,i)=>`<tr><th style="text-align:left">${r}%${r===35?" Finance, Audit":r===40?" Base":r===60?" Sales":""}</th>${C.map[i].map((c,j)=>`<td class="${c.pb!=null&&c.pb<=30?(c.ok?"mg":"my"):"mr"} ${r===S.sc.rec&&C.rl[j]===S.sc.real?"base":""}">${pbTxt(c.pb)}</td>`).join("")}</tr>`).join("")+`</tbody></table><p class="note">Pilot realisation is the share of the pilot effect achieved at scale. The outlined cell is the current setting.</p>`;
+ $("fsCert").innerHTML=`<table><thead><tr><th>Case</th><th class="n">Quarterly</th><th class="n">Monthly</th></tr></thead><tbody>`+C.cert.map(([n,q,m])=>`<tr><td>${n}</td><td class="n" style="color:${q!=null&&q<=30?"var(--good)":"var(--bad)"}">${pbTxt(q)} mo</td><td class="n" style="color:${m!=null&&m<=30?"var(--good)":"var(--bad)"}">${pbTxt(m)} mo</td></tr>`).join("")+`</tbody></table><p class="note">Monthly certification sets the Finance certification lag to zero. Written into the Day-0 charter, it costs nothing.</p>`;
+ const b=C.brk;
+ $("fsBrk").innerHTML=`<table><thead><tr><th>Driver</th><th class="n">Now</th><th class="n">Break-even</th><th class="n">Workbook</th></tr></thead><tbody><tr><td>Demand recovery</td><td class="n">${S.sc.rec}%</td><td class="n"><b>${b.rec==null?"n/a":f1(b.rec)+"%"}</b></td><td class="n">${f1(WBBRK.rec)}%</td></tr><tr><td>Pilot realisation</td><td class="n">${(S.sc.real/100).toFixed(2)}×</td><td class="n"><b>${b.real==null?"n/a":(b.real/100).toFixed(3)+"×"}</b></td><td class="n">${WBBRK.real.toFixed(3)}×</td></tr><tr><td>Benefit delay</td><td class="n">${S.sc.delay} mo</td><td class="n"><b>${b.delay==null?"n/a":f1(b.delay)+" mo"}</b></td><td class="n">${f1(WBBRK.delay)} mo</td></tr></tbody></table><p class="note">Holding every other input at its current value. Stop-loss: if month 12 shows recovery under 37% or realisation under 0.85×, freeze waves 2–3 and the data tail (about ₹53 Cr).</p>`;
+ $("fsLoo").innerHTML=`<table><thead><tr><th>Remove this lever</th><th class="n">IRR</th><th class="n">Payback</th><th class="n">NPV</th><th class="n">NPV lost</th><th></th></tr></thead><tbody>`+C.loo.map(([i,m])=>`<tr><td>${i.name}</td><td class="n">${pct1(m.irr)}</td><td class="n">${pbTxt(m.pb)} mo</td><td class="n">${cr(m.npv)}</td><td class="n"><b>${cr(M.npv-m.npv)}</b></td><td>${m.pb!=null&&m.pb<=30?chip("ok","Payback holds"):chip("no","Payback fails")}</td></tr>`).join("")+`</tbody></table>`;
+ $("fsDisp").innerHTML=`<table><thead><tr><th>Disputed number</th><th>Positions in the case</th><th>Our call and why</th><th>Flips our decision if…</th></tr></thead><tbody>`+DISPUTED.map(r=>`<tr>${r.map((c,i)=>`<td${i===0?' style="font-weight:600"':""}>${esc(c)}</td>`).join("")}</tr>`).join("")+`</tbody></table><p class="note">Principle: where a disputed number can be measured within 30 days, we do not take a side. The Day-0 charter freezes the baseline, one recovery basis is agreed with Finance, and gates are certified monthly.</p>`;
+}
+/* ---------- finance: versions ---------- */
+function renderFver(){
+ const V=[...WS.ver].sort((a,b)=>b.at-a.at),B=baseline();
+ $("fvSub").textContent=V.length?`${V.length} saved · baseline: ${B?B.name:"none yet"}`:"none saved yet";
+ const fin_=may("finance")&&!WS.ro,brd=may("board")&&!WS.ro;
+ $("fvList").innerHTML=V.length?`<table><thead><tr><th>Version</th><th>Status</th><th class="n">IRR</th><th class="n">Payback</th><th class="n">Spend</th><th>Gates</th><th>Saved</th><th></th></tr></thead><tbody>`+V.map(v=>{const o=v.out,st=VST[v.status]||VST.draft;
+  const acts=[`<button type="button" class="ghost" data-vl="${v.id}">Load</button>`];
+  if((v.status==="draft"||v.status==="returned"))acts.push(`<button type="button" class="primary" data-vs="${v.id}" ${fin_?"":"disabled"} title="Finance submits">Submit</button>`);
+  if(v.status==="submitted"){acts.push(`<button type="button" class="primary" data-va="${v.id}" ${brd?"":"disabled"} title="Audit and Board approve">Approve as baseline</button>`);acts.push(`<button type="button" data-vr="${v.id}" ${brd?"":"disabled"}>Send back</button>`);}
+  return `<tr><td><b>${esc(v.name)}</b>${v.note?`<div class="note">${esc(v.note)}</div>`:""}</td><td>${chip(st[0],st[1])}</td><td class="n">${pct1(o.irr)}</td><td class="n">${pbTxt(o.pb)} mo</td><td class="n">${cr(o.spend)}</td><td>${o.p1?chip("ok","G1"):chip("no","G1")} ${o.p2?chip("ok","G2"):chip("no","G2")}</td><td class="minis">${esc(teamName(v.team))}<br>${ago(v.at)}</td><td><div class="vrow-act">${acts.join("")}</div></td></tr>`;}).join("")+`</tbody></table>`
+  :`<div class="empty">No versions yet. Save the current model above. Finance then submits it, and Audit and Board approve it as the baseline.</div>`;
+ const opts=`<option value="cur">Current working model</option>`+V.map(v=>`<option value="${v.id}">${esc(v.name)} (${(VST[v.status]||VST.draft)[1]})</option>`).join("");
+ const a=$("fvA"),b=$("fvB"),av=a.value||(B?B.id:"cur"),bv=b.value||"cur";a.innerHTML=opts;b.innerHTML=opts;a.value=V.some(v=>v.id===av)?av:"cur";b.value=V.some(v=>v.id===bv)?bv:"cur";
+ renderCmp();
+ const L=WS.log.filter(l=>l.kind==="model"||l.kind==="version").slice(0,40);
+ $("fvLog").innerHTML=L.length?`<ul class="logl">${L.map(l=>`<li><span class="w">${new Date(l.at).toLocaleString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}</span><span><span class="k">${l.kind==="model"?"Model":"Version"}</span> · ${esc(teamName(l.team))}</span><span>${esc(l.text)}</span></li>`).join("")}</ul>`:`<div class="empty">No model changes yet. Edits on the Assumptions page appear here.</div>`;
+}
+function verSnap(id){if(id==="cur")return{name:"Current working model",snap:snapNow(),out:outOf(M)};return WS.ver.find(v=>v.id===id);}
+function renderCmp(){
+ const A=verSnap($("fvA").value||"cur"),B=verSnap($("fvB").value||"cur");if(!A||!B){$("fvCmp").innerHTML="";return;}
+ const oa=A.out,ob=B.out,row=(n,x,y,f,up)=>{const d=x!=null&&y!=null?y-x:null;return `<tr><td>${n}</td><td class="n">${f(x)}</td><td class="n">${f(y)}</td><td class="n">${d==null||Math.abs(d)<1e-9?"–":`<span class="delta ${d*(up?1:-1)>=0?"up":"dn"}">${d>0?"+":"−"}${f(Math.abs(d)).replace("₹","₹")}</span>`}</td></tr>`;};
+ const diffs=modelInputsDiff(A.snap,B.snap);
+ $("fvCmp").innerHTML=`<table><thead><tr><th>Result</th><th class="n">${esc(A.name)}</th><th class="n">${esc(B.name)}</th><th class="n">Change</th></tr></thead><tbody>`+
+  row("5-year IRR",oa.irr*100,ob.irr*100,v=>v==null?"n/a":f1(v)+"%",1)+row("Payback (months)",oa.pb,ob.pb,v=>v==null?">60":f1(v),0)+row("NPV (₹ Cr)",oa.npv,ob.npv,v=>f1(v),1)+row("Spend in 36 months (₹ Cr)",oa.spend,ob.spend,v=>f1(v),0)+row("Gate 2 fill (%)",oa.g22.fill,ob.g22.fill,v=>f1(v),1)+row("Gate 2 inventory days",oa.g22.days,ob.g22.days,v=>f1(v),0)+row("Gate 2 EBITDA (₹ Cr)",oa.g22.ebitda,ob.g22.ebitda,v=>f1(v),1)+
+  `<tr><td>Gates</td><td class="n">${oa.p1?"G1 ✓":"G1 ✗"} ${oa.p2?"G2 ✓":"G2 ✗"}</td><td class="n">${ob.p1?"G1 ✓":"G1 ✗"} ${ob.p2?"G2 ✓":"G2 ✗"}</td><td></td></tr></tbody></table>`+
+  (diffs.length?`<div style="height:12px"></div><table><thead><tr><th>Input that differs</th><th class="n">${esc(A.name)}</th><th class="n">${esc(B.name)}</th><th>Unit</th></tr></thead><tbody>${diffs.map(d=>`<tr><td>${esc(d[0])}</td><td class="n">${esc(d[1])}</td><td class="n">${esc(d[2])}</td><td class="minis">${esc(d[3])}</td></tr>`).join("")}</tbody></table>`:`<p class="note" style="margin-top:10px">The inputs are identical.</p>`);
+}
+$("fvA").onchange=renderCmp;$("fvB").onchange=renderCmp;
+$("fvForm").addEventListener("submit",async e=>{e.preventDefault();const name=$("fvName").value.trim();if(!name)return;
+ const ok=await wsWrite(()=>WS.db.collection("versions").add({name,note:$("fvNote").value.trim(),status:"draft",team:myTeam(),by:WS.uid||"",at:Date.now(),snap:snapNow(),out:outOf(M),hist:[{s:"draft",team:myTeam(),at:Date.now()}]}),$("fvMsg"));
+ if(ok){logEvent("version",`Saved version "${name}" (IRR ${pct1(M.irr)}, payback ${pbTxt(M.pb)} mo)`);$("fvName").value="";$("fvNote").value="";$("fvMsg").textContent="";toast("Version saved");}});
+$("fvList").addEventListener("click",async e=>{const b=e.target.closest("button");if(!b||b.disabled)return;
+ const id=b.dataset.vl||b.dataset.vs||b.dataset.va||b.dataset.vr,v=WS.ver.find(x=>x.id===id);if(!v)return;
+ const step=(st,label)=>wsWrite(()=>WS.db.doc("versions/"+id).update({status:st,hist:(v.hist||[]).concat([{s:st,team:myTeam(),at:Date.now()}])})).then(ok=>{if(ok){logEvent("version",`"${v.name}": ${label}`);toast(label);}return ok;});
+ if(b.dataset.vl){if(b.dataset.sure!=="1"){b.dataset.sure="1";b.textContent="Replace current?";return;}Object.assign(S,clone(v.snap));recalc();logEvent("version",`Loaded version "${v.name}" into the app`);toast("Loaded "+v.name);return;}
+ if(b.dataset.vs){await step("submitted","Submitted for approval");return;}
+ if(b.dataset.vr){await step("returned","Sent back to Finance");return;}
+ if(b.dataset.va){for(const o of WS.ver.filter(x=>x.status==="approved"))await wsWrite(()=>WS.db.doc("versions/"+o.id).update({status:"superseded"}));await step("approved","Approved as the baseline");}
+});
+/* ---------- Excel export / import (SheetJS, loaded on demand) ---------- */
+function loadXLSX(){return window.XLSX?Promise.resolve():new Promise((res,rej)=>{const sc=document.createElement("script");sc.src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";sc.onload=res;sc.onerror=()=>rej(new Error("load"));document.head.appendChild(sc);});}
+$("fvExport").onclick=async()=>{const msg=$("fvXmsg");msg.textContent="Preparing the file…";
+ try{await loadXLSX();}catch(e){msg.textContent="Could not load the Excel library. Check your internet connection and try again.";return;}
+ const X=window.XLSX,wb=X.utils.book_new(),add=(n,rows,w)=>{const ws=X.utils.aoa_to_sheet(rows);if(w)ws["!cols"]=w.map(x=>({wch:x}));X.utils.book_append_sheet(wb,ws,n);};
+ const B=baseline(),now=new Date();
+ add("Read me",[["Project Drishti — financial model export"],["Exported",now.toLocaleString("en-GB")],["Team",teamName(myTeam())],["Approved baseline",B?B.name:"None yet"],[],["Edit the yellow input columns on Assumptions, Initiatives, Cost phasing and Budget, then upload this file on Finance → Versions and sign-off."],["Do not change the Key column; it tells the app which input each row is."],[],["5-year IRR",M.irr],["Payback (months)",M.pb],["NPV (₹ Cr)",M.npv],["Spend in 36 months (₹ Cr)",M.cs36],["Gate 1",G.p1?"PASS":"MISS"],["Gate 2",G.p2?"PASS":"MISS"]],[34,60]);
+ add("Assumptions",[["Key","Parameter","Base","Current (input)","Unit","Rationale"],...GLOB.map(g=>[g[0],g[1],gBase(g),gVal(g),g[2],g[5]]),...SELS.map(([k,n])=>["sel:"+k,n,DEF.sc[k],S.sc[k],"choice",""])],[10,46,10,16,8,60]);
+ add("Initiatives",[["Key","Initiative",...INIC.map(c=>c[1])],...WB.ini.map(w=>[w.id,ININ[w.id],...INIC.map(c=>w[c[0]])])],[8,32,...INIC.map(()=>12)]);
+ add("Cost phasing",[["Key","Initiative",...[...Array(12)].map((_,q)=>"Q"+(q+1)),"Total"],...Object.keys(WB.capex).map(id=>[id,CAPN[id],...WB.capex[id],WB.capex[id].reduce((a,b)=>a+b,0)])],[8,32]);
+ add("Budget",[["Key","Initiative","Allocated ₹ Cr (input)","Plan ₹ Cr"],...INITS.map(i=>[i.id,i.name,S.alloc[i.id],i.base])],[8,34,18,10]);
+ const Q=M.Q,qs=[...Array(20)].map((_,i)=>i+1);
+ add("Cash flow",[["₹ Cr",...qs.map(q=>"Q"+q)],...[["Contribution",Q.contrib],["Capacity and penalties",Q.cap],["Avoided cost (after cap)",Q.av],["Working-capital benefit",Q.wc],["Benefit as it occurs",Q.gross],["Benefit certified",Q.cert],["Capex",Q.capex.map(v=>-v)],["Running cost",Q.run.map(v=>-v)],["Destocking dip",Q.dip.map(v=>-v)],["Net cash flow",Q.net],["Cumulative",Q.cum]].map(([n,a])=>[n,...qs.map(q=>+(a[q]||0).toFixed(4))])],[28]);
+ add("Gates",[["Month","Fill-rate %","Network days","Net EBITDA ₹ Cr","WC network ₹ Cr","WC owned ₹ Cr"],...[0,3,6,9,12,15,18,21,22,24,27,30,33,36].map(m=>{const k=M.gk(m);return[m,+k.fill.toFixed(3),+k.days.toFixed(3),+k.ebitda.toFixed(3),+k.wc.toFixed(2),+k.wcOwned.toFixed(2)];})]);
+ const C=sensCalc();add("Survival map",[["Payback (months)",...C.rl.map(x=>"Realisation "+x+"%")],...C.rec.map((r,i)=>["Recovery "+r+"%",...C.map[i].map(c=>c.pb==null?">60":+c.pb.toFixed(1))])],[18,16,16,16,16]);
+ add("Change log",[["When","Team","Type","Change"],...WS.log.map(l=>[new Date(l.at).toLocaleString("en-GB"),teamName(l.team),l.kind,l.text])],[20,18,10,90]);
+ X.writeFile(wb,`Drishti_model_${now.toISOString().slice(0,10)}.xlsx`);msg.textContent="Downloaded.";logEvent("model","Downloaded the model as Excel");};
+$("fvImport").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(!f)return;const msg=$("fvXmsg");msg.textContent="Reading "+f.name+"…";
+ try{await loadXLSX();}catch(er){msg.textContent="Could not load the Excel library. Check your internet connection and try again.";return;}
+ let wb;try{wb=window.XLSX.read(await f.arrayBuffer(),{type:"array"});}catch(er){msg.textContent="That file could not be read as Excel.";return;}
+ const rows=n=>wb.Sheets[n]?window.XLSX.utils.sheet_to_json(wb.Sheets[n],{header:1}):null;const ch=[],bad=[];
+ const A=rows("Assumptions");if(A)A.slice(1).forEach(r=>{const isSel=String(r[0]).startsWith("sel:"),g=isSel?null:GLOB.find(x=>x[0]===r[0]);const sl=isSel?SELS.find(x=>"sel:"+x[0]===r[0]):null;
+  if(g){const v=+r[3];if(!isFinite(v)||v<g[6]||v>g[7]){bad.push(g[1]);return;}if(Math.abs(v-gVal(g))>1e-9){ch.push(`${g[1]}: ${+gVal(g).toFixed(3)} → ${v}`);if(g[3]==="sc")S.sc[g[0]]=v;else{S.fin.g[g[0]]=v/g[4];}}}
+  else if(sl&&sl[2].some(o=>o[0]===r[3])&&S.sc[sl[0]]!==r[3]){ch.push(`${sl[1]}: ${S.sc[sl[0]]} → ${r[3]}`);S.sc[sl[0]]=r[3];}});
+ const I=rows("Initiatives");if(I)I.slice(1).forEach(r=>{const w=WB.ini.find(x=>x.id===r[0]);if(!w)return;INIC.forEach(([k,n,mn,mx],j)=>{const v=+r[2+j];if(!isFinite(v)||v<mn||v>mx){if(r[2+j]!=null)bad.push(ININ[w.id]+" "+n);return;}if(Math.abs(v-w[k])>1e-9){ch.push(`${ININ[w.id]}, ${n}: ${w[k]} → ${v}`);S.fin.ini[w.id]=Object.assign({},S.fin.ini[w.id]||{},{[k]:v});}});});
+ const Cp=rows("Cost phasing");if(Cp)Cp.slice(1).forEach(r=>{if(!WB0.capex[r[0]])return;const row=r.slice(2,14).map(Number);if(row.length!==12||row.some(v=>!isFinite(v)||v<0)){bad.push(CAPN[r[0]]+" cost phasing");return;}if(row.some((v,q)=>Math.abs(v-WB.capex[r[0]][q])>1e-9)){ch.push(`${CAPN[r[0]]}: cost phasing updated (total ${row.reduce((a,b)=>a+b,0).toFixed(2)})`);S.fin.capex[r[0]]=row;}});
+ const Bu=rows("Budget");if(Bu)Bu.slice(1).forEach(r=>{const i=INITS.find(x=>x.id===r[0]);const v=+r[2];if(!i||!isFinite(v)||v<0)return;if(Math.abs(v-S.alloc[i.id])>1e-9){ch.push(`Budget ${i.name}: ${S.alloc[i.id]} → ${v}`);S.alloc[i.id]=v;}});
+ recalc();if(ch.length){logEvent("model",`Uploaded ${f.name}: ${ch.length} change${ch.length>1?"s":""}`);for(const c of ch.slice(0,30))logEvent("model",c+" (from Excel)");}
+ msg.textContent=(ch.length?`Applied ${ch.length} change${ch.length>1?"s":""} from ${f.name}.`:`No changes found in ${f.name}.`)+(bad.length?` Skipped ${bad.length} value${bad.length>1?"s":""} out of range: ${bad.slice(0,3).join(", ")}${bad.length>3?"…":""}.`:"");toast(ch.length?"Excel changes applied":"No changes in the file");};
+
+/* ---------- delivery: initiatives and milestones ---------- */
+const OWN={pmo:["finance","CFO and programme office"],flow:["sales","CSO"],mdm:["flow","CIO"],rep:["flow","Supply Chain Head (Flow Owner)"],plc:["plants","COO"],port:["brands","Brand heads"],qc:["sales","Head of quick commerce"],sic:["finance","CFO and Internal Audit"]};
+const PLAN_MS={pmo:[["Day-0 measurement charter signed",0],["Gate 1 audit and certification",9],["Gate 2 audit and certification",22]],
+ flow:[["Flow Contract designed with the CSO",1],["Two-region pilot live",3],["Scaled to all regions",9],["Last-3-week share at or below 27%",12]],
+ mdm:[["North and West SKUs cleansed",6],["Wave 1 data ready",9],["Integration complete",24]],
+ rep:[["Wave 1 live",10],["Wave 1 verified by Finance",13],["Waves 2 and 3 live",18],["National extension decision",24]],
+ plc:[["Production wheel live",5],["Plant C output",8],["A and H capacity trigger review",12]],
+ port:[["Incubation lane for 11 launches",3],["68 tail SKUs delisted",9]],
+ qc:[["Fast lane for 11 at-risk SKUs",2],["Platform fill at or above 90%",6]],
+ sic:[["Distributor audit method agreed",3],["Monthly calibration ledger running",6],["Stock-truth gap at or below 5%",18]]};
+const MST=[["todo","Not started"],["prog","In progress"],["risk","At risk"],["done","Done"]];
+function msList(id){return PLAN_MS[id].map(([t,m],i)=>{const d=WS.ms[id+"_"+i]||{};const st=d.st||"todo";const late=st!=="done"&&m<S.pm;return{id,i,t,m,st,late,note:d.note||"",d};});}
+function planToDate(id,pm){const sc=(S.alloc[id]||0)/(INITS.find(i=>i.id===id).base||1),ov=q=>q>=4?1+S.sc.over/100:1;let s=0;for(let q=1;q<=12;q++){const f=Math.max(0,Math.min(1,(pm-3*(q-1))/3));s+=WB.capex[id][q-1]*sc*ov(q)*f;}return s;}
+function initRag(id){const ms=msList(id),plan=planToDate(id,S.pm),act=(WS.spend[id]||{}).act;const v=act!=null&&plan>0?(act-plan)/plan:0;
+ if(ms.some(x=>x.late)||ms.some(x=>x.st==="risk"&&x.m<=S.pm+1)||v>.1)return"r";
+ if(ms.some(x=>x.st==="risk")||v>.05||ms.some(x=>x.st==="todo"&&x.m<=S.pm+1&&x.m>=S.pm))return"a";
+ if(S.pm===0&&ms.every(x=>x.st==="todo"))return"n";return"g";}
+function renderInitiatives(){
+ $("dlMonth").value=S.pm;$("dlMonthO").textContent="Month "+S.pm;
+ const ids=INITS.map(i=>i.id),rag=Object.fromEntries(ids.map(id=>[id,initRag(id)]));
+ const all=ids.flatMap(msList),late=all.filter(x=>x.late),done=all.filter(x=>x.st==="done");
+ const plan=ids.reduce((a,id)=>a+planToDate(id,S.pm),0),act=ids.reduce((a,id)=>a+((WS.spend[id]||{}).act||0),0),haveAct=ids.some(id=>(WS.spend[id]||{}).act!=null);
+ $("dlKpis").innerHTML=kpi("On track",ids.filter(id=>rag[id]==="g").length,"initiatives")+kpi("Watch",ids.filter(id=>rag[id]==="a").length,"initiatives")+kpi("Off track",ids.filter(id=>rag[id]==="r").length,"initiatives")+kpi("Milestones done",done.length+" of "+all.length,late.length?late.length+" late":"none late")+kpi("Spend to date",haveAct?cr(act):"–",`plan ${cr(plan)} by month ${S.pm}`);
+ const t=$("dlTable");
+ if(!t.contains(document.activeElement)){
+  t.innerHTML=`<table><thead><tr><th>Initiative</th><th>Owner</th><th class="n">Budget</th><th class="n">Plan to date</th><th class="n">Actual to date</th><th class="n">Variance</th><th>Milestones</th><th>Next</th><th>Status</th></tr></thead><tbody>`+INITS.map(i=>{const ms=msList(i.id),pl=planToDate(i.id,S.pm),sp=WS.spend[i.id]||{},a=sp.act,vr=a!=null?a-pl:null,nx=ms.find(x=>x.st!=="done");
+   return `<tr><td><b>${i.name}</b></td><td>${OWN[i.id][1]}<div class="minis">${teamName(OWN[i.id][0])}</div></td><td class="n">${f1(S.alloc[i.id])}</td><td class="n">${f1(pl)}</td><td class="ed-c n"><input class="ed" type="number" min="0" step="0.1" data-sp="${i.id}" value="${a!=null?a:""}" placeholder="enter" aria-label="Actual spend ${i.name}" ${may("finance")?"":"disabled title='Finance enters actual spend'"}>${sp.at?`<div class="minis">${ago(sp.at)}</div>`:""}</td><td class="n" style="color:${vr!=null&&vr>pl*.05?"var(--bad)":vr!=null&&vr<0?"var(--good)":"inherit"}">${vr==null?"–":(vr>0?"+":vr<0?"−":"")+f1(Math.abs(vr))}</td><td>${ms.filter(x=>x.st==="done").length}/${ms.length}${ms.some(x=>x.late)?" "+chip("no",ms.filter(x=>x.late).length+" late"):""}</td><td class="minis">${nx?esc(nx.t)+" · M"+nx.m:"All done"}</td><td>${ragChip(rag[i.id])}</td></tr>`;}).join("")+`</tbody></table>`;
+ }
+ $("dlMsSub").textContent=`${done.length} done · ${late.length} late · owners update their own`;
+ const box=$("dlMs");
+ if(!box.contains(document.activeElement)){
+  box.innerHTML=INITS.map(i=>{const ms=msList(i.id),own=OWN[i.id][0],can=may(own)||may("flow");return `<div class="ms-grp"><h3><span class="dot ${RAGC[rag[i.id]]}"></span>${i.name}<span class="minis">${OWN[i.id][1]}</span></h3>${ms.map(x=>`<div class="ms-row"><span>${esc(x.t)}</span><span class="minis">Due M${x.m}${x.late?" "+chip("no","Late"):""}</span><select data-ms="${x.id}_${x.i}" aria-label="Status: ${esc(x.t)}" ${can?"":"disabled"}>${MST.map(([v,n])=>`<option value="${v}" ${x.st===v?"selected":""}>${n}</option>`).join("")}</select><span class="note-in minis">${x.d.at?`${esc(teamName(x.d.team))} · ${ago(x.d.at)}${x.note?" · "+esc(x.note):""}`:""}</span></div>`).join("")}</div>`;}).join("");
+ }
+}
+$("dlMonth").addEventListener("input",e=>{S.pm=+e.target.value;save();renderInitiatives();renderCockpit();});
+$("dlMonth").addEventListener("change",()=>{logEvent("delivery","Programme month set to "+S.pm);recalc();});
+$("dlTable").addEventListener("change",async e=>{const el=e.target;if(!el.dataset.sp)return;const id=el.dataset.sp,v=el.value===""?null:+el.value;if(v!=null&&(!isFinite(v)||v<0)){el.classList.add("bad");toast("Enter a spend of zero or more");return;}
+ const old=(WS.spend[id]||{}).act;el.blur();const ok=await wsWrite(()=>WS.db.doc("spend/"+id).set({act:v,team:myTeam(),by:WS.uid||"",at:Date.now()}));if(ok){logEvent("delivery",`Actual spend, ${INITS.find(i=>i.id===id).name}: ${old==null?"–":old} → ${v==null?"–":v} ₹ Cr`);toast("Spend saved");}});
+$("dlMs").addEventListener("change",async e=>{const el=e.target;if(!el.dataset.ms)return;const [id,i]=el.dataset.ms.split("_"),m=PLAN_MS[id][+i],old=(WS.ms[el.dataset.ms]||{}).st||"todo";el.blur();
+ const ok=await wsWrite(()=>WS.db.doc("ms/"+el.dataset.ms).set({st:el.value,team:myTeam(),by:WS.uid||"",at:Date.now()}));if(ok){logEvent("delivery",`${m[0]}: ${MST.find(x=>x[0]===old)[1]} → ${MST.find(x=>x[0]===el.value)[1]}`);toast("Milestone updated");}});
+
+/* ---------- decisions ---------- */
+const PLAN_DEC=[["d1","Release tranche 1 (₹34 Cr)","board",0,"The plan spends ₹31.8 Cr by month 9 with no new software."],
+ ["d2","Sign the Day-0 measurement charter","finance",0,"Frozen baseline, monthly certification, one recovery basis."],
+ ["d3","Name a Flow Owner with slab, schedule and allocation rights","board",0,"Avoids a repeat of the 2023 reset lapse."],
+ ["d4","Snacks capacity at Plants A and H (₹30 Cr)","board",12,"Fund only if Plant C adds ₹7 Cr a year or more and utilisation stays at 92% or above after the wheel."],
+ ["d5","Month-12 stop-loss review","board",12,"If recovery is under 37% or realisation under 0.85×, freeze waves 2–3 and the data tail (about ₹53 Cr)."],
+ ["d6","National replenishment extension (₹54 Cr)","board",24,"Rest of India holds 24% of the imbalance; 9-year payback."]];
+const DST={pending:["wn","Pending"],approved:["ok","Approved"],rejected:["no","Rejected"],deferred:["nt","Deferred"]};
+function decList(){const plan=PLAN_DEC.map(([id,t,o,m,w])=>Object.assign({id,title:t,owner:o,due:m,why:w,status:"pending",plan:1},WS.dec[id]||{}));
+ const extra=Object.values(WS.dec).filter(d=>!PLAN_DEC.some(p=>p[0]===d.id));return plan.concat(extra).map(d=>Object.assign(d,{over:d.status==="pending"&&d.due<S.pm,soon:d.status==="pending"&&d.due<=S.pm}));}
+function renderDecisions(){
+ const D=decList(),P=D.filter(d=>d.status==="pending");
+ $("dcKpis").innerHTML=kpi("Due now",P.filter(d=>d.soon).length,"at or before month "+S.pm)+kpi("Overdue",P.filter(d=>d.over).length,"past their month")+kpi("Pending later",P.filter(d=>!d.soon).length,"trigger decisions")+kpi("Taken",D.filter(d=>d.status!=="pending").length,"approved, rejected or deferred");
+ $("dcSub").textContent="Programme month "+S.pm;
+ if(!$("dcOwner").options.length)$("dcOwner").innerHTML=TEAMS.map(([v,n])=>`<option value="${v}" ${v==="board"?"selected":""}>${n}</option>`).join("");
+ const t=$("dcTable");if(t.contains(document.activeElement))return;
+ t.innerHTML=`<table><thead><tr><th>Decision</th><th>Owner</th><th>Due</th><th>Status</th><th>Numbers at the time</th><th></th></tr></thead><tbody>`+D.sort((a,b)=>(a.status!=="pending")-(b.status!=="pending")||a.due-b.due).map(d=>{const can=may(d.owner)&&!WS.ro;const sn=d.snap;
+  return `<tr><td><b>${esc(d.title)}</b><div class="note">${esc(d.why||"")}</div>${d.note?`<div class="minis">Note: ${esc(d.note)}</div>`:""}</td><td>${esc(teamName(d.owner))}</td><td>M${d.due}${d.over?" "+chip("no","Overdue"):d.soon&&d.status==="pending"?" "+chip("wn","Due"):""}</td><td>${chip(DST[d.status][0],DST[d.status][1])}${d.at&&d.status!=="pending"?`<div class="minis">${esc(teamName(d.team))} · ${ago(d.at)}</div>`:""}</td><td class="minis">${sn?`IRR ${pct1(sn.irr)} · payback ${pbTxt(sn.pb)} mo · spend ${cr(sn.spend)} · ${sn.p1?"G1 ✓":"G1 ✗"} ${sn.p2?"G2 ✓":"G2 ✗"}`:"recorded when decided"}</td><td>${d.status==="pending"?`<div class="vrow-act"><input type="text" placeholder="Note" maxlength="140" data-dn="${d.id}" style="width:130px;min-height:30px;padding:4px 8px;font-size:12.5px" aria-label="Note" ${can?"":"disabled"}><button type="button" class="primary" data-dd="${d.id}" data-to="approved" ${can?"":"disabled"}>Approve</button><button type="button" data-dd="${d.id}" data-to="deferred" ${can?"":"disabled"}>Defer</button><button type="button" data-dd="${d.id}" data-to="rejected" ${can?"":"disabled"}>Reject</button></div>`:`<button type="button" class="ghost" data-dd="${d.id}" data-to="pending" ${can?"":"disabled"} style="min-height:30px;padding:4px 10px;font-size:12.5px">Reopen</button>`}</td></tr>`;}).join("")+`</tbody></table>`;
+}
+$("dcTable").addEventListener("click",async e=>{const b=e.target.closest("button[data-dd]");if(!b||b.disabled)return;const id=b.dataset.dd,to=b.dataset.to,d=decList().find(x=>x.id===id),inp=$("dcTable").querySelector(`[data-dn="${id}"]`),note=inp?inp.value.trim():"";
+ if(to==="rejected"&&!note){toast("Add a note saying why it is rejected");inp&&inp.focus();return;}
+ b.blur();const doc={id,title:d.title,owner:d.owner,due:d.due,why:d.why,status:to,note:to==="pending"?"":note,team:myTeam(),by:WS.uid||"",at:Date.now(),snap:to==="pending"?null:outOf(M)};
+ const ok=await wsWrite(()=>WS.db.doc("decisions/"+id).set(doc));if(ok){logEvent("decision",`${d.title}: ${DST[to][1]}${note?" · "+note:""}`);toast(DST[to][1]+": "+d.title);}});
+$("dcForm").addEventListener("submit",async e=>{e.preventDefault();const title=$("dcTitle").value.trim();if(!title)return;const id="u"+rid(10);
+ const ok=await wsWrite(()=>WS.db.doc("decisions/"+id).set({id,title,owner:$("dcOwner").value,due:Math.max(0,+$("dcDue").value||0),why:$("dcWhy").value.trim(),status:"pending",team:myTeam(),by:WS.uid||"",at:Date.now()}),$("dcMsg"));
+ if(ok){logEvent("decision","Added decision: "+title);$("dcTitle").value="";$("dcWhy").value="";$("dcMsg").textContent="";toast("Decision added");}});
+
+/* ---------- owners: responsibility chart and scorecard ---------- */
+const RACI_COLS=["CEO","CFO","CSO","COO","CIO","Flow Owner","Internal Audit","Board"];
+const RACI=[["Day-0 measurement charter",{CEO:"A",CFO:"R","Internal Audit":"C","Flow Owner":"C",Board:"I"}],
+ ["Flow Contract and slab change",{CEO:"A",CSO:"R",CFO:"C","Flow Owner":"C",Board:"I"}],
+ ["KPI and incentive reset",{CEO:"A",CSO:"R",COO:"R",CFO:"C","Flow Owner":"C"}],
+ ["Weekly Flow Council and allocation",{"Flow Owner":"A/R",CSO:"C",COO:"C",CFO:"I",CEO:"I"}],
+ ["Master data and integration",{CIO:"A/R","Flow Owner":"C",CFO:"I"}],
+ ["Replenishment waves, North and West",{"Flow Owner":"A/R",CIO:"R",CFO:"C",COO:"C"}],
+ ["Plant C and production wheel",{COO:"A/R","Flow Owner":"C",CFO:"I"}],
+ ["Portfolio clean-up and launch gate",{CSO:"A","Flow Owner":"R",CFO:"C"}],
+ ["Benefit certification (monthly)",{CFO:"A/R","Internal Audit":"C","Flow Owner":"C",Board:"I"}],
+ ["Gate verification",{"Internal Audit":"R",Board:"A",CFO:"C",CEO:"I"}],
+ ["Tranche release",{Board:"A/R",CEO:"C",CFO:"C"}],
+ ["Risk register and early warnings",{"Flow Owner":"R",CFO:"C",CEO:"A",Board:"I"}]];
+function ownerStats(){const rows=TEAMS.map(([v,n])=>{const ms=INITS.filter(i=>OWN[i.id][0]===v).flatMap(i=>msList(i.id));
+ const acts=WS.acts.filter(a=>a.team===v&&!a.done),od=acts.filter(isOverdue),risks=WS.risks.filter(r=>r.owner===v&&r.status!=="closed"),hi=risks.filter(r=>rScore(r)>=15),dec=decList().filter(d=>d.owner===v&&d.status==="pending"&&d.soon);
+ const sent=NONDATA.includes(v)?null:!!inpDoc(v,THISWEEK),late=ms.filter(x=>x.late).length;
+ const r=late||od.length||dec.some(d=>d.over)?"r":(hi.length||sent===false||dec.length||ms.some(x=>x.st==="risk"))?"a":"g";
+ return{v,n,ms,late,acts,od,risks,hi,dec,sent,r};});return rows;}
+function renderOwners(){
+ const R=ownerStats();
+ $("raScore").innerHTML=`<table><thead><tr><th>Team</th><th>Status</th><th class="n">Milestones owned</th><th class="n">Late</th><th class="n">Open actions</th><th class="n">Overdue</th><th class="n">High risks owned</th><th class="n">Decisions due</th><th>This week's numbers</th></tr></thead><tbody>`+R.map(o=>`<tr><td><b>${o.n}</b></td><td>${ragChip(o.r)}</td><td class="n">${o.ms.length}</td><td class="n" style="color:${o.late?"var(--bad)":""}">${o.late}</td><td class="n">${o.acts.length}</td><td class="n" style="color:${o.od.length?"var(--bad)":""}">${o.od.length}</td><td class="n">${o.hi.length}</td><td class="n">${o.dec.length}</td><td>${o.sent==null?"–":o.sent?chip("ok","Sent"):chip("wn","Missing")}</td></tr>`).join("")+`</tbody></table>`;
+ $("raTable").innerHTML=`<table class="raci"><thead><tr><th>Deliverable or decision</th>${RACI_COLS.map(c=>`<th style="text-align:center">${c}</th>`).join("")}</tr></thead><tbody>`+RACI.map(([n,m])=>`<tr><td>${n}</td>${RACI_COLS.map(c=>`<td class="${(m[c]||"").replace("/","")}">${m[c]||""}</td>`).join("")}</tr>`).join("")+`</tbody></table>`;
+}
+/* ---------- activity log ---------- */
+function renderLog(){
+ const tm=$("lgTeam"),kd=$("lgKind");
+ if(!tm.options.length){tm.innerHTML=`<option value="">All teams</option>`+TEAMS.map(([v,n])=>`<option value="${v}">${n}</option>`).join("");kd.innerHTML=`<option value="">All types</option>`+LOGK.map(([v,n])=>`<option value="${v}">${n}</option>`).join("");}
+ const L=WS.log.filter(l=>(!tm.value||l.team===tm.value)&&(!kd.value||l.kind===kd.value)).slice(0,300);
+ $("lgList").innerHTML=L.length?`<ul class="logl">${L.map(l=>`<li><span class="w">${new Date(l.at).toLocaleString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}</span><span><span class="k">${(LOGK.find(k=>k[0]===l.kind)||[0,l.kind])[1]}</span> · ${esc(teamName(l.team))}</span><span>${esc(l.text)}</span></li>`).join("")}</ul>`:`<div class="empty">Nothing logged yet. Changes to the model, versions, decisions, milestones, spend, gates and scenarios appear here.</div>`;
+}
+$("lgTeam").onchange=renderLog;$("lgKind").onchange=renderLog;
+$("lgCsv").onclick=()=>{const q=v=>`"${String(v).replace(/"/g,'""')}"`;const csv="When,Team,Type,Change\n"+WS.log.map(l=>[new Date(l.at).toISOString(),teamName(l.team),l.kind,l.text].map(q).join(",")).join("\n");
+ const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="Drishti_activity_log.csv";document.body.appendChild(a);a.click();a.remove();};
+
+/* ---------- risk register: workbook risks with live triggers ---------- */
+function riskLive(rid){
+ const L={R1:["Gate 2 network days",M.g22.days,38,"≤",1],R3:["Gate 1 fill-rate %",M.g9.fill,89,"≥",1],R4:["Gate 1 EBITDA if dip counted ₹ Cr",M.g9.ebitda-20.95,22,"≥",1],R5:["Payback months",M.pb==null?99:M.pb,30,"≤",1],R6:["Recovery vs break-even %",S.sc.rec,WBBRK.rec,"≥",1],R7:["Realisation multiplier",S.sc.real/100,WBBRK.real,"≥",3],R8:["Benefit delay months",S.sc.delay,WBBRK.delay,"≤",1],R9:["ACPL-owned WC release ₹ Cr",M.g22.wcOwned,170,"≥",0],R15:["Last-3-week share of sales %",S.om.skew,27,"≤",0],R12:["Forecast accuracy %",63.8,70,"≥",1],R13:["Plant C contribution ₹ Cr/yr",9.6,7,"≥",1],R17:["Quick-commerce fill %",74,90,"≥",0]}[rid];
+ if(!L)return"";const [n,v,lim,op,d]=L,ok=op==="≥"?v>=lim:v<=lim,h=op==="≥"?v-lim:lim-v;
+ return `<div class="minis" style="margin-top:4px"><span class="dot ${ok?(Math.abs(h)<Math.abs(lim)*.03?"ra":"rg"):"rr"}"></span>${n}: <b>${v.toFixed(d)}</b> ${op} ${(+lim).toFixed(d)} · headroom ${h>=0?"+":"−"}${Math.abs(h).toFixed(d)}</div>`;
+}
+
+/* ---------- cockpit ---------- */
+function cockpitKpis(){
+ const t1=M.cs9<=34+1e-6,t2=M.cs21<=92+1e-6,t3=M.cs36<=150+1e-6;
+ const fillH=G.g2[0][1].v-92,dayH=38-G.g2[1][1].v,ebH=G.g2[2][1].v-70,pbv=M.pb==null?99:M.pb;
+ return[
+  ["Fill-rate at Gate 2",f1(G.g2[0][1].v)+"%",`from 86%; needs ≥92% · headroom ${sgn(fillH)} pts`,fillH<0?"r":fillH<1?"a":"g"],
+  ["Network inventory days",f1(G.g2[1][1].v),`from 46; needs ≤38 · headroom ${sgn(dayH,2)}`,dayH<0?"r":dayH<1?"a":"g"],
+  ["EBITDA run-rate",cr(G.g2[2][1].v),`needs ≥₹70 Cr at Gate 2 · ≈ +90 bps`,ebH<0?"r":ebH<7?"a":"g"],
+  ["Working capital released","₹"+f0(G.g2[3][1].v)+" Cr",`network; ₹${f0(M.g22.wcOwned)} Cr ACPL-owned vs ₹170 Cr test`,G.g2[3][1].v<170?"r":M.g22.wcOwned<170?"a":"g"],
+  ["5-year IRR",pct1(M.irr),"hurdle 18%",M.irr!=null&&M.irr>=.18?"g":"r"],
+  ["Payback",pbTxt(M.pb)+" mo",`limit 30 · headroom ${sgn(30-pbv)} mo`,pbv>30?"r":pbv>28.5?"a":"g"],
+  ["Spend against tranches",cr(M.cs36),`M9 ${cr(M.cs9)}/₹34 · M21 ${cr(M.cs21)}/₹92 · M36 /₹150`,t1&&t2&&t3?(M.cs9>34*.97?"a":"g"):"r"],
+  (()=>{const R=INITS.map(i=>initRag(i.id)),on=R.filter(r=>r==="g"||r==="n").length;return["Initiatives on track",on+" of "+R.length,R.filter(r=>r==="r").length+" off track · "+R.filter(r=>r==="a").length+" to watch · month "+S.pm,worst(R.map(r=>r==="n"?"g":r))];})()];
+}
+function renderCockpit(){
+ const K=cockpitKpis(),ids=INITS.map(i=>i.id),rag=Object.fromEntries(ids.map(id=>[id,initRag(id)])),D=decList(),P=D.filter(d=>d.status==="pending"),own=ownerStats();
+ const AL=alerts(),hiRisk=WS.risks.filter(r=>r.status!=="closed"&&rScore(r)>=15).sort((a,b)=>rScore(b)-rScore(a));
+ const parts=K.map(k=>k[3]).concat(ids.map(id=>rag[id]==="n"?"g":rag[id])).concat([G.p1?"g":"r",G.p2?"g":"r"]);
+ const overall=worst(parts),nA=parts.filter(x=>x==="a").length,nR=parts.filter(x=>x==="r").length;
+ const label=overall==="g"?"On track":overall==="a"?"On track, with thin margins":"Off track: action needed";
+ $("ckStatus").innerHTML=`<div class="status ${overall}"><span class="st">${label}</span><span class="sub">${nR?nR+" red, ":""}${nA} amber across KPIs, gates and initiatives · programme month ${S.pm} · ${P.filter(d=>d.soon).length} decision${P.filter(d=>d.soon).length===1?"":"s"} due now · ${AL.filter(a=>a.sev==="high").length} high warnings</span>${ragChip(overall)}</div>`;
+ $("ckKpis").innerHTML=K.map(([l,v,s,r])=>`<div class="kpi ${RAGC[r]}"><span class="l"><span class="dot ${RAGC[r]}"></span>${l}</span><span class="v">${v}</span><span class="s">${s}</span></div>`).join("");
+ const dueNow=P.filter(d=>d.soon),later=P.filter(d=>!d.soon).slice(0,3);
+ $("ckDec").innerHTML=(dueNow.length?`<ul class="howl">${dueNow.map(d=>`<li><a href="#decisions">${esc(d.title)}</a><span>${esc(teamName(d.owner))} · due M${d.due}${d.over?" · overdue":""}</span></li>`).join("")}</ul>`:`<div class="empty">No decisions due at month ${S.pm}.</div>`)+(later.length?`<p class="note" style="margin-top:10px">Coming up: ${later.map(d=>`${esc(d.title)} (M${d.due})`).join("; ")}.</p>`:"");
+ const gt=(n,rows,p,st)=>`<div style="margin-bottom:10px"><b>${n}</b> ${p?chip("ok","Plan passes"):chip("no","Plan misses")} ${chip(APR_STAGE[st][0],APR_STAGE[st][1])}<div class="minis" style="margin-top:4px">${rows.map(r=>{const h=r[2]==="≥"?r[1].v-r[3]:r[3]-r[1].v;return `${r[0]} ${fmtK(r[1].v,r[4])} (${h>=0?"+":"−"}${Math.abs(h).toFixed(r[4]==="d"?2:1)})`;}).join(" · ")}</div></div>`;
+ $("ckGates").innerHTML=gt("Gate 1 · month 9 · releases ₹58 Cr",G.g1,G.p1,aprDoc("g1").stage||"draft")+gt("Gate 2 · month 22 · releases ₹58 Cr",G.g2,G.p2,aprDoc("g2").stage||"draft");
+ $("ckInit").innerHTML=`<div class="tbl"><table><tbody>${INITS.map(i=>{const ms=msList(i.id),nx=ms.find(x=>x.st!=="done");return `<tr><td><span class="dot ${RAGC[rag[i.id]]}"></span>${i.name}</td><td class="minis">${OWN[i.id][1]}</td><td class="minis">${nx?esc(nx.t)+" · M"+nx.m+(nx.late?" · late":""):"done"}</td></tr>`;}).join("")}</tbody></table></div>`;
+ const warn=AL.filter(a=>a.sev==="high").slice(0,3);
+ $("ckRisk").innerHTML=(hiRisk.length?`<ul class="howl">${hiRisk.slice(0,4).map(r=>`<li><a href="#risks">${esc(r.title)}</a><span>${esc(teamName(r.owner))} · score ${rScore(r)}</span></li>`).join("")}</ul>`:`<div class="empty">No high risks in the register. <a href="#risks">Load the plan's 17 risks</a>.</div>`)+(warn.length?`<p class="note" style="margin-top:10px"><b>Warnings:</b> ${warn.map(a=>esc(a.title)).join("; ")}.</p>`:"");
+ const F=[["Spend within ₹150 Cr",cr(M.cs36),M.cs36<=150+1e-6],["Tranche windows (₹34 Cr by M9, ₹92 Cr by M21)",`${cr(M.cs9)} · ${cr(M.cs21)}`,M.cs9<=34+1e-6&&M.cs21<=92+1e-6],["IRR at least 18%",pct1(M.irr),M.irr!=null&&M.irr>=.18],["Payback within 30 months",pbTxt(M.pb)+" mo",M.pb!=null&&M.pb<=30],["Gate 1 (M9): all three tests",G.p1?"Pass":"Miss",G.p1],["Gate 2 (M22): all four tests",G.p2?"Pass":"Miss",G.p2],["Board target: 95% fill",f1(G.g2[0][1].v)+"%",null],["Board target: under 35 days",f1(G.g2[1][1].v),null],["Board target: 70% forecast accuracy","63.8%",null]];
+ $("ckFeas").innerHTML=`<div class="tbl"><table><tbody>${F.map(([n,v,ok])=>`<tr><td>${n}</td><td class="n">${v}</td><td>${ok==null?chip("wn","Gap"):ok?chip("ok","Pass"):chip("no","Fail")}</td></tr>`).join("")}</tbody></table></div><p class="note">Board-target gaps are deliberate: 95% uniform fill costs ₹205 Cr against ₹98 Cr for differentiated targets.</p>`;
+ const B=baseline();
+ if(!B)$("ckBase").innerHTML=`<div class="empty">No approved baseline yet. Finance saves and submits a version; Audit and Board approve it. <a href="#fver">Go to Versions</a>.</div>`;
+ else{const o=B.out,diffs=modelInputsDiff(B.snap,snapNow()),r=(n,a,b,f,up)=>{const d=b-a;return `<tr><td>${n}</td><td class="n">${f(a)}</td><td class="n">${f(b)}</td><td class="n">${Math.abs(d)<1e-9?"–":`<span class="delta ${d*(up?1:-1)>=0?"up":"dn"}">${d>0?"+":"−"}${f(Math.abs(d))}</span>`}</td></tr>`;};
+  $("ckBase").innerHTML=`<p class="note">Baseline "${esc(B.name)}", approved ${ago(B.at)}. ${diffs.length?diffs.length+" input"+(diffs.length>1?"s":"")+" changed since.":"No inputs changed since."}</p><div class="tbl"><table><thead><tr><th></th><th class="n">Baseline</th><th class="n">Now</th><th class="n">Change</th></tr></thead><tbody>${r("IRR %",o.irr*100,M.irr*100,v=>f1(v),1)}${r("Payback (months)",o.pb==null?99:o.pb,M.pb==null?99:M.pb,v=>f1(v),0)}${r("NPV ₹ Cr",o.npv,M.npv,v=>f1(v),1)}${r("Spend ₹ Cr",o.spend,M.cs36,v=>f1(v),0)}</tbody></table></div>`;}
+ const behind=own.filter(o=>o.r!=="g");
+ $("ckOwners").innerHTML=behind.length?`<div class="tbl"><table><thead><tr><th>Team</th><th>Status</th><th>Why</th></tr></thead><tbody>${behind.map(o=>{const why=[];if(o.late)why.push(o.late+" late milestone"+(o.late>1?"s":""));if(o.od.length)why.push(o.od.length+" overdue action"+(o.od.length>1?"s":""));if(o.dec.length)why.push(o.dec.length+" decision"+(o.dec.length>1?"s":"")+" due");if(o.hi.length)why.push(o.hi.length+" high risk"+(o.hi.length>1?"s":""));if(o.sent===false)why.push("this week's numbers missing");if(o.ms.some(x=>x.st==="risk"))why.push("milestone at risk");return `<tr><td><b>${o.n}</b></td><td>${ragChip(o.r)}</td><td class="minis">${why.join(" · ")}</td></tr>`;}).join("")}</tbody></table></div>`:`<div class="empty">Every team is on track.</div>`;
+}
+/* ---------- render hooks ---------- */
+function renderNewViews(){try{renderCockpit();renderDecisions();renderFmodel();renderFcash();renderFsens();renderFver();renderInitiatives();renderOwners();renderLog();}catch(e){console.error(e);}}
+function renderNewWS(){renderNewViews();}
+function newWsSubs(){const db=WS.db;
+ db.collection("log").orderBy("at","desc").limit(500).onSnapshot(s=>{WS.log=s.docs.map(d=>({id:d.id,...d.data()}));if(["log","fver"].includes(S.view))renderNewViews();});
+ db.collection("decisions").orderBy("at","desc").limit(200).onSnapshot(s=>{WS.dec={};s.docs.forEach(d=>{const v=d.data();WS.dec[v.id||d.id]={...v,id:v.id||d.id};});renderNewViews();});
+ db.collection("ms").orderBy("at","desc").limit(200).onSnapshot(s=>{WS.ms={};s.docs.forEach(d=>WS.ms[d.id]=d.data());renderNewViews();});
+ db.collection("spend").orderBy("at","desc").limit(50).onSnapshot(s=>{WS.spend={};s.docs.forEach(d=>WS.spend[d.id]=d.data());renderNewViews();});
+ db.collection("versions").orderBy("at","desc").limit(100).onSnapshot(s=>{WS.ver=s.docs.map(d=>({id:d.id,...d.data()}));renderNewViews();});}
+
 /* ---------- boot ---------- */
 recalcCore();
 {const h=location.hash.slice(1);S.view=VIEWS.some(v=>v[0]===h)?h:"overview";if(S.view!=="overview")S.last=S.view;}
 fillSelects();renderNav();renderAll();renderWS();wsInit();
+window.drishti={get M(){return M;},get G(){return G;},get S(){return S;},model:o=>model(o)};
 })();
 </script>
 
